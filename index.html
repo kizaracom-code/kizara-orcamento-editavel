@@ -607,9 +607,9 @@ document.addEventListener('DOMContentLoaded',()=>{
    localStorage.setItem('kiza_dono','1');
  }
  render();
- document.getElementById('logoEdit').addEventListener('click',()=>document.getElementById('inputLogo').click());
- document.getElementById('nomeEmpresa').addEventListener('click',abrirModalEditarEmpresa);
- document.getElementById('subEmpresa').addEventListener('click',abrirModalEditarEmpresa);
+ document.getElementById('logoEdit')?.addEventListener('click',()=>document.getElementById('inputLogo').click());
+ document.getElementById('nomeEmpresa')?.addEventListener('click',abrirModalEditarEmpresa);
+ document.getElementById('subEmpresa')?.addEventListener('click',abrirModalEditarEmpresa);
  document.getElementById('inputLogo').addEventListener('change',function(){if(this.files[0]){let r=new FileReader();r.onload=e=>{logoData=e.target.result;localStorage.setItem('kiza_logo_final',logoData);render();};r.readAsDataURL(this.files[0])}});
  document.getElementById('inputClienteTop').addEventListener('input',function(){clienteNome=this.value;localStorage.setItem('kiza_cli_final',clienteNome);render();});
  document.getElementById('inputTelefoneTop').addEventListener('input',function(){telefone=this.value;localStorage.setItem('kiza_tel_final',telefone)});
@@ -622,7 +622,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  document.getElementById('btnCriarComodo').addEventListener('click',()=>{let n=document.getElementById('mNome').value.trim();let c=document.getElementById('mC').value.trim();let l=document.getElementById('mL').value.trim();if(!n||!c||!l){alert('Preencha tudo');return}comodos.push({id:Date.now(),nome:n,c,l,servicos:[]});salvar();fecharModal('modal');document.getElementById('mNome').value='';document.getElementById('mC').value='';document.getElementById('mL').value='';render();showStatus('Cômodo criado');});
  document.getElementById('btnCriarServ').addEventListener('click',()=>{let nome=document.getElementById('nsNome').value.trim();let preco=parseFloat(document.getElementById('nsPreco').value)||0;let un=document.getElementById('nsUn').value;let cat=document.getElementById('nsCat').value.trim()||'GERAL';if(!nome){alert('Nome');return}servicos.push({id:'s'+Date.now(),nome,valor:preco,un,cat:cat.toUpperCase()});salvar();fecharModal('modalNovoServ');document.getElementById('nsNome').value='';document.getElementById('nsPreco').value='';document.getElementById('nsCat').value='';render();showStatus('Serviço criado');});
  document.getElementById('btnSalvarTudo').addEventListener('click',salvarTudo);
- document.getElementById('btnAtivarPro').addEventListener('click',()=>{
+ document.getElementById('btnAtivarPro')?.addEventListener('click',()=>{
   let lic=document.getElementById('inputLic').value.trim().toUpperCase();
   let validas=[];
   for(let i=1;i<=5000;i++){
@@ -641,7 +641,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     showStatus('❌ Inválida! Use KIZARANET-PRO-0001 até 5000');
   }
 });
- document.getElementById('btnAtivarPro2').addEventListener('click',()=>abrirModal('modalLic'));
+ document.getElementById('btnAtivarPro2')?.addEventListener('click',()=>abrirModal('modalLic'));
 });
 </script>
 </body>
