@@ -53,7 +53,7 @@ body{background:#f4f2f8;color:#1a1033}
       localStorage.removeItem('kiza_dono');
       // CSS imediato para esconder
       var style = document.createElement('style');
-      style.textContent = '#btnLinkPlataforma{display:none !important;} #btnAtivarPro2{display:none !important;} #btnAtivarPro{display:none !important;} #bannerPromo{display:none !important;} .btn-pro{display:none !important;}';
+      style.textContent = '#btnLinkPlataforma{display:none !important;} #btnAtivarPro2{display:none !important;} #btnAtivarPro{display:none !important;} #btnAtivarProPreview{display:none !important;} #bannerPromo{display:none !important;} .btn-pro{display:none !important;}';
       document.head.appendChild(style);
     }
   }catch(e){}
@@ -94,7 +94,7 @@ body{background:#f4f2f8;color:#1a1033}
 <div class="card"><div class="card-head"><b>SERVIÇOS</b><div style="display:flex;gap:6px"><button onclick="limparServicos()" style="background:#ff4444;color:#fff;border:none;padding:8px 16px;border-radius:999px;font-weight:900;cursor:pointer;font-size:11px">LIMPAR</button></div></div><div class="grid" id="gridServicos"></div></div>
 </div>
 <div>
-<div class="previa"><div style="padding:16px"><h3>PRÉVIA</h3><div id="previaClienteNome" style="font-size:11px;color:#666;margin:6px 0">Cliente</div><div id="previaLista" style="margin-top:12px"></div><div class="total"><span>TOTAL GERAL</span><span id="totalGeral">R$ 0,00</span></div><button class="btn btn-pro" style="width:100%;margin-top:10px;padding:14px" onclick="abrirModal('modalLic')">ATIVAR PRO R$297</button><button class="btn btn-green" style="width:100%;margin-top:8px;padding:14px" id="btnSalvarTudo">💾 SALVAR TUDO</button></div></div>
+<div class="previa"><div style="padding:16px"><h3>PRÉVIA</h3><div id="previaClienteNome" style="font-size:11px;color:#666;margin:6px 0">Cliente</div><div id="previaLista" style="margin-top:12px"></div><div class="total"><span>TOTAL GERAL</span><span id="totalGeral">R$ 0,00</span></div><button id="btnAtivarProPreview" class="btn btn-pro" style="width:100%;margin-top:10px;padding:14px" onclick="abrirModal('modalLic')">ATIVAR PRO R$297</button><button class="btn btn-green" style="width:100%;margin-top:8px;padding:14px" id="btnSalvarTudo">💾 SALVAR TUDO</button></div></div>
 </div>
 </div>
 
@@ -151,7 +151,7 @@ function area(c,l){return (parseFloat(c)||0)*(parseFloat(l)||0)}
 function perim(c,l){return 2*((parseFloat(c)||0)+(parseFloat(l)||0))}
 
 function render(){
- document.getElementById('nomeEmpresa').textContent=empresaNome;
+ if(document.getElementById('nomeEmpresa')) document.getElementById('nomeEmpresa').textContent=empresaNome;
  document.title=empresaNome+' - ORCAMENTO';
  document.getElementById('subEmpresa').textContent=empresaSub;
  if(logoData){document.getElementById('logoImg').src=logoData;document.getElementById('logoImg').style.display='block';document.getElementById('logoTxt').style.display='none';}
@@ -606,18 +606,18 @@ document.addEventListener('DOMContentLoaded',()=>{
  document.getElementById('logoEdit')?.addEventListener('click',()=>document.getElementById('inputLogo').click());
  document.getElementById('nomeEmpresa')?.addEventListener('click',abrirModalEditarEmpresa);
  document.getElementById('subEmpresa')?.addEventListener('click',abrirModalEditarEmpresa);
- document.getElementById('inputLogo').addEventListener('change',function(){if(this.files[0]){let r=new FileReader();r.onload=e=>{logoData=e.target.result;localStorage.setItem('kiza_logo_final',logoData);render();};r.readAsDataURL(this.files[0])}});
- document.getElementById('inputClienteTop').addEventListener('input',function(){clienteNome=this.value;localStorage.setItem('kiza_cli_final',clienteNome);render();});
- document.getElementById('inputTelefoneTop').addEventListener('input',function(){telefone=this.value;localStorage.setItem('kiza_tel_final',telefone)});
- document.getElementById('inputEnderecoTop').addEventListener('input',function(){endereco=this.value;localStorage.setItem('kiza_end_final',endereco)});
- document.getElementById('btnPdf').addEventListener('click',gerarPDF);
+ document.getElementById('inputLogo')?.addEventListener('change',function(){if(this.files[0]){let r=new FileReader();r.onload=e=>{logoData=e.target.result;localStorage.setItem('kiza_logo_final',logoData);render();};r.readAsDataURL(this.files[0])}});
+ document.getElementById('inputClienteTop')?.addEventListener('input',function(){clienteNome=this.value;localStorage.setItem('kiza_cli_final',clienteNome);render();});
+ document.getElementById('inputTelefoneTop')?.addEventListener('input',function(){telefone=this.value;localStorage.setItem('kiza_tel_final',telefone)});
+ document.getElementById('inputEnderecoTop')?.addEventListener('input',function(){endereco=this.value;localStorage.setItem('kiza_end_final',endereco)});
+ document.getElementById('btnPdf')?.addEventListener('click',gerarPDF);
  document.getElementById('btnLinkPlataforma')?.addEventListener('click',gerarLinkPlataforma);
- document.getElementById('btnZap').addEventListener('click',()=>{let t=`*${empresaNome}*%0ACliente: ${clienteNome}%0A`;comodos.forEach(c=>{t+=`%0A*${c.nome}* ${c.c}x${c.l}%0A`;c.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid);if(s)t+=`- ${s.nome}%0A`})});t+=`%0ATOTAL: ${document.getElementById('totalGeral').textContent}`;window.open('https://wa.me/?text='+t,'_blank')});
- document.getElementById('btnComodo').addEventListener('click',()=>abrirModal('modal'));
- document.getElementById('btnNovoServ').addEventListener('click',()=>abrirModal('modalNovoServ'));
- document.getElementById('btnCriarComodo').addEventListener('click',()=>{let n=document.getElementById('mNome').value.trim();let c=document.getElementById('mC').value.trim();let l=document.getElementById('mL').value.trim();if(!n||!c||!l){alert('Preencha tudo');return}comodos.push({id:Date.now(),nome:n,c,l,servicos:[]});salvar();fecharModal('modal');document.getElementById('mNome').value='';document.getElementById('mC').value='';document.getElementById('mL').value='';render();showStatus('Cômodo criado');});
- document.getElementById('btnCriarServ').addEventListener('click',()=>{let nome=document.getElementById('nsNome').value.trim();let preco=parseFloat(document.getElementById('nsPreco').value)||0;let un=document.getElementById('nsUn').value;let cat=document.getElementById('nsCat').value.trim()||'GERAL';if(!nome){alert('Nome');return}servicos.push({id:'s'+Date.now(),nome,valor:preco,un,cat:cat.toUpperCase()});salvar();fecharModal('modalNovoServ');document.getElementById('nsNome').value='';document.getElementById('nsPreco').value='';document.getElementById('nsCat').value='';render();showStatus('Serviço criado');});
- document.getElementById('btnSalvarTudo').addEventListener('click',salvarTudo);
+ document.getElementById('btnZap')?.addEventListener('click',()=>{let t=`*${empresaNome}*%0ACliente: ${clienteNome}%0A`;comodos.forEach(c=>{t+=`%0A*${c.nome}* ${c.c}x${c.l}%0A`;c.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid);if(s)t+=`- ${s.nome}%0A`})});t+=`%0ATOTAL: ${document.getElementById('totalGeral').textContent}`;window.open('https://wa.me/?text='+t,'_blank')});
+ document.getElementById('btnComodo')?.addEventListener('click',()=>abrirModal('modal'));
+ document.getElementById('btnNovoServ')?.addEventListener('click',()=>abrirModal('modalNovoServ'));
+ document.getElementById('btnCriarComodo')?.addEventListener('click',()=>{let n=document.getElementById('mNome').value.trim();let c=document.getElementById('mC').value.trim();let l=document.getElementById('mL').value.trim();if(!n||!c||!l){alert('Preencha tudo');return}comodos.push({id:Date.now(),nome:n,c,l,servicos:[]});salvar();fecharModal('modal');document.getElementById('mNome').value='';document.getElementById('mC').value='';document.getElementById('mL').value='';render();showStatus('Cômodo criado');});
+ document.getElementById('btnCriarServ')?.addEventListener('click',()=>{let nome=document.getElementById('nsNome').value.trim();let preco=parseFloat(document.getElementById('nsPreco').value)||0;let un=document.getElementById('nsUn').value;let cat=document.getElementById('nsCat').value.trim()||'GERAL';if(!nome){alert('Nome');return}servicos.push({id:'s'+Date.now(),nome,valor:preco,un,cat:cat.toUpperCase()});salvar();fecharModal('modalNovoServ');document.getElementById('nsNome').value='';document.getElementById('nsPreco').value='';document.getElementById('nsCat').value='';render();showStatus('Serviço criado');});
+ document.getElementById('btnSalvarTudo')?.addEventListener('click',salvarTudo);
  document.getElementById('btnAtivarPro')?.addEventListener('click',()=>{
   let lic=document.getElementById('inputLic').value.trim().toUpperCase();
   let validas=[];
