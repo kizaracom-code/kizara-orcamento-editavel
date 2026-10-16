@@ -504,7 +504,9 @@ function gerarLinkPlataforma(){
  let cli=document.getElementById('inputClienteTop')?.value||clienteNome||'';
  let tel=document.getElementById('inputTelefoneTop')?.value||telefone||'';
  let end=document.getElementById('inputEnderecoTop')?.value||endereco||'';
- let emp=document.getElementById('nomeEmpresa')?.textContent||empresaNome||'KIZARANET';
+ let empRaw=document.getElementById('nomeEmpresa')?.textContent||empresaNome||'KIZARANET';
+ let emp=empRaw.replace(/[^a-zA-Z0-9_-]/g,'').substring(0,20)||'kizara';
+ // exemplo: kizara / danilo - simples sem ç
  let sub=document.getElementById('subEmpresa')?.textContent||empresaSub||'';
  let base='https://kizaracom-code.github.io/kizara-orcamento-editavel/';
  let params=new URLSearchParams();
@@ -556,26 +558,20 @@ document.addEventListener('DOMContentLoaded',()=>{
    if(empParam){ empresaNome=empParam; localStorage.setItem('kiza_emp_final', empParam); }
    if(subParam){ empresaSub=subParam; localStorage.setItem('kiza_sub_final', subParam); }
    if(limpoParam==='1'){
-     // VERSÃO CLIENTE - começa limpo apenas se ainda não tem nada do cliente, mas permite criar depois
-     // Não apaga automaticamente a cada reload, só na primeira vez se veio do dono
-     if(!sessionStorage.getItem('kiza_cliente_iniciado')){
-       // primeira abertura como cliente - limpa dados do dono
-       // mas guarda flag pra não apagar o que cliente criar depois
-       if(localStorage.getItem('kiza_comodos_final') || localStorage.getItem('kiza_serv_final')){
-         // se tinha dados do dono, limpa uma vez
-         comodos=[]; servicos=[]; 
-         localStorage.removeItem('kiza_comodos_final'); localStorage.removeItem('kiza_serv_final');
-         sessionStorage.setItem('kiza_cliente_iniciado','1');
-       }
-     }
-     // VERSÃO CLIENTE - Remove completamente os botões de dono
+     // VERSÃO CLIENTE - SIMPLES E QUE NÃO TRAVA
      localStorage.removeItem('kiza_dono');
-     // Remove do DOM imediatamente
-     ['btnLinkPlataforma','btnAtivarPro2','btnAtivarPro','bannerPromo','btnPro'].forEach(id=>{
-       let el=document.getElementById(id);
-       if(el){ el.remove(); }
-     });
-     // Mostra aviso cliente
+     // Começa limpo só 1x por sessão - depois deixa cliente salvar
+     let jaLimpou = sessionStorage.getItem('kiza_cliente_limpo');
+     if(!jaLimpou){
+       // Se URL tem empresa diferente, limpa dados antigos do dono
+       if(empParam && empParam !== localStorage.getItem('kiza_emp_final')){
+         comodos=[]; servicos=[];
+         localStorage.removeItem('kiza_comodos_final');
+         localStorage.removeItem('kiza_serv_final');
+       }
+       sessionStorage.setItem('kiza_cliente_limpo','1');
+     }
+     // Esconde dono via CSS (não remove DOM pra não quebrar)
      setTimeout(()=>{
        let header=document.querySelector('.header');
        if(header && !document.getElementById('avisoCliente')){
@@ -585,21 +581,6 @@ document.addEventListener('DOMContentLoaded',()=>{
          aviso.textContent='✓ VERSÃO CLIENTE: '+empresaNome+' - Só cadastra serviços/comodos e gera PDF';
          header.appendChild(aviso);
        }
-       // Garante que não tem botão plataforma em lugar nenhum
-       let btnPlat=document.getElementById('btnLinkPlataforma');
-       if(btnPlat) btnPlat.remove();
-       // Remove ATIVAR PRO da prévia na versão cliente
-       let btnProPreview=document.getElementById('btnAtivarPro');
-       if(btnProPreview) btnProPreview.remove();
-       let btnProPreview2=document.querySelectorAll('.btn-pro');
-       btnProPreview2.forEach(b=>b.remove());
-       // Esconde todos os elementos que contem ATIVAR PRO
-       document.querySelectorAll('button').forEach(b=>{
-         if(b.textContent.includes('ATIVAR PRO')) b.remove();
-       });
-       // Remove qualquer box de link plataforma antigo
-       let oldBox=document.getElementById('areaLinkPlataforma');
-       if(oldBox) oldBox.remove();
      },100);
    }
    // Cliente nunca é dono
