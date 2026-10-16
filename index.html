@@ -65,8 +65,8 @@ body{background:#f4f2f8;color:#1a1033}
 <input class="input-top" id="inputClienteTop" placeholder="Cliente - Nome">
 <input class="input-top" id="inputTelefoneTop" placeholder="Telefone do cliente - variável ex: 84998791222">
 <input class="input-top" id="inputEnderecoTop" placeholder="Endereço">
-<button class="btn btn-dark" id="btnPdf">PDF</button>
-<button class="btn btn-green" id="btnZap">WhatsApp</button>
+<button class="btn btn-dark" id="btnPdf">📥 BAIXAR PDF</button>
+<button class="btn btn-green" id="btnZap">📱 WhatsApp / LINK NO NOME</button>
 <button class="btn btn-orange" id="btnComodo">+ CÔMODO</button>
 <button class="btn btn-dark" id="btnNovoServ">+ SERVIÇO</button>
 <button class="btn" onclick="limparTopo()" style="background:#eee;border:none;padding:6px 12px;border-radius:999px;font-weight:900;cursor:pointer">LIMPAR</button>
@@ -252,6 +252,7 @@ function gerarPDF(){
    urlZap='https://wa.me/?text='+textoEnc;
  }
  
+ let linkWhatsCriado = urlZap; // FIX: link visivel
  let div=document.getElementById('printArea');
  div.innerHTML=`${conteudo}
  <div style="margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;flex-direction:column;align-items:center">
@@ -265,40 +266,32 @@ function gerarPDF(){
      <span style="font-size:10px">Telefone variável do campo superior: ${telUsar||'preencha 84998791222'}</span>
    </div>
  </div>`;
- div.style.display='block';
- div.scrollIntoView({behavior:'smooth'});
-  // CRIA LINK NO NOME DAS PESSOAS - VISIVEL
- let linkComNome = `https://wa.me/${telLimpo}?text=${encodeURIComponent(textoZap)}`;
- let linkCurto = `wa.me/${telLimpo}?text=Olá ${cliUsar}`;
- window._dadosOrc={total, conteudo, clienteNome:cliUsar, telefone:telUsar, endereco:endUsar, empresaNome, empresaSub, comodos, servicos, areaFn: area, perimFn: perim, textoZap, urlZap, telLimpo, linkComNome, linkCurto};
- // MOSTRA LINK NA PREVIA
- let divLink = document.getElementById('areaLinkVisivel');
- if(!divLink){
-   let previa = document.getElementById('previaConteudo');
-   if(previa){
-     let box = document.createElement('div');
-     box.id='areaLinkVisivel';
-     box.style.cssText='background:#e8f5e9;border:2px solid #25D366;border-radius:12px;padding:12px;margin-top:12px;word-break:break-all;';
-     previa.appendChild(box);
-     divLink=box;
-   }
- }
- if(divLink){
-   divLink.innerHTML = `
-     <div style="font-size:11px;font-weight:900;color:#1b5e20;margin-bottom:6px">🔗 LINK CRIADO NO NOME: ${cliUsar} | ${telUsar}</div>
-     <div style="font-size:10px;background:#fff;padding:8px;border-radius:8px;border:1px dashed #25D366;margin-bottom:8px">${linkComNome}</div>
-     <div style="display:flex;gap:6px;flex-wrap:wrap">
-       <button onclick="navigator.clipboard.writeText('${linkComNome.replace(/'/g, "\'")}').then(()=>alert('Link copiado!'))" style="background:#25D366;color:#fff;border:none;padding:8px 14px;border-radius:999px;font-weight:900;font-size:10px;cursor:pointer">📋 COPIAR LINK DO ${cliUsar.toUpperCase()}</button>
-       <button onclick="window.open('${linkComNome.replace(/'/g, "\'")}', '_blank')" style="background:#1e1040;color:#fff;border:none;padding:8px 14px;border-radius:999px;font-weight:900;font-size:10px;cursor:pointer">📱 ABRIR WHATSAPP DO ${cliUsar.toUpperCase()}</button>
+ div.style.display='none'; // FICA NA MESMA PÁGINA, não abre outra página
+ // não faz scroll da printArea
+ window._dadosOrc={total, conteudo, clienteNome:cliUsar, telefone:telUsar, endereco:endUsar, empresaNome, empresaSub, comodos, servicos, areaFn: area, perimFn: perim, textoZap, urlZap, telLimpo};
+
+ // MOSTRA LINK VISIVEL
+ setTimeout(()=>{
+   let previa = document.getElementById('previaConteudo') || document.querySelector('.previa');
+   let existing = document.getElementById('areaLinkVisivel');
+   if(existing) existing.remove();
+   let box = document.createElement('div');
+   box.id='areaLinkVisivel';
+   box.style.cssText='background:#e8f5e9;border:3px solid #25D366;border-radius:12px;padding:14px;margin:12px;word-break:break-all;position:relative;z-index:5';
+   box.innerHTML = `
+     <div style="font-size:12px;font-weight:900;color:#1b5e20;margin-bottom:8px">🔗 LINK CRIADO NO NOME: ${cliUsar.toUpperCase()} | ${telUsar}</div>
+     <div style="font-size:10px;background:#fff;padding:10px;border-radius:8px;border:2px dashed #25D366;margin-bottom:10px;max-height:80px;overflow:auto">${linkWhatsCriado}</div>
+     <div style="display:flex;gap:8px;flex-wrap:wrap">
+       <button onclick="navigator.clipboard.writeText('${linkWhatsCriado}'.replace(/'/g, "\\'"));alert('Link do ${cliUsar} copiado!')" style="background:#25D366;color:#fff;border:none;padding:10px 16px;border-radius:999px;font-weight:900;font-size:11px;cursor:pointer">📋 COPIAR LINK DO ${cliUsar.toUpperCase()}</button>
+       <button onclick="window.open('${linkWhatsCriado}'.replace(/'/g, "\\'"),'_blank')" style="background:#1e1040;color:#fff;border:none;padding:10px 16px;border-radius:999px;font-weight:900;font-size:11px;cursor:pointer">📱 ABRIR WHATSAPP ${cliUsar.toUpperCase()}</button>
+       <button onclick="document.getElementById('btnPdf').click()" style="background:#ff8a00;color:#fff;border:none;padding:10px 16px;border-radius:999px;font-weight:900;font-size:11px;cursor:pointer">📥 BAIXAR PDF ${cliUsar.toUpperCase()}</button>
      </div>
-     <div style="font-size:9px;color:#666;margin-top:6px">Arquivo para 5000+ clientes: KIZARANET-PRO-0001 até 5000 | Link: joao maria | 84998791222</div>
+     <div style="font-size:9px;color:#666;margin-top:8px">Link no nome: joao maria | 84998791222 -> https://wa.me/55...?text=Olá joao maria... | Arquivo 5000+ clientes</div>
    `;
-   // Rola até o link visivel
-   setTimeout(()=>{ 
-     if(divLink) divLink.scrollIntoView({behavior:'smooth', block:'center'});
-   }, 300);
- }
- // GERA PDF AUTOMÁTICO NA MESMA PÁGINA via jsPDF - NÃO VAI PRA OUTRA PÁGINA
+   if(previa) previa.appendChild(box);
+   box.scrollIntoView({behavior:'smooth', block:'center'});
+ },300);
+ // AUTO DOWNLOAD PDF - já baixa na mesma hora + mostra link
  try{
    if(window.jspdf && window.jspdf.jsPDF){
      const { jsPDF } = window.jspdf;
@@ -324,101 +317,65 @@ function gerarPDF(){
          docPDF.text(`- ${s.nome}: ${base.toFixed(2)}${s.un} x R$${s.valor.toFixed(2)} = R$${v.toFixed(2)}`, 12, y); y+=5;
        }); y+=4;
      });
-     if(y>250){docPDF.addPage(); y=15;}
-     y+=5; docPDF.setFontSize(13); docPDF.setFont('helvetica','bold');
-     docPDF.text(`TOTAL: R$ ${total.toFixed(2)}`, 10, y);
+     if(y>250){docPDF.addPage(); y=15;} y+=5;
+     docPDF.setFontSize(13); docPDF.setFont('helvetica','bold');
+     docPDF.text(`TOTAL: R$ ${total.toFixed(2)} - KIZARANET`, 10, y);
      let nomeArquivo=`KIZARANET-${cliUsar.replace(/\s+/g,'_')}-R$${total.toFixed(0)}.pdf`;
      docPDF.save(nomeArquivo);
    }
- }catch(e){ console.log('pdf auto erro', e); }
- showStatus('✅ Orçamento R$'+total.toFixed(2)+' | Link: '+cliUsar+' -> '+telUsar+' | PDF baixado! Veja box verde abaixo na PRÉVIA!');
+ }catch(e){ console.log('pdf auto', e); }
+ showStatus('✅ BAIXOU! R$'+total.toFixed(2)+' | LINK: '+cliUsar+' -> '+telUsar+' | Veja box verde na PRÉVIA abaixo!');
 }
 
 function imprimirAgora(){
  try{
    let d=window._dadosOrc;
    if(!d){showStatus('Gere orçamento primeiro');return;}
-   let printArea=document.getElementById('printArea');
-   if(!printArea){showStatus('Gere orçamento primeiro');return;}
-   
-   // NOVO MÉTODO: jsPDF - gera PDF real, não depende de window.print() bloqueado no preview
+   // jsPDF - PDF real, funciona mesmo com bloqueio de window.print()
    if(window.jspdf && window.jspdf.jsPDF){
      try{
        const { jsPDF } = window.jspdf;
        let docPDF = new jsPDF();
        let y=15;
-       docPDF.setFontSize(16);
-       docPDF.setFont('helvetica','bold');
-       docPDF.text(d.empresaNome||'KIZARANET', 10, y);
-       y+=8;
-       docPDF.setFontSize(9);
-       docPDF.setFont('helvetica','normal');
-       docPDF.text(d.empresaSub||'CNPJ', 10, y);
-       y+=10;
-       docPDF.setFontSize(11);
-       docPDF.setFont('helvetica','bold');
-       docPDF.text(`Cliente: ${d.clienteNome||''} | Tel: ${d.telefone||''} | End: ${d.endereco||''}`, 10, y);
-       y+=10;
+       docPDF.setFontSize(16); docPDF.setFont('helvetica','bold');
+       docPDF.text(d.empresaNome||'KIZARANET', 10, y); y+=8;
+       docPDF.setFontSize(9); docPDF.setFont('helvetica','normal');
+       docPDF.text(d.empresaSub||'CNPJ', 10, y); y+=10;
+       docPDF.setFontSize(11); docPDF.setFont('helvetica','bold');
+       docPDF.text(`Cliente: ${d.clienteNome||''} | Tel: ${d.telefone||''} | End: ${d.endereco||''}`, 10, y); y+=10;
        docPDF.setFontSize(10);
        d.comodos.forEach(c=>{
          let a=d.areaFn?d.areaFn(c.c,c.l):0;
          let p=d.perimFn?d.perimFn(c.c,c.l):0;
          docPDF.setFont('helvetica','bold');
          if(y>270){docPDF.addPage(); y=15;}
-         docPDF.text(`${c.nome} (${c.c}x${c.l} = ${a.toFixed(2)}m² - Perimetro ${p.toFixed(2)}ml)`, 10, y);
-         y+=6;
+         docPDF.text(`${c.nome} (${c.c}x${c.l} = ${a.toFixed(2)}m² - ${p.toFixed(2)}ml)`, 10, y); y+=6;
          docPDF.setFont('helvetica','normal');
          c.servicos.forEach(sid=>{
            let s=d.servicos.find(x=>x.id==sid); if(!s) return;
            let base=s.un=='m2'?a:s.un=='ml'?p:1;
            let v=base*s.valor;
            if(y>270){docPDF.addPage(); y=15;}
-           docPDF.text(`- ${s.nome}: ${base.toFixed(2)}${s.un} x R$${s.valor.toFixed(2)} = R$${v.toFixed(2)}`, 12, y);
-           y+=5;
-         });
-         y+=4;
+           docPDF.text(`- ${s.nome}: ${base.toFixed(2)}${s.un} x R$${s.valor.toFixed(2)} = R$${v.toFixed(2)}`, 12, y); y+=5;
+         }); y+=4;
        });
-       if(y>250){docPDF.addPage(); y=15;}
-       y+=5;
-       docPDF.setFontSize(13);
-       docPDF.setFont('helvetica','bold');
+       if(y>250){docPDF.addPage(); y=15;} y+=5;
+       docPDF.setFontSize(13); docPDF.setFont('helvetica','bold');
        docPDF.text(`TOTAL GERAL: R$ ${(d.total||d.totalGeral||0).toFixed(2)} - KIZARANET`, 10, y);
-       y+=8;
-       docPDF.setFontSize(8);
-       docPDF.setFont('helvetica','normal');
-       docPDF.text(`Orçamento válido 7 dias - Gerado em ${new Date().toLocaleDateString('pt-BR')}`, 10, y);
        let nomeArquivo=`KIZARANET-${(d.clienteNome||'Cliente').replace(/\s+/g,'_')}-R$${(d.total||0).toFixed(0)}.pdf`;
        docPDF.save(nomeArquivo);
-       showStatus('✅ PDF salvo! Arquivo: '+nomeArquivo);
+       showStatus('✅ PDF salvo: '+nomeArquivo+' - Arquivo para 1000+ clientes!');
        return;
-     }catch(e){
-       console.log('jsPDF erro, tentando iframe', e);
-     }
+     }catch(e){ console.log('jsPDF erro',e); }
    }
-   
-   // Fallback 1: iframe escondido - funciona fora do preview
-   let htmlPDF=`
-     <html><head><title>KIZARANET - ${d.clienteNome||'Cliente'}</title>
-     <style>body{font-family:Arial,sans-serif;padding:20px;color:#000} h2{color:#1e1040} .total{background:#1e1040;color:#fff;padding:14px;border-radius:10px;font-weight:900;margin-top:20px;text-align:center}</style>
-     </head><body>${printArea.innerHTML.replace(/<div style="margin-top:20px;display:flex;gap:10px;flex-direction:column">[\s\S]*?<\/div>\s*<div style="margin-top:12px;text-align:center;font-size:11px;color:#666">[\s\S]*?<\/div>/,'')}<div style="margin-top:20px;text-align:center;font-size:11px;color:#666">Gerado por KIZARANET - ${new Date().toLocaleDateString('pt-BR')}</div></body></html>`;
-   let iframe=document.createElement('iframe');
-   iframe.style.position='fixed'; iframe.style.width='0'; iframe.style.height='0'; iframe.style.border='0'; iframe.style.left='-1000px';
+   // Fallback iframe
+   let printArea=document.getElementById('printArea');
+   let htmlPDF=`<html><head><title>KIZARANET</title><style>body{font-family:Arial;padding:20px}</style></head><body>${printArea.innerHTML}</body></html>`;
+   let iframe=document.createElement('iframe'); iframe.style.position='fixed'; iframe.style.left='-1000px'; iframe.style.width='0'; iframe.style.height='0'; iframe.style.border='0';
    document.body.appendChild(iframe);
-   let doc=iframe.contentWindow.document;
-   doc.open(); doc.write(htmlPDF); doc.close();
-   setTimeout(()=>{
-     try{
-       iframe.contentWindow.focus(); iframe.contentWindow.print();
-       showStatus('🖨️ Escolha Destino: Salvar como PDF');
-     }catch(e){
-       let win=window.open('','_blank'); win.document.write(htmlPDF); win.document.close(); win.focus(); setTimeout(()=>win.print(),500);
-       showStatus('🖨️ Nova janela - Salvar como PDF');
-     }
-     setTimeout(()=>{if(iframe.parentNode) iframe.parentNode.removeChild(iframe);},2000);
-   },500);
- }catch(e){
-   try{window.print();}catch(err){alert('Erro PDF: '+e.message+' - Pressione Ctrl+P');}
- }
+   let doc=iframe.contentWindow.document; doc.open(); doc.write(htmlPDF); doc.close();
+   setTimeout(()=>{ try{iframe.contentWindow.print();}catch(e){ let win=window.open('','_blank'); win.document.write(htmlPDF); win.document.close(); win.print(); } setTimeout(()=>iframe.remove(),2000); },500);
+ }catch(e){ try{window.print();}catch(err){alert('Erro PDF: '+e.message);} }
 }
 
 function copiarTextoZap(){
@@ -453,31 +410,41 @@ function copiarTextoZap(){
 }
 function compartilharWhatsAppDireto(){
  let d=window._dadosOrc;
- if(!d){showStatus('Gere orçamento em PDF primeiro');return;}
+ if(!d){showStatus('Gere orçamento em PDF primeiro - clique em BAIXAR PDF!');return;}
  let telefoneCampo=document.getElementById('inputTelefoneTop')?document.getElementById('inputTelefoneTop').value:'';
  let telefoneAtual=telefoneCampo||d.telefone||telefone||'';
  let telLimpo=(telefoneAtual||'').replace(/\D/g,'');
  if(telLimpo.length==8||telLimpo.length==9) telLimpo='84'+telLimpo;
  if(telLimpo.length==10||telLimpo.length==11) telLimpo='55'+telLimpo;
  let texto=d.textoZap||'';
- let linkNome = d.linkComNome || `https://wa.me/${telLimpo}?text=${encodeURIComponent(texto)}`;
- // Mostra link visivel
- let divLink=document.getElementById('areaLinkVisivel');
- if(divLink){ divLink.style.border='3px solid #ff8a00'; divLink.scrollIntoView({behavior:'smooth'}); }
+ // CRIA LINK NO NOME - VISIVEL NA TELA
+ let linkWhatsCriado=`https://wa.me/${telLimpo}?text=${encodeURIComponent(texto)}`;
+ let linkCurto=`wa.me/${telLimpo}?text=Olá ${cliUsar}`;
+ console.log('Link criado no nome:', cliUsar, '->', linkWhatsCriado);
+ localStorage.setItem('kiza_ultimo_link_'+(cliUsar||'cliente'), linkWhatsCriado);
+ // SALVA PARA MOSTRAR
+ window._linkCriado = linkWhatsCriado;
+ window._clienteLink = cliUsar;
+ 
  if(navigator.share){
-   navigator.share({title:`Orçamento KIZARANET - ${d.clienteNome} - R$ ${d.total?d.total.toFixed(2):''}`, text:texto}).then(()=>{
-     showStatus(`✅ Link criado no nome: ${d.clienteNome} -> ${telefoneAtual} | ${linkNome.substring(0,50)}...`);
+   navigator.share({title:`Orçamento ${d.empresaNome} - ${d.clienteNome}`, text:texto}).then(()=>{
+     showStatus(`✅ Link criado: ${d.clienteNome} -> WhatsApp ${telefoneAtual} - 1000+ clientes!`);
    }).catch(()=>{});
    return;
  }
  if(navigator.clipboard){
    navigator.clipboard.writeText(texto).then(()=>{
-     showStatus(`📋 Link do ${d.clienteNome} copiado! ${telefoneAtual} - Link: ${linkNome.substring(0,40)}...`);
-     window.open(linkNome,'_blank');
-   }).catch(()=>{ window.open(linkNome,'_blank'); });
+     showStatus(`📋 Link criado no nome ${d.clienteNome}! Texto copiado - Abrindo WhatsApp ${telefoneAtual}`);
+     let url=telLimpo.length>=12?`https://api.whatsapp.com/send?phone=${telLimpo}&text=${encodeURIComponent(texto)}`:`https://wa.me/?text=${encodeURIComponent(texto)}`;
+     window.open(url,'_blank');
+   }).catch(()=>{
+     let url=telLimpo.length>=12?`https://wa.me/${telLimpo}?text=${encodeURIComponent(texto)}`:`https://wa.me/?text=${encodeURIComponent(texto)}`;
+     window.open(url,'_blank');
+   });
    return;
  }
- window.open(linkNome,'_blank');
+ let url=telLimpo.length>=12?`https://wa.me/${telLimpo}?text=${encodeURIComponent(texto)}`:`https://wa.me/?text=${encodeURIComponent(texto)}`;
+ window.open(url,'_blank');
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -498,21 +465,28 @@ document.addEventListener('DOMContentLoaded',()=>{
  document.getElementById('btnSalvarTudo').addEventListener('click',salvarTudo);
  document.getElementById('btnAtivarPro').addEventListener('click',()=>{
   let lic=document.getElementById('inputLic').value.trim().toUpperCase();
+  // ARQUIVO PARA MIL OU MAIS - Licenças de 1 até 5000
   let validas=[];
   for(let i=1;i<=5000;i++){
     let n=String(i).padStart(4,'0');
-    validas.push('DG-PRO-CLIENTE-'+n); validas.push('DG-PRO-CLIENTE-'+i);
-    validas.push('KIZARANET-PRO-'+n); validas.push('KIZARANET-PRO-'+i);
+    validas.push('DG-PRO-CLIENTE-'+n);
+    validas.push('DG-PRO-CLIENTE-'+i);
+    validas.push('KIZARANET-PRO-'+n);
+    validas.push('KIZARANET-PRO-'+i);
     validas.push('KIZA-PRO-'+n);
   }
+  // Licenças vitalícias master
   validas.push('KIZARANET-VITALICIO','KIZARANET-MASTER','DG-MASTER-2024');
+  // Validação flexível: aceita qualquer DG-PRO-CLIENTE-xxx ou KIZARANET-PRO-xxx com número
   let regex = /^(DG-PRO-CLIENTE-|KIZARANET-PRO-|KIZA-PRO-)\d{1,5}$/;
   if(validas.includes(lic) || regex.test(lic) || lic.startsWith('KIZARANET-')){
     fecharModal('modalLic');
-    showStatus('✅ PRO ATIVADO! '+lic+' - 5000+ clientes liberados!');
-    localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_licenca',lic);
+    showStatus('✅ PRO ATIVADO! Licença: '+lic+' - Arquivo liberado para 5000+ clientes!');
+    localStorage.setItem('kiza_pro','1');
+    localStorage.setItem('kiza_licenca',lic);
+    document.getElementById('badgePlano')?document.getElementById('badgePlano').textContent='KIZARANET PRO - '+lic:'';
   }else{
-    showStatus('❌ Inválida! Use KIZARANET-PRO-0001 até 5000');
+    showStatus('❌ Licença inválida! Use KIZARANET-PRO-0001 até 5000');
   }
 });
  document.getElementById('btnAtivarPro2').addEventListener('click',()=>abrirModal('modalLic'));
