@@ -140,11 +140,7 @@ try{
 if(servicos.length>0){
   // Guarda mas mostra botão LIMPAR - usuário pode limpar
 }
-// Para começar realmente zerado, vamos limpar automaticamente agora:
-servicos=[];
-comodos=[];
-localStorage.removeItem('kiza_serv_final');
-localStorage.removeItem('kiza_comodos_final');
+// Mantém o que o usuário criar - não apaga automático
 
 
 function salvar(){localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));}
