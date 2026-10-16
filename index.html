@@ -556,9 +556,18 @@ document.addEventListener('DOMContentLoaded',()=>{
    if(empParam){ empresaNome=empParam; localStorage.setItem('kiza_emp_final', empParam); }
    if(subParam){ empresaSub=subParam; localStorage.setItem('kiza_sub_final', subParam); }
    if(limpoParam==='1'){
-     // limpa comodos e servicos para mandar limpo - VERSÃO CLIENTE
-     comodos=[]; servicos=[]; 
-     localStorage.removeItem('kiza_comodos_final'); localStorage.removeItem('kiza_serv_final');
+     // VERSÃO CLIENTE - começa limpo apenas se ainda não tem nada do cliente, mas permite criar depois
+     // Não apaga automaticamente a cada reload, só na primeira vez se veio do dono
+     if(!sessionStorage.getItem('kiza_cliente_iniciado')){
+       // primeira abertura como cliente - limpa dados do dono
+       // mas guarda flag pra não apagar o que cliente criar depois
+       if(localStorage.getItem('kiza_comodos_final') || localStorage.getItem('kiza_serv_final')){
+         // se tinha dados do dono, limpa uma vez
+         comodos=[]; servicos=[]; 
+         localStorage.removeItem('kiza_comodos_final'); localStorage.removeItem('kiza_serv_final');
+         sessionStorage.setItem('kiza_cliente_iniciado','1');
+       }
+     }
      // VERSÃO CLIENTE - Remove completamente os botões de dono
      localStorage.removeItem('kiza_dono');
      // Remove do DOM imediatamente
