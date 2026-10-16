@@ -483,6 +483,12 @@ function compartilharWhatsAppDireto(){
 }
 
 function gerarLinkPlataforma(){
+ // Só dono pode gerar link plataforma
+ if(window.location.search.includes('limpo=1')){
+   alert('Você está na versão CLIENTE - só o dono (João) pode gerar link da plataforma!');
+   return;
+ }
+
  let cli=document.getElementById('inputClienteTop')?.value||clienteNome||'';
  let tel=document.getElementById('inputTelefoneTop')?.value||telefone||'';
  let end=document.getElementById('inputEnderecoTop')?.value||endereco||'';
@@ -537,12 +543,44 @@ document.addEventListener('DOMContentLoaded',()=>{
    if(empParam){ empresaNome=empParam; localStorage.setItem('kiza_emp_final', empParam); }
    if(subParam){ empresaSub=subParam; localStorage.setItem('kiza_sub_final', subParam); }
    if(limpoParam==='1'){
-     // limpa comodos e servicos para mandar limpo
+     // limpa comodos e servicos para mandar limpo - VERSÃO CLIENTE
      comodos=[]; servicos=[]; 
      localStorage.removeItem('kiza_comodos_final'); localStorage.removeItem('kiza_serv_final');
-     // mantem nome/telefone/empresa
+     // ESCONDE botao LINK PLATAFORMA na versao cliente - ele nao pode revender
+     setTimeout(()=>{
+       let btnPlat=document.getElementById('btnLinkPlataforma');
+       if(btnPlat) btnPlat.style.display='none';
+       let banner=document.getElementById('bannerPromo');
+       if(banner) banner.style.display='none';
+       let btnPro2=document.getElementById('btnAtivarPro2');
+       if(btnPro2) btnPro2.style.display='none';
+       // Mostra aviso que é versão cliente
+       let header=document.querySelector('.header');
+       if(header && !document.getElementById('avisoCliente')){
+         let aviso=document.createElement('div');
+         aviso.id='avisoCliente';
+         aviso.style.cssText='background:#e8f5e9;border:2px solid #25D366;border-radius:10px;padding:8px 12px;margin-left:12px;font-size:10px;font-weight:900;color:#1b5e20';
+         aviso.textContent='✓ VERSÃO CLIENTE - Só cadastra serviços/comodos e gera PDF';
+         header.appendChild(aviso);
+       }
+     },500);
+   }
+   // Se for versao CLIENTE (tem cliente param mas nao tem dono), esconde tambem
+   if(cliParam && !localStorage.getItem('kiza_dono')){
+     // Se não for o dono (João), esconde botão plataforma
+     let urlSemDono=window.location.href.includes('limpo=1');
+     if(urlSemDono){
+       setTimeout(()=>{
+         let btnPlat=document.getElementById('btnLinkPlataforma');
+         if(btnPlat) btnPlat.style.display='none';
+       },600);
+     }
    }
  }catch(e){ console.log('url params', e); }
+ // Marca como dono se abrir sem parametro limpo
+ if(!window.location.search.includes('limpo=1')){
+   localStorage.setItem('kiza_dono','1');
+ }
  render();
  document.getElementById('logoEdit').addEventListener('click',()=>document.getElementById('inputLogo').click());
  document.getElementById('nomeEmpresa').addEventListener('click',abrirModalEditarEmpresa);
