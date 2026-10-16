@@ -293,8 +293,45 @@ function gerarPDF(){
      </div>
      <div style="font-size:9px;color:#666;margin-top:6px">Arquivo para 5000+ clientes: KIZARANET-PRO-0001 até 5000 | Link: joao maria | 84998791222</div>
    `;
+   // Rola até o link visivel
+   setTimeout(()=>{ 
+     if(divLink) divLink.scrollIntoView({behavior:'smooth', block:'center'});
+   }, 300);
  }
- showStatus('✅ Orçamento R$'+total.toFixed(2)+' pronto! Link: '+cliUsar+' -> '+(telUsar||'contato')+' - 100%! - Veja link abaixo!');
+ // GERA PDF AUTOMÁTICO NA MESMA PÁGINA via jsPDF - NÃO VAI PRA OUTRA PÁGINA
+ try{
+   if(window.jspdf && window.jspdf.jsPDF){
+     const { jsPDF } = window.jspdf;
+     let docPDF = new jsPDF();
+     let y=15;
+     docPDF.setFontSize(16); docPDF.setFont('helvetica','bold');
+     docPDF.text(empresaNome||'KIZARANET', 10, y); y+=8;
+     docPDF.setFontSize(9); docPDF.setFont('helvetica','normal');
+     docPDF.text(empresaSub||'', 10, y); y+=10;
+     docPDF.setFontSize(11); docPDF.setFont('helvetica','bold');
+     docPDF.text(`Cliente: ${cliUsar} | Tel: ${telUsar} | End: ${endUsar}`, 10, y); y+=10;
+     docPDF.setFontSize(10);
+     comodos.forEach(c=>{
+       let a=area(c.c,c.l); let p=perim(c.c,c.l);
+       docPDF.setFont('helvetica','bold');
+       if(y>270){docPDF.addPage(); y=15;}
+       docPDF.text(`${c.nome} (${c.c}x${c.l} = ${a.toFixed(2)}m²)`, 10, y); y+=6;
+       docPDF.setFont('helvetica','normal');
+       c.servicos.forEach(sid=>{
+         let s=servicos.find(x=>x.id==sid); if(!s) return;
+         let base=s.un=='m2'?a:s.un=='ml'?p:1; let v=base*s.valor;
+         if(y>270){docPDF.addPage(); y=15;}
+         docPDF.text(`- ${s.nome}: ${base.toFixed(2)}${s.un} x R$${s.valor.toFixed(2)} = R$${v.toFixed(2)}`, 12, y); y+=5;
+       }); y+=4;
+     });
+     if(y>250){docPDF.addPage(); y=15;}
+     y+=5; docPDF.setFontSize(13); docPDF.setFont('helvetica','bold');
+     docPDF.text(`TOTAL: R$ ${total.toFixed(2)}`, 10, y);
+     let nomeArquivo=`KIZARANET-${cliUsar.replace(/\s+/g,'_')}-R$${total.toFixed(0)}.pdf`;
+     docPDF.save(nomeArquivo);
+   }
+ }catch(e){ console.log('pdf auto erro', e); }
+ showStatus('✅ Orçamento R$'+total.toFixed(2)+' | Link: '+cliUsar+' -> '+telUsar+' | PDF baixado! Veja box verde abaixo na PRÉVIA!');
 }
 
 function imprimirAgora(){
