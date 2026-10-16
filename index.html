@@ -44,6 +44,21 @@ body{background:#f4f2f8;color:#1a1033}
  @page { margin: 10mm; }
 }
 </style>
+<script>
+// VERSÃO CLIENTE - Bloqueio imediato antes de carregar
+(function(){
+  try{
+    var isCliente = window.location.search.includes('limpo=1');
+    if(isCliente){
+      localStorage.removeItem('kiza_dono');
+      // CSS imediato para esconder
+      var style = document.createElement('style');
+      style.textContent = '#btnLinkPlataforma{display:none !important;} #btnAtivarPro2{display:none !important;} #btnAtivarPro{display:none !important;} #bannerPromo{display:none !important;} .btn-pro{display:none !important;}';
+      document.head.appendChild(style);
+    }
+  }catch(e){}
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -141,6 +156,7 @@ function perim(c,l){return 2*((parseFloat(c)||0)+(parseFloat(l)||0))}
 
 function render(){
  document.getElementById('nomeEmpresa').textContent=empresaNome;
+ document.title=empresaNome+' - ORCAMENTO';
  document.getElementById('subEmpresa').textContent=empresaSub;
  if(logoData){document.getElementById('logoImg').src=logoData;document.getElementById('logoImg').style.display='block';document.getElementById('logoTxt').style.display='none';}
  if(document.activeElement.id!=='inputClienteTop') document.getElementById('inputClienteTop').value=clienteNome;
@@ -513,7 +529,8 @@ function gerarLinkPlataforma(){
  box.style.cssText='background:#f3e8ff;border:3px solid #6b21a8;border-radius:12px;padding:14px;margin:12px;word-break:break-all;position:relative;z-index:6';
  box.innerHTML=`
    <div style="font-size:12px;font-weight:900;color:#4c1d95;margin-bottom:8px">🔗 LINK DA PLATAFORMA LIMPA PARA: ${cli.toUpperCase()||'CLIENTE'} | ${tel}</div>
-   <div style="font-size:9px;color:#666;margin-bottom:6px">Esse link abre a plataforma vazia, com cômodos limpos, com o nome e logo dele pra ele começar a usar</div>
+   <div style="font-size:11px;font-weight:900;background:#fff;padding:8px;border-radius:6px;border:2px solid #6b21a8;margin-bottom:6px;color:#1e1040">🏢 Cabeçalho vai aparecer como: <span style="color:#6b21a8">${emp}</span> | ${sub}</div>
+   <div style="font-size:9px;color:#666;margin-bottom:6px">Esse link abre a plataforma vazia, com cômodos limpos, com o nome <b>${emp}</b> no cabeçalho pra ele começar a usar</div>
    <div style="font-size:10px;background:#fff;padding:10px;border-radius:8px;border:2px dashed #6b21a8;margin-bottom:10px;max-height:80px;overflow:auto">${linkPlat}</div>
    <div style="display:flex;gap:8px;flex-wrap:wrap">
      <button onclick="navigator.clipboard.writeText('${linkPlat}'.replace(/'/g, &quot;\'&quot;));alert('Link da plataforma copiado! Manda pra ${cli}!')" style="background:#6b21a8;color:#fff;border:none;padding:10px 16px;border-radius:999px;font-weight:900;font-size:11px;cursor:pointer">📋 COPIAR LINK PLATAFORMA ${cli.toUpperCase()}</button>
@@ -546,35 +563,43 @@ document.addEventListener('DOMContentLoaded',()=>{
      // limpa comodos e servicos para mandar limpo - VERSÃO CLIENTE
      comodos=[]; servicos=[]; 
      localStorage.removeItem('kiza_comodos_final'); localStorage.removeItem('kiza_serv_final');
-     // ESCONDE botao LINK PLATAFORMA na versao cliente - ele nao pode revender
+     // VERSÃO CLIENTE - Remove completamente os botões de dono
+     localStorage.removeItem('kiza_dono');
+     // Remove do DOM imediatamente
+     ['btnLinkPlataforma','btnAtivarPro2','btnAtivarPro','bannerPromo','btnPro'].forEach(id=>{
+       let el=document.getElementById(id);
+       if(el){ el.remove(); }
+     });
+     // Mostra aviso cliente
      setTimeout(()=>{
-       let btnPlat=document.getElementById('btnLinkPlataforma');
-       if(btnPlat) btnPlat.style.display='none';
-       let banner=document.getElementById('bannerPromo');
-       if(banner) banner.style.display='none';
-       let btnPro2=document.getElementById('btnAtivarPro2');
-       if(btnPro2) btnPro2.style.display='none';
-       // Mostra aviso que é versão cliente
        let header=document.querySelector('.header');
        if(header && !document.getElementById('avisoCliente')){
          let aviso=document.createElement('div');
          aviso.id='avisoCliente';
          aviso.style.cssText='background:#e8f5e9;border:2px solid #25D366;border-radius:10px;padding:8px 12px;margin-left:12px;font-size:10px;font-weight:900;color:#1b5e20';
-         aviso.textContent='✓ VERSÃO CLIENTE - Só cadastra serviços/comodos e gera PDF';
+         aviso.textContent='✓ VERSÃO CLIENTE: '+empresaNome+' - Só cadastra serviços/comodos e gera PDF';
          header.appendChild(aviso);
        }
-     },500);
+       // Garante que não tem botão plataforma em lugar nenhum
+       let btnPlat=document.getElementById('btnLinkPlataforma');
+       if(btnPlat) btnPlat.remove();
+       // Remove ATIVAR PRO da prévia na versão cliente
+       let btnProPreview=document.getElementById('btnAtivarPro');
+       if(btnProPreview) btnProPreview.remove();
+       let btnProPreview2=document.querySelectorAll('.btn-pro');
+       btnProPreview2.forEach(b=>b.remove());
+       // Esconde todos os elementos que contem ATIVAR PRO
+       document.querySelectorAll('button').forEach(b=>{
+         if(b.textContent.includes('ATIVAR PRO')) b.remove();
+       });
+       // Remove qualquer box de link plataforma antigo
+       let oldBox=document.getElementById('areaLinkPlataforma');
+       if(oldBox) oldBox.remove();
+     },100);
    }
-   // Se for versao CLIENTE (tem cliente param mas nao tem dono), esconde tambem
-   if(cliParam && !localStorage.getItem('kiza_dono')){
-     // Se não for o dono (João), esconde botão plataforma
-     let urlSemDono=window.location.href.includes('limpo=1');
-     if(urlSemDono){
-       setTimeout(()=>{
-         let btnPlat=document.getElementById('btnLinkPlataforma');
-         if(btnPlat) btnPlat.style.display='none';
-       },600);
-     }
+   // Cliente nunca é dono
+   if(limpoParam==='1'){
+     localStorage.removeItem('kiza_dono');
    }
  }catch(e){ console.log('url params', e); }
  // Marca como dono se abrir sem parametro limpo
