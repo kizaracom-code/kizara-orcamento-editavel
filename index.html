@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DANILO GESSO - ORCAMENTO LIMPO</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#f4f2f8}
+.header{background:#fff;padding:12px;display:flex;justify-content:space-between;border-bottom:2px solid #e9e7f0}
+.btn{padding:10px 16px;border-radius:999px;border:none;font-weight:900;cursor:pointer;font-size:11px}
+.btn-orange{background:#ff8a00;color:#fff}.btn-dark{background:#1e1040;color:#fff}.btn-green{background:#25D366;color:#fff}
+.topbar{background:#fff;padding:10px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid #eee;position:sticky;top:0;z-index:10}
+.container{max-width:1200px;margin:0 auto;padding:12px;display:grid;grid-template-columns:1.2fr 0.8fr;gap:12px}
+.card{background:#fff;border-radius:14px;border:1px solid #e9e7f0;overflow:hidden;margin-bottom:12px}
+.card-head{padding:12px 16px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;background:#faf8ff}
+.grid{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.serv{border:1px solid #e9e7f0;border-radius:12px;padding:12px;background:#fff}
+.previa{position:sticky;top:70px;background:#fff;border-radius:14px;border:2px solid #e9e7f0;padding:16px}
+.total{background:#1e1040;color:#fff;padding:14px;border-radius:10px;display:flex;justify-content:space-between;margin-top:12px;font-weight:900}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:9999;padding:16px}
+.modal-overlay.ativo{display:flex}
+.modal{background:#fff;border-radius:18px;padding:22px;max-width:480px;width:100%;border:3px solid #d4af37}
+.input-modal{width:100%;padding:12px;border-radius:10px;border:2px solid #e9e7f0;margin-bottom:10px;font-weight:700}
+.status{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1e1040;color:#fff;padding:12px 20px;border-radius:999px;font-size:11px;display:none;z-index:10000}
+.status.show{display:block}
+</style>
+</head>
+<body>
+<div class="header"><div><b id="nomeEmpresa" style="border:2px dashed #d4af37;padding:6px 12px;border-radius:10px;background:#fffbe6">DANILO GESSO</b><br><small id="subEmpresa" style="border:1px dashed #ccc;padding:4px 8px;border-radius:6px;background:#fff;font-size:9px">CNPJ</small></div><button class="btn" onclick="limparTudo()" style="background:#ff4444;color:#fff">COMEÇAR DO ZERO</button></div>
+<div class="topbar"><button class="btn" onclick="limparTudo()" style="background:#ff4444;color:#fff">🗑️ COMEÇAR DO ZERO</button><button class="btn btn-orange" onclick="abrirModal('modal')">+ CÔMODO</button><button class="btn btn-dark" onclick="abrirModal('modalNovoServ')">+ SERVIÇO</button><button class="btn" onclick="gerarLinkPlataforma()" style="background:#6b21a8;color:#fff">🔗 LINK PLATAFORMA COM DADOS</button></div>
+<div class="container"><div><div class="card"><div class="card-head"><b>CÔMODOS - COMEÇA EM BRANCO</b><button onclick="limparComodos()" style="background:#ff4444;color:#fff;border:none;padding:6px 12px;border-radius:999px;font-size:10px">LIMPAR</button></div><div id="listaComodos" style="padding:12px"></div></div><div class="card"><div class="card-head"><b>SERVIÇOS</b><button onclick="limparServicos()" style="background:#ff4444;color:#fff;border:none;padding:6px 12px;border-radius:999px;font-size:10px">LIMPAR</button></div><div class="grid" id="gridServicos"></div></div></div><div><div class="previa"><div id="previaConteudo"><h3>PRÉVIA</h3><div class="total"><span>TOTAL GERAL</span><span id="totalGeral">R$ 0,00</span></div></div></div></div></div>
+<div class="modal-overlay" id="modal"><div class="modal"><h3>Novo Cômodo</h3><br><input id="mNome" class="input-modal" placeholder="Nome"><input id="mC" class="input-modal" placeholder="Comprimento"><input id="mL" class="input-modal" placeholder="Largura"><div style="display:flex;gap:8px"><button class="btn btn-green" style="flex:1;padding:14px" onclick="criarComodo()">CRIAR</button><button class="btn" style="flex:1;background:#eee;padding:14px" onclick="fecharModal('modal')">FECHAR</button></div></div></div>
+<div class="modal-overlay" id="modalNovoServ"><div class="modal"><h3>Novo Serviço</h3><br><input id="nsNome" class="input-modal" placeholder="Nome"><input id="nsPreco" type="number" class="input-modal" placeholder="Preço"><select id="nsUn" class="input-modal"><option value="m2">M²</option><option value="ml">ML</option><option value="un">UN</option></select><div style="display:flex;gap:8px"><button class="btn btn-green" style="flex:1;padding:14px" onclick="criarServ()">CRIAR</button><button class="btn" style="flex:1;background:#eee" onclick="fecharModal('modalNovoServ')">FECHAR</button></div></div></div>
+<div class="status" id="status"></div>
+<script>
+let empresaNome='DANILO GESSO';let empresaSub='CNPJ';let servicos=[];let comodos=[];
+function salvar(){localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));}
+function showStatus(t){let s=document.getElementById('status');s.textContent=t;s.classList.add('show');setTimeout(()=>s.classList.remove('show'),3000);}
+function abrirModal(id){document.getElementById(id).classList.add('ativo')}
+function fecharModal(id){document.getElementById(id).classList.remove('ativo')}
+function area(c,l){let _c=String(c||'0').replace(',','.').trim();let _l=String(l||'0').replace(',','.').trim();return (parseFloat(_c)||0)*(parseFloat(_l)||0);}
+function perim(c,l){let _c=String(c||'0').replace(',','.').trim();let _l=String(l||'0').replace(',','.').trim();return 2*((parseFloat(_c)||0)+(parseFloat(_l)||0));}
+function render(){
+ let grid=document.getElementById('gridServicos');grid.innerHTML='';
+ servicos.forEach((s,i)=>{
+   let div=document.createElement('div');div.className='serv';
+   div.innerHTML=`<div style="display:flex;justify-content:space-between"><b>GERAL</b><button onclick="removerServico(${i})" style="background:#ff0000;color:#fff;border:none;border-radius:50%;width:22px;height:22px">X</button></div><input style="width:100%;border:2px dashed #d4af37;border-radius:8px;padding:8px;margin:6px 0;font-weight:900" value="${s.nome}" onchange="editarNome(${i},this.value)"><div style="display:flex;gap:6px"><span>R$</span><input style="width:80px;padding:6px;border-radius:999px;border:2px solid #d4af37;font-weight:900;text-align:center" type="number" value="${s.valor}" onchange="editarPreco(${i},this.value)"><span>${s.un.toUpperCase()}</span></div>`;
+   grid.appendChild(div);
+ });
+ let lista=document.getElementById('listaComodos');lista.innerHTML='';
+ if(comodos.length===0) lista.innerHTML='<div style="text-align:center;padding:20px;color:#999">Nenhum cômodo - clique em + CÔMODO</div>';
+ comodos.forEach((c,ci)=>{
+   let a=area(c.c,c.l);let p=perim(c.c,c.l);
+   let div=document.createElement('div');div.style.cssText='border:1px solid #e9e7f0;border-radius:10px;padding:10px;margin-bottom:8px;background:#faf8ff';
+   let servsHtml=c.servicos.map(sid=>{let s=servicos.find(x=>x.id==sid);if(!s)return '';let base=s.un=='m2'?a:s.un=='ml'?p:1;let v=base*s.valor;return `<div style="font-size:10px;display:flex;justify-content:space-between"><span>${s.nome}</span><span>R$${v.toFixed(2)}</span></div>`;}).join('');
+   let todosServs=servicos.map(s=>{let sel=c.servicos.includes(s.id);return `<label style="font-size:9px;display:flex;gap:4px;margin:2px 0"><input type="checkbox" ${sel?'checked':''} onchange="toggleServico(${ci},'${s.id}')"> ${s.nome}</label>`;}).join('');
+   div.innerHTML=`<div style="display:flex;justify-content:space-between"><b>${c.nome} - ${c.c}x${c.l} = ${a.toFixed(2)}m²</b><button onclick="removerComodo(${ci})" style="background:#ff0000;color:#fff;border:none;border-radius:50%;width:22px;height:22px">X</button></div><div style="margin-top:6px">${servsHtml}</div><div style="margin-top:8px;border-top:1px dashed #ddd;padding-top:6px"><div style="font-size:8px;font-weight:900">SERVIÇOS:</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">${todosServs}</div></div>`;
+   lista.appendChild(div);
+ });
+ let total=0;comodos.forEach(c=>{let a=area(c.c,c.l);let p=perim(c.c,c.l);c.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid);if(!s)return;let base=s.un=='m2'?a:s.un=='ml'?p:1;total+=base*s.valor;});});
+ document.getElementById('totalGeral').textContent='R$ '+total.toFixed(2);
+}
+function editarNome(i,v){servicos[i].nome=v;salvar();render();}
+function editarPreco(i,v){servicos[i].valor=parseFloat(v)||0;salvar();render();}
+function removerServico(i){servicos.splice(i,1);salvar();render();}
+function toggleServico(ci,si){let c=comodos[ci];let p=c.servicos.indexOf(si);if(p>=0)c.servicos.splice(p,1);else c.servicos.push(si);salvar();render();}
+function removerComodo(i){comodos.splice(i,1);salvar();render();}
+function limparComodos(){comodos=[];salvar();render();}
+function limparServicos(){servicos=[];salvar();render();}
+function limparTudo(){if(confirm('Começar do zero?')){comodos=[];servicos=[];localStorage.removeItem('kiza_comodos_final');localStorage.removeItem('kiza_serv_final');render();showStatus('Tudo limpo');}}
+function criarComodo(){let n=document.getElementById('mNome').value.trim();let c=document.getElementById('mC').value.trim();let l=document.getElementById('mL').value.trim();if(!n||!c||!l){alert('Preencha tudo');return;}comodos.push({nome:n,c:c,l:l,servicos:[]});salvar();render();fecharModal('modal');document.getElementById('mNome').value='';document.getElementById('mC').value='';document.getElementById('mL').value='';}
+function criarServ(){let n=document.getElementById('nsNome').value.trim();let p=parseFloat(document.getElementById('nsPreco').value)||0;let u=document.getElementById('nsUn').value;if(!n){alert('Nome');return;}let id='s'+Date.now();servicos.push({id:id,nome:n,valor:p,un:u,cat:'GERAL'});salvar();render();fecharModal('modalNovoServ');document.getElementById('nsNome').value='';document.getElementById('nsPreco').value='';}
+function gerarLinkPlataforma(){
+ let emp=document.getElementById('nomeEmpresa')?.textContent?.trim()||'DANILO GESSO';
+ let sub=document.getElementById('subEmpresa')?.textContent?.trim()||'CNPJ';
+ if(comodos.length===0){alert('Crie 1 cômodo antes!');return;}
+ let dadosObj={comodos:comodos,servicos:servicos,t:Date.now()};
+ let dadosB64='';try{dadosB64=btoa(unescape(encodeURIComponent(JSON.stringify(dadosObj))));}catch(e){alert('Erro: '+e.message);return;}
+ let baseUrl='https://kizaracom-code.github.io/kizara-orcamento-editavel/';
+ let params=new URLSearchParams();
+ if(emp) params.set('empresa', emp);
+ if(sub) params.set('sub', sub);
+ if(dadosB64) params.set('dados', dadosB64);
+ params.set('limpo','1');
+ let linkPlat=baseUrl+'?'+params.toString();
+ let previa=document.getElementById('previaConteudo');let existing=document.getElementById('areaLinkPlataforma');if(existing) existing.remove();
+ let box=document.createElement('div');box.id='areaLinkPlataforma';
+ box.style.cssText='background:#e8f5e9;border:3px solid #25D366;border-radius:12px;padding:14px;margin:12px;word-break:break-all;';
+ box.innerHTML=`<div style="font-weight:900;color:#1b5e20;margin-bottom:8px">✅ LINK COM DADOS - ${comodos.length} COMODOS - ${servicos.length} SERVICOS</div><div style="background:#fff;padding:10px;border-radius:8px;border:2px dashed #25D366;margin-bottom:10px;font-size:10px;max-height:150px;overflow:auto;word-break:break-all">${linkPlat}</div><div style="display:flex;gap:8px"><button id="btnCopiarPlat" style="background:#25D366;color:#fff;padding:12px 18px;border-radius:999px;border:none;font-weight:900">📋 COPIAR LINK</button><button id="btnAbrirPlat" style="background:#1e1040;color:#fff;padding:12px 18px;border-radius:999px;border:none;font-weight:900">🚀 ABRIR</button></div>`;
+ previa.appendChild(box);
+ document.getElementById('btnCopiarPlat')?.addEventListener('click',()=>{ navigator.clipboard.writeText(linkPlat).then(()=>{ showStatus('Link copiado!'); }); });
+ document.getElementById('btnAbrirPlat')?.addEventListener('click',()=>{ window.open(linkPlat,'_blank'); });
+ box.scrollIntoView({behavior:'smooth'});
+}
+document.addEventListener('DOMContentLoaded',()=>{
+ try{
+   let urlParams=new URLSearchParams(window.location.search);
+   let empParam=urlParams.get('empresa');
+   let subParam=urlParams.get('sub');
+   let dadosParam=urlParams.get('dados');
+   let limpoParam=urlParams.get('limpo');
+   if(!empParam && !dadosParam && !limpoParam){
+     comodos=[];servicos=[];localStorage.removeItem('kiza_comodos_final');localStorage.removeItem('kiza_serv_final');
+   }
+   if(empParam){ document.getElementById('nomeEmpresa').textContent=empParam; }
+   if(subParam){ document.getElementById('subEmpresa').textContent=subParam; }
+   if(dadosParam){
+     try{
+       let jsonStr=decodeURIComponent(escape(atob(dadosParam)));
+       let dadosObj=JSON.parse(jsonStr);
+       if(dadosObj.comodos&&dadosObj.comodos.length){comodos=dadosObj.comodos;localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));}
+       if(dadosObj.servicos&&dadosObj.servicos.length){servicos=dadosObj.servicos;localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));}
+     }catch(e){}
+   }
+ }catch(e){}
+ render();
+});
+</script>
+</body>
+</html>
