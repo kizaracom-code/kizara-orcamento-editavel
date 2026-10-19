@@ -170,8 +170,31 @@ function gerarCodigoDono(id,tipo){
 }
 function getNextId(){let n=parseInt(localStorage.getItem('kiza_next_id')||'1',10);return n;}
 function setNextId(n){localStorage.setItem('kiza_next_id',n.toString()); document.getElementById('nextIdInfo').textContent='Próximo ID: '+n;}
-function addHistorico(cod, nome, telObs, id, tipo){let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); hist.unshift({cod:cod, nome:nome||'', tel:telObs||'', id:id, tipo:tipo, data:new Date().toLocaleString()}); if(hist.length>5000) hist=hist.slice(0,5000); localStorage.setItem('kiza_hist_cod',JSON.stringify(hist)); renderHist();}
-function renderHist(filtro){try{let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); if(filtro){ let f=filtro.toLowerCase(); hist=hist.filter(h=> (h.cod+' '+(h.nome||'')+' '+(h.tel||'')+' '+(h.id||'')).toLowerCase().includes(f)); } let ta=document.getElementById('historicoGerados'); if(ta) ta.value=hist.map(h=>{ let id=h.id||'?'; let tipo=(h.tipo|| (h.cod.includes('MENSAL')?'mensal':'vitalicio')); let nome=h.nome||''; let tel=h.tel||''; return `ID ${id} | ${tipo.toUpperCase()} | ${h.cod} ${nome? '| '+nome:''} ${tel? '| '+tel:''} | ${h.data||''}`;}).join('\n'); }catch(e){ console.log('renderHist erro',e); } }
+function addHistorico(cod, nome, telObs, id, tipo){
+  try{
+    let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); 
+    hist.unshift({cod:cod, nome:nome||'', tel:telObs||'', id:id, tipo:tipo, data:new Date().toLocaleString()}); 
+    if(hist.length>5000) hist=hist.slice(0,5000); 
+    localStorage.setItem('kiza_hist_cod',JSON.stringify(hist)); 
+    renderHist();
+  }catch(e){ console.log('addHist erro',e); }
+}
+function renderHist(filtro){
+  try{
+    let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); 
+    if(filtro){ let f=filtro.toLowerCase(); hist=hist.filter(h=> (h.cod+' '+(h.nome||'')+' '+(h.tel||'')+' '+(h.id||'')).toLowerCase().includes(f)); } 
+    let ta=document.getElementById('historicoGerados'); 
+    if(ta) {
+      ta.value=hist.map(h=>{
+        let id = (h.id!==undefined && h.id!==null) ? h.id : '?';
+        let tipo=(h.tipo|| (h.cod.includes('MENSAL')?'MENSAL':'VITALICIO'));
+        let nome=h.nome||'';
+        let tel=h.tel||'';
+        return `ID ${id} | ${tipo} | ${h.cod} | ${nome} | ${tel} | ${h.data||''}`;
+      }).join('\n');
+    }
+  }catch(e){ console.log('renderHist erro',e); }
+}
 function gerarUm(tipo){
   let id=getNextId();
   let nomeCli=document.getElementById('inputNomeClienteGerador')?.value.trim()||'';
