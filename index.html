@@ -130,7 +130,7 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
   <div id="painelDono" style="display:none;background:#111;border:2px solid #d4af37;border-radius:14px;padding:14px;margin-bottom:12px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <b style="color:#d4af37;font-size:13px">🔐 PAINEL DONO - Gerador de Licenças</b>
-      <span id="nextIdInfo" style="font-size:10px;color:#aaa"></span>
+      <span id="nextIdInfo" style="font-size:10px;color:#aaa"></span><button id="btnRestaurarID3" style="margin-left:6px;background:#300;color:#f88;border:1px solid #533;padding:3px 8px;border-radius:20px;font-size:9px;cursor:pointer;display:none">RESTAURAR ID 3</button>
     </div>
     <div style="background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:10px;margin-bottom:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <div><label style="color:#d4af37;font-size:10px;font-weight:700">NOME CLIENTE (pra guardar)</label><input id="inputNomeClienteGerador" placeholder="Ex: Danilo Gesso" style="width:100%;padding:8px;border-radius:8px;border:1px solid #444;background:#000;color:#fff;font-size:12px;margin-top:3px"></div>
@@ -299,7 +299,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   // Mostrar painel dono se for dono
   let isDonoCheck=localStorage.getItem('kiza_dono')==='1';
   let painelD=document.getElementById('painelDono');
-  if(painelD){ if(isDonoCheck){ painelD.style.display='block'; setNextId(getNextId()); renderHist(); } }
+  if(painelD){ if(isDonoCheck){ painelD.style.display='block'; setNextId(getNextId()); renderHist(); 
+  let btnRes=document.getElementById('btnRestaurarID3'); if(btnRes){ let nid=getNextId(); if(nid<=1){ btnRes.style.display='inline-block'; } btnRes.addEventListener('click',()=>{ if(confirm('Restaurar para ID 3? Você tinha 2 clientes (Danilo etc). Vou voltar para ID 3 para não repetir códigos.')){ setNextId(3); renderHist(); btnRes.style.display='none'; showStatus('✅ ID restaurado para 3!'); } }); } } }
   let btnV=document.getElementById('btnGerar1Vital'); if(btnV) btnV.addEventListener('click',()=>gerarUm('vitalicio'));
   let btnM=document.getElementById('btnGerar1Mensal'); if(btnM) btnM.addEventListener('click',()=>gerarUm('mensal'));
   let btnCH=document.getElementById('btnCopiarHist'); if(btnCH) btnCH.addEventListener('click',()=>{ let ta=document.getElementById('historicoGerados'); if(ta){ navigator.clipboard.writeText(ta.value).then(()=>showStatus('Histórico com nomes copiado!')); } });
