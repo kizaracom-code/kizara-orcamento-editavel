@@ -60,6 +60,20 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
   <div class="topbar"><button id="btnZerar">COMEÇAR DO ZERO</button><button id="btnComodo">+ COMODO</button><button id="btnNovoServ">+ SERVICO</button><button id="btnLinkPlataforma">LINK PLATAFORMA COM DADOS</button><button id="btnPdf">BAIXAR PDF</button></div>
   <div id="avisoCliente">📱 MODO CLIENTE - Link com dados carregado (limpo=1)</div>
   <div class="clienteBar"><div><label>Nome cliente obra</label><input id="inputClienteTop" placeholder="Nome do cliente"></div><div><label>Telefone cliente</label><input id="inputTelefoneTop" placeholder="(00) 00000-0000"></div><div><label>Endereço obra</label><input id="inputEnderecoTop" placeholder="Rua, número, bairro"></div></div>
+  
+  <div id="painelDono" style="display:none;background:#111;border:2px solid #d4af37;border-radius:14px;padding:14px;margin-bottom:12px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <b style="color:#d4af37;font-size:13px">🔐 PAINEL DONO - Gerador de Licenças</b>
+      <span id="nextIdInfo" style="font-size:10px;color:#aaa"></span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button id="btnGerar1Vital" style="background:#d4af37;color:#111;border:none;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR 1 VITALÍCIO</button>
+      <button id="btnGerar1Mensal" style="background:#fff;color:#111;border:1px solid #d4af37;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR 1 MENSAL (30d)</button>
+    </div>
+    <div id="ultimoGerado" style="background:#000;color:#0f0;padding:10px;border-radius:10px;margin-top:10px;font-family:monospace;font-size:11px;display:none"></div>
+    <details style="margin-top:10px"><summary style="font-size:11px;color:#d4af37;cursor:pointer">Ver histórico de códigos gerados</summary><textarea id="historicoGerados" readonly style="width:100%;height:120px;background:#000;color:#0f0;border:1px solid #333;border-radius:10px;padding:8px;font-size:10px;margin-top:6px;font-family:monospace"></textarea><div style="display:flex;gap:6px;margin-top:6px"><button id="btnCopiarHist" style="flex:1;background:#222;color:#fff;border:1px solid #444;padding:8px;border-radius:8px;font-size:11px;cursor:pointer">Copiar histórico</button><button id="btnLimparHist" style="flex:1;background:#300;color:#f88;border:1px solid #533;padding:8px;border-radius:8px;font-size:11px;cursor:pointer">Limpar histórico</button></div></details>
+  </div>
+
   <div id="bannerPromo"><span>🎁 TESTE GRÁTIS 2 CÔMODOS - Ative PRO para ilimitado</span><span id="bannerAcao" style="text-decoration:underline;cursor:pointer">Ativar</span></div>
   <div class="mainGrid"><div class="card"><h2>CÔMODOS</h2><div id="listaComodos"></div></div><div class="card"><h2>SERVIÇOS</h2><div id="gridServicos"></div></div></div>
   <div class="previa"><h3>PRÉVIA DO ORÇAMENTO</h3><div id="clientePrevia"></div><div id="previaComodos" style="font-size:11px;line-height:1.6;opacity:.9;margin-bottom:10px"></div><div style="font-size:11px;opacity:.6">TOTAL GERAL</div><div id="totalGeral">R$ 0,00</div></div>
@@ -71,6 +85,32 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
   <div id="modalEditarEmpresa" class="modalOverlay"><div class="modalBox"><h3>Editar Empresa</h3><input id="editNomeEmp" placeholder="Nome empresa"><input id="editSubEmp" placeholder="CNPJ"><input id="editTelEmp" placeholder="Telefone"><input id="editCidadeEmp" placeholder="Cidade"><input id="inputLogo" type="file" accept="image/*" style="display:none"><button onclick="document.getElementById('inputLogo').click()" style="width:100%;padding:8px;border:1px dashed #d4af37;border-radius:10px;background:#fff8e1;font-size:11px;font-weight:700;margin-bottom:8px;cursor:pointer">Trocar Logo</button><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarEmpresa')">Cancelar</button><button id="btnSalvarEmpresa" class="btnPrimary">Salvar</button></div></div></div>
 </div>
 <script>
+
+// ===== GERADOR DONO EMBUTIDO =====
+const SECRETO_DONO = 1397670, MOD_DONO = 1679616, PRIME_DONO = 7919;
+function toB36d(n,len){let c="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",r="";for(let i=0;i<len;i++){r=c[n%36]+r;n=Math.floor(n/36);}return r;}
+function gerarCodigoDono(id,tipo){
+  let obf=(id*PRIME_DONO + SECRETO_DONO) % MOD_DONO;
+  let chk=(obf*13 + SECRETO_DONO*7) % MOD_DONO;
+  let xxxx=toB36d(obf,4), yyyy=toB36d(chk,4);
+  if(tipo==='vitalicio') return `KIZARANET-VITALICIO-${xxxx}-${yyyy}`;
+  else return `KIZARANET-MENSAL-${xxxx}-${yyyy}`;
+}
+function getNextId(){let n=parseInt(localStorage.getItem('kiza_next_id')||'1',10);return n;}
+function setNextId(n){localStorage.setItem('kiza_next_id',n.toString()); document.getElementById('nextIdInfo').textContent='Próximo ID: '+n;}
+function addHistorico(cod){let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); hist.unshift({cod:cod, data:new Date().toLocaleString()}); if(hist.length>5000) hist=hist.slice(0,5000); localStorage.setItem('kiza_hist_cod',JSON.stringify(hist)); renderHist();}
+function renderHist(){let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); let ta=document.getElementById('historicoGerados'); if(ta) ta.value=hist.map(h=>h.cod+'  // '+h.data).join('\n');}
+function gerarUm(tipo){
+  let id=getNextId();
+  let cod=gerarCodigoDono(id,tipo);
+  let el=document.getElementById('ultimoGerado');
+  el.style.display='block';
+  el.innerHTML=`<div style="color:#d4af37">GERADO ID ${id} - ${tipo.toUpperCase()}</div><div style="font-size:14px;font-weight:900;margin:6px 0">${cod}</div><button onclick="navigator.clipboard.writeText('${cod}').then(()=>showStatus('Código copiado!'))" style="background:#d4af37;color:#111;border:none;padding:6px 10px;border-radius:6px;font-weight:800;font-size:11px;cursor:pointer">COPIAR ESSE CÓDIGO</button>`;
+  addHistorico(cod);
+  setNextId(id+1);
+  showStatus('✅ '+tipo+' gerado: '+cod);
+}
+
 const EMPRESA_FIXA = { nome: 'kizaranet.com', sub: 'CNPJ 42.103.065/0001-02', tel: 'Tel: (84)998791222', cid: 'LAGOA NOVA RN' };
 let empresaNome=EMPRESA_FIXA.nome,empresaSub=EMPRESA_FIXA.sub,empresaTel=EMPRESA_FIXA.tel,empresaCidade=EMPRESA_FIXA.cid,clienteNome='',telefoneCli='',enderecoCli='',comodos=[],servicos=[];
 
@@ -145,6 +185,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   let tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
   if(tipo==='mensal' && expira>0 && Date.now()>expira){ localStorage.removeItem('kiza_pro'); localStorage.removeItem('kiza_pro_tipo'); localStorage.removeItem('kiza_pro_expira'); }
   try{let lsCli=localStorage.getItem('kiza_cli_final'),lsTelCli=localStorage.getItem('kiza_tel_cli_final'),lsEnd=localStorage.getItem('kiza_end_final'); if(lsCli){clienteNome=lsCli;document.getElementById('inputClienteTop').value=lsCli;} if(lsTelCli){telefoneCli=lsTelCli;document.getElementById('inputTelefoneTop').value=lsTelCli;} if(lsEnd){enderecoCli=lsEnd;document.getElementById('inputEnderecoTop').value=lsEnd;}}catch(e){}
+  
+  // Mostrar painel dono se for dono
+  let isDonoCheck=localStorage.getItem('kiza_dono')==='1';
+  let painelD=document.getElementById('painelDono');
+  if(painelD){ if(isDonoCheck){ painelD.style.display='block'; setNextId(getNextId()); renderHist(); } }
+  let btnV=document.getElementById('btnGerar1Vital'); if(btnV) btnV.addEventListener('click',()=>gerarUm('vitalicio'));
+  let btnM=document.getElementById('btnGerar1Mensal'); if(btnM) btnM.addEventListener('click',()=>gerarUm('mensal'));
+  let btnCH=document.getElementById('btnCopiarHist'); if(btnCH) btnCH.addEventListener('click',()=>{ let ta=document.getElementById('historicoGerados'); if(ta){ navigator.clipboard.writeText(ta.value).then(()=>showStatus('Histórico copiado!')); } });
+  let btnLH=document.getElementById('btnLimparHist'); if(btnLH) btnLH.addEventListener('click',()=>{ if(confirm('Limpar todo histórico de códigos gerados?')){ localStorage.removeItem('kiza_hist_cod'); renderHist(); showStatus('Histórico limpo'); } });
+
   document.getElementById('logoEdit').addEventListener('click',()=>{document.getElementById('inputLogo').click();});
   document.getElementById('nomeEmpresa').addEventListener('click',abrirModalEditarEmpresa);document.getElementById('subEmpresa').addEventListener('click',abrirModalEditarEmpresa);document.getElementById('telEmpresa').addEventListener('click',abrirModalEditarEmpresa);document.getElementById('cidadeEmpresa').addEventListener('click',abrirModalEditarEmpresa);
   document.getElementById('inputLogo').addEventListener('change',(e)=>{let file=e.target.files[0];if(!file)return;let reader=new FileReader();reader.onload=(ev)=>{localStorage.setItem('kiza_logo_final',ev.target.result);render();};reader.readAsDataURL(file);});
