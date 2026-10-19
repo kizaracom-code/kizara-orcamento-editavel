@@ -174,7 +174,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   let params=new URLSearchParams(window.location.search),emp=params.get('empresa'),sub=params.get('sub'),tel=params.get('tel'),cid=params.get('cid'),dados=params.get('dados'),limpo=params.get('limpo');
   if(!emp&&!dados&&!limpo){
     empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
-    comodos=[]; servicos=[]; localStorage.clear(); localStorage.setItem('kiza_dono','1');
+    comodos=[]; servicos=[]; 
+    // NÃO apaga PRO e nem histórico - só limpa dados da obra
+    localStorage.removeItem('kiza_serv_final'); localStorage.removeItem('kiza_comodos_final');
+    localStorage.removeItem('kiza_cli_final'); localStorage.removeItem('kiza_tel_cli_final'); localStorage.removeItem('kiza_end_final');
+    localStorage.setItem('kiza_dono','1');
     localStorage.setItem('kiza_emp_final',empresaNome); localStorage.setItem('kiza_sub_final',empresaSub);
     localStorage.setItem('kiza_tel_final',empresaTel); localStorage.setItem('kiza_cid_final',empresaCidade);
   }
@@ -212,12 +216,26 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(res.tipo==='vitalicio'){
       localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_pro_tipo','vitalicio'); localStorage.removeItem('kiza_pro_expira');
       fecharModal('modalLic'); showStatus('✅ PRO VITALÍCIO ativado! Seguro.');
+      let b=document.getElementById('bannerPromo'); if(b) b.style.display='none'; let btn2=document.getElementById('btnAtivarPro2'); if(btn2){ btn2.textContent='✅ PRO ATIVO'; btn2.style.background='#16a34a'; btn2.style.color='#fff'; }
     } else if(res.tipo==='mensal'){
       let expira=Date.now()+30*24*60*60*1000;
       localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_pro_tipo','mensal'); localStorage.setItem('kiza_pro_expira',expira.toString());
       fecharModal('modalLic'); showStatus('✅ PRO MENSAL ativado! 30 dias.');
+      let b=document.getElementById('bannerPromo'); if(b) b.style.display='none'; let btn2=document.getElementById('btnAtivarPro2'); if(btn2){ btn2.textContent='✅ PRO MENSAL (30d)'; btn2.style.background='#16a34a'; btn2.style.color='#fff'; }
     }
   });
+  // Esconde banner se já é PRO ao carregar
+  try{
+    let proInit=localStorage.getItem('kiza_pro');
+    if(proInit==='1'){
+      let b=document.getElementById('bannerPromo'); if(b) b.style.display='none';
+      let btn2=document.getElementById('btnAtivarPro2'); if(btn2){ 
+        let t=localStorage.getItem('kiza_pro_tipo'); 
+        btn2.textContent=t==='mensal'?'✅ PRO MENSAL (30d)':'✅ PRO ATIVO'; 
+        btn2.style.background='#16a34a'; btn2.style.color='#fff'; 
+      }
+    }
+  }catch(e){}
   document.querySelectorAll('.modalOverlay').forEach(ov=>{ov.addEventListener('click',(e)=>{if(e.target===ov)fecharModal(ov.id);});});
   render();
 });
