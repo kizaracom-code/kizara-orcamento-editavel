@@ -66,12 +66,18 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
       <b style="color:#d4af37;font-size:13px">🔐 PAINEL DONO - Gerador de Licenças</b>
       <span id="nextIdInfo" style="font-size:10px;color:#aaa"></span>
     </div>
+    <div style="background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:10px;margin-bottom:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><label style="color:#d4af37;font-size:10px;font-weight:700">NOME CLIENTE (pra guardar)</label><input id="inputNomeClienteGerador" placeholder="Ex: Danilo Gesso" style="width:100%;padding:8px;border-radius:8px;border:1px solid #444;background:#000;color:#fff;font-size:12px;margin-top:3px"></div>
+      <div><label style="color:#d4af37;font-size:10px;font-weight:700">TEL / OBS</label><input id="inputTelClienteGerador" placeholder="Ex: (84) 9... - Obra Lagoa" style="width:100%;padding:8px;border-radius:8px;border:1px solid #444;background:#000;color:#fff;font-size:12px;margin-top:3px"></div>
+    </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <button id="btnGerar1Vital" style="background:#d4af37;color:#111;border:none;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR 1 VITALÍCIO</button>
       <button id="btnGerar1Mensal" style="background:#fff;color:#111;border:1px solid #d4af37;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR 1 MENSAL (30d)</button>
     </div>
     <div id="ultimoGerado" style="background:#000;color:#0f0;padding:10px;border-radius:10px;margin-top:10px;font-family:monospace;font-size:11px;display:none"></div>
-    <details style="margin-top:10px"><summary style="font-size:11px;color:#d4af37;cursor:pointer">Ver histórico de códigos gerados</summary><textarea id="historicoGerados" readonly style="width:100%;height:120px;background:#000;color:#0f0;border:1px solid #333;border-radius:10px;padding:8px;font-size:10px;margin-top:6px;font-family:monospace"></textarea><div style="display:flex;gap:6px;margin-top:6px"><button id="btnCopiarHist" style="flex:1;background:#222;color:#fff;border:1px solid #444;padding:8px;border-radius:8px;font-size:11px;cursor:pointer">Copiar histórico</button><button id="btnLimparHist" style="flex:1;background:#300;color:#f88;border:1px solid #533;padding:8px;border-radius:8px;font-size:11px;cursor:pointer">Limpar histórico</button></div></details>
+    <details style="margin-top:10px" open><summary style="font-size:11px;color:#d4af37;cursor:pointer;font-weight:800">📋 Ver histórico COM NOMES (clique aqui)</summary><textarea id="historicoGerados" readonly style="width:100%;height:180px;background:#000;color:#0f0;border:1px solid #333;border-radius:10px;padding:8px;font-size:10px;margin-top:6px;font-family:monospace"></textarea><div style="display:flex;gap:6px;margin-top:6px"><button id="btnCopiarHist" style="flex:1;background:#222;color:#fff;border:1px solid #444;padding:8px;border-radius:8px;font-size:11px;cursor:pointer">Copiar histórico</button><button id="btnBaixarTxt" style="flex:1;background:#d4af37;color:#111;border:none;padding:8px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">Baixar .TXT</button><button id="btnLimparHist" style="flex:1;background:#300;color:#f88;border:1px solid #533;padding:8px;border-radius:8px;font-size:11px;cursor:pointer">Limpar</button></div>
+    <div style="margin-top:8px;background:#000;border-radius:8px;padding:8px"><input id="buscaHist" placeholder="🔍 Buscar cliente no histórico..." style="width:100%;padding:6px 8px;border-radius:6px;border:1px solid #333;background:#111;color:#fff;font-size:11px"></div>
+    </details>
   </div>
 
   <div id="bannerPromo"><span>🎁 TESTE GRÁTIS 2 CÔMODOS - Ative PRO para ilimitado</span><span id="bannerAcao" style="text-decoration:underline;cursor:pointer">Ativar</span></div>
@@ -98,10 +104,13 @@ function gerarCodigoDono(id,tipo){
 }
 function getNextId(){let n=parseInt(localStorage.getItem('kiza_next_id')||'1',10);return n;}
 function setNextId(n){localStorage.setItem('kiza_next_id',n.toString()); document.getElementById('nextIdInfo').textContent='Próximo ID: '+n;}
-function addHistorico(cod){let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); hist.unshift({cod:cod, data:new Date().toLocaleString()}); if(hist.length>5000) hist=hist.slice(0,5000); localStorage.setItem('kiza_hist_cod',JSON.stringify(hist)); renderHist();}
-function renderHist(){let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); let ta=document.getElementById('historicoGerados'); if(ta) ta.value=hist.map(h=>h.cod+'  // '+h.data).join('\n');}
+function addHistorico(cod, nome, telObs, id, tipo){let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); hist.unshift({cod:cod, nome:nome||'', tel:telObs||'', id:id, tipo:tipo, data:new Date().toLocaleString()}); if(hist.length>5000) hist=hist.slice(0,5000); localStorage.setItem('kiza_hist_cod',JSON.stringify(hist)); renderHist();}
+function renderHist(filtro){let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); if(filtro){ let f=filtro.toLowerCase(); hist=hist.filter(h=> (h.cod+' '+(h.nome||'')+' '+(h.tel||'')+' '+h.id).toLowerCase().includes(f)); } let ta=document.getElementById('historicoGerados'); if(ta) ta.value=hist.map(h=>`ID ${h.id} | ${h.tipo.toUpperCase()} | ${h.cod} | ${h.nome||'SEM NOME'} | ${h.tel||''} | ${h.data}`).join('\n');}
 function gerarUm(tipo){
   let id=getNextId();
+  let nomeCli=document.getElementById('inputNomeClienteGerador')?.value.trim()||'';
+  let telCli=document.getElementById('inputTelClienteGerador')?.value.trim()||'';
+  if(!nomeCli){ if(!confirm('Gerar sem nome do cliente? Recomendo colocar o nome pra não se perder depois. Continuar mesmo assim?')) return; }
   let cod=gerarCodigoDono(id,tipo);
   let el=document.getElementById('ultimoGerado');
   el.style.display='block';
@@ -196,7 +205,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(painelD){ if(isDonoCheck){ painelD.style.display='block'; setNextId(getNextId()); renderHist(); } }
   let btnV=document.getElementById('btnGerar1Vital'); if(btnV) btnV.addEventListener('click',()=>gerarUm('vitalicio'));
   let btnM=document.getElementById('btnGerar1Mensal'); if(btnM) btnM.addEventListener('click',()=>gerarUm('mensal'));
-  let btnCH=document.getElementById('btnCopiarHist'); if(btnCH) btnCH.addEventListener('click',()=>{ let ta=document.getElementById('historicoGerados'); if(ta){ navigator.clipboard.writeText(ta.value).then(()=>showStatus('Histórico copiado!')); } });
+  let btnCH=document.getElementById('btnCopiarHist'); if(btnCH) btnCH.addEventListener('click',()=>{ let ta=document.getElementById('historicoGerados'); if(ta){ navigator.clipboard.writeText(ta.value).then(()=>showStatus('Histórico com nomes copiado!')); } });
+  let btnBaixar=document.getElementById('btnBaixarTxt'); if(btnBaixar) btnBaixar.addEventListener('click',()=>{ let ta=document.getElementById('historicoGerados'); if(!ta||!ta.value){showStatus('Nada pra baixar'); return;} let blob=new Blob([ta.value],{type:'text/plain'}); let url=URL.createObjectURL(blob); let a=document.createElement('a'); a.href=url; a.download='kizara_codigos_'+new Date().toISOString().slice(0,10)+'.txt'; a.click(); URL.revokeObjectURL(url); showStatus('TXT baixado!'); });
+  let busca=document.getElementById('buscaHist'); if(busca) busca.addEventListener('input',(e)=>{ renderHist(e.target.value); });
   let btnLH=document.getElementById('btnLimparHist'); if(btnLH) btnLH.addEventListener('click',()=>{ if(confirm('Limpar todo histórico de códigos gerados?')){ localStorage.removeItem('kiza_hist_cod'); renderHist(); showStatus('Histórico limpo'); } });
 
   document.getElementById('logoEdit').addEventListener('click',()=>{document.getElementById('inputLogo').click();});
