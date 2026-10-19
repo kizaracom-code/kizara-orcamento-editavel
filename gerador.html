@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gerador de Licenças Seguro - KIZARANET</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif}
+body{background:#111;color:#fff;padding:20px}
+h1{color:#d4af37}
+.card{background:#222;border-radius:14px;padding:16px;margin:14px 0;border:1px solid #333}
+input,select,button{padding:10px;border-radius:10px;border:1px solid #444;background:#111;color:#fff;margin:4px 0;width:100%}
+button{background:#d4af37;color:#111;font-weight:800;cursor:pointer}
+textarea{width:100%;height:300px;background:#000;color:#0f0;border:1px solid #333;border-radius:10px;padding:10px;font-family:monospace;font-size:11px}
+.small{font-size:11px;color:#999}
+</style>
+</head>
+<body>
+<h1>🔐 Gerador Seguro KIZARANET</h1>
+<p class="small">Segredo: CNPJ 42.103.065/0001-02 (1397670) - Só você tem</p>
+
+<div class="card">
+<h3>Gerar Licenças</h3>
+<label>Quantidade (1-5000)</label>
+<input id="qtd" type="number" value="10" min="1" max="5000">
+<label>Tipo</label>
+<select id="tipo">
+<option value="vitalicio">VITALÍCIO (para sempre)</option>
+<option value="mensal">MENSAL (30 dias)</option>
+</select>
+<label>Começar do ID</label>
+<input id="start" type="number" value="1" min="1">
+<button onclick="gerar()">GERAR CÓDIGOS SEGUROS</button>
+</div>
+
+<div class="card">
+<h3>Códigos Gerados (inadivinháveis)</h3>
+<textarea id="out" readonly placeholder="Os códigos vão aparecer aqui..."></textarea>
+<div style="display:flex;gap:8px;margin-top:8px">
+<button onclick="copiar()" style="flex:1">COPIAR TUDO</button>
+<button onclick="baixar()" style="flex:1;background:#16a34a;color:#fff">BAIXAR .TXT</button>
+</div>
+</div>
+
+<div class="card">
+<h3>🧪 Testar código</h3>
+<input id="teste" placeholder="Cole aqui ex: KIZARANET-VITALICIO-U4K5-PCEZ">
+<button onclick="testar()">VALIDAR</button>
+<div id="resTeste" class="small" style="margin-top:8px"></div>
+</div>
+
+<script>
+const SECRETO=1397670, MOD=1679616, PRIME=7919;
+function toB36(n,len){let c="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",r="";for(let i=0;i<len;i++){r=c[n%36]+r;n=Math.floor(n/36);}return r;}
+function fromB36(s){return parseInt(s,36);}
+
+function gerarCodigo(id, tipo){
+  let obf=(id*PRIME + SECRETO) % MOD;
+  let chk=(obf*13 + SECRETO*7) % MOD;
+  let xxxx=toB36(obf,4), yyyy=toB36(chk,4);
+  if(tipo==='vitalicio') return `KIZARANET-VITALICIO-${xxxx}-${yyyy}`;
+  else return `KIZARANET-MENSAL-${xxxx}-${yyyy}`;
+}
+
+function gerar(){
+  let qtd=parseInt(document.getElementById('qtd').value)||10;
+  let tipo=document.getElementById('tipo').value;
+  let start=parseInt(document.getElementById('start').value)||1;
+  let out=[];
+  for(let i=0;i<qtd;i++){
+    let id=start+i;
+    if(id>100000) break;
+    out.push(gerarCodigo(id, tipo));
+  }
+  document.getElementById('out').value=out.join("\n");
+}
+
+function copiar(){let t=document.getElementById('out'); t.select(); document.execCommand('copy'); alert('Copiado!');}
+function baixar(){let txt=document.getElementById('out').value, blob=new Blob([txt],{type:'text/plain'}), a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='licencas-kizaranet-seguras.txt'; a.click();}
+
+function testar(){
+  let cod=document.getElementById('teste').value.trim().toUpperCase();
+  let m=cod.match(/^KIZARANET-(VITALICIO|MENSAL)-([A-Z0-9]{4})-([A-Z0-9]{4})$/);
+  let res=document.getElementById('resTeste');
+  if(!m){res.innerHTML='❌ Formato inválido'; res.style.color='#f55'; return;}
+  let xxxx=m[2], yyyy=m[3];
+  let xv=fromB36(xxxx), yv=fromB36(yyyy);
+  let esperado=(xv*13 + SECRETO*7) % MOD;
+  if(yv===esperado){
+    res.innerHTML=`✅ VÁLIDO! Tipo: ${m[1]}<br>XXXX=${xxxx} (${xv})<br>YYYY=${yyyy} esperado=${toB36(esperado,4)}<br>Segredo bate com CNPJ`;
+    res.style.color='#4f4';
+  } else {
+    res.innerHTML=`❌ INVÁLIDO! Checksum não bate<br>Esperado: ${toB36(esperado,4)} mas veio ${yyyy}`;
+    res.style.color='#f55';
+  }
+}
+// gera 3 exemplos ao abrir
+window.onload=()=>{document.getElementById('qtd').value=5; gerar();}
+</script>
+</body>
+</html>
