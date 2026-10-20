@@ -62,13 +62,13 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
   <div class="header"><div id="logoEdit"><img id="logoImg" alt="logo"><span id="logoTxt">K</span></div><div class="empresaBox"><div id="nomeEmpresa">kizaranet.com</div><div><span id="subEmpresa">CNPJ 42.103.065/0001-02</span> <span id="telEmpresa">Tel: (84)998791222</span> <span id="cidadeEmpresa">LAGOA NOVA RN</span></div></div><button id="btnAtivarPro2" style="background:#d4af37;border:none;padding:8px 12px;border-radius:20px;font-weight:800;font-size:11px;cursor:pointer">ATIVAR PRO</button></div>
   <div class="topbar"><button id="btnZerar">COMEÇAR DO ZERO</button><button id="btnComodo">+ COMODO</button><button id="btnNovoServ">+ SERVICO</button><button id="btnLinkPlataforma">LINK PLATAFORMA COM DADOS</button><button id="btnPdf">BAIXAR PDF</button><button id="btnVideoAjuda">📹 COMO USAR (VÍDEO)</button></div>
   <div id="avisoCliente">📱 MODO CLIENTE - Cliente não pode apagar a obra. Botão COMEÇAR DO ZERO travado.</div>
-  <div id="areaVideoTutorial"><div style="display:flex;justify-content:space-between;align-items:center"><h3>🎬 Como usar o KIZARA - Tutorial Rápido (com legendas)</h3><button id="btnFecharVideo" style="background:#222;color:#fff;border:1px solid #444;padding:4px 10px;border-radius:20px;font-size:11px;cursor:pointer">Fechar X</button></div><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;background:#111;margin-top:8px"><iframe id="videoFrame" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="https://www.youtube.com/embed/dQw4w9WgXcQ?cc_load_policy=1&cc_lang_pref=pt" title="Tutorial KIZARA" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><div style="margin-top:8px;background:#111;border-radius:8px;padding:8px;color:#aaa;font-size:11px">💡 Dica: Ative a legenda no YouTube clicando em CC. Troque o VIDEO_ID no código pelo seu vídeo real.</div></div>
+  <div id="areaVideoTutorial"><div style="display:flex;justify-content:space-between;align-items:center"><h3>🎬 Como usar o KIZARA - Tutorial Rápido</h3><button id="btnFecharVideo" style="background:#222;color:#fff;border:1px solid #444;padding:4px 10px;border-radius:20px;font-size:11px;cursor:pointer">Fechar X</button></div><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;background:#111;margin-top:8px"><iframe id="videoFrame" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="https://www.youtube.com/embed/dQw4w9WgXcQ?cc_load_policy=1&cc_lang_pref=pt" title="Tutorial KIZARA" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></div>
   <div class="clienteBar"><div><label>Nome cliente obra</label><input id="inputClienteTop" placeholder="Nome do cliente"></div><div><label>Telefone cliente</label><input id="inputTelefoneTop" placeholder="(00) 00000-0000"></div><div><label>Endereço obra</label><input id="inputEnderecoTop" placeholder="Rua, número, bairro"></div></div>
   
   <div id="painelDono" style="display:none;background:#111;border:2px solid #d4af37;border-radius:14px;padding:14px;margin-bottom:12px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <b style="color:#d4af37;font-size:13px">🔐 PAINEL DONO - Gerador de Licenças</b>
-      <div><span id="nextIdInfo" style="font-size:10px;color:#aaa"></span><button id="btnRestaurarID3" style="margin-left:6px;background:#300;color:#f88;border:1px solid #533;padding:3px 8px;border-radius:20px;font-size:9px;cursor:pointer;display:none">RESTAURAR ID 3</button></div>
+      <span id="nextIdInfo" style="font-size:10px;color:#aaa"></span>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
       <div><label style="color:#d4af37;font-size:10px;font-weight:800">NOME CLIENTE (pra guardar)</label><input id="inputNomeClienteGerador" placeholder="Ex: Danilo Gesso" style="width:100%;padding:8px;border-radius:8px;border:1px solid #333;background:#000;color:#fff;font-size:12px"></div>
@@ -79,18 +79,18 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
       <button id="btnGerar1Mensal" style="background:#fff;color:#111;border:1px solid #d4af37;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR 1 MENSAL (30d)</button>
     </div>
     <div id="ultimoGerado" style="background:#000;color:#0f0;padding:10px;border-radius:10px;margin-top:10px;font-family:monospace;font-size:11px;display:none"></div>
-    <details style="margin-top:10px"><summary style="font-size:11px;color:#d4af37;cursor:pointer;font-weight:800">📋 Ver histórico COM NOMES (clique aqui)</summary><textarea id="historicoGerados" readonly style="width:100%;height:180px;background:#000;color:#0f0;border:1px solid #333;border-radius:10px;padding:8px;font-size:10px;margin-top:6px;font-family:monospace"></textarea><div style="display:flex;gap:6px;margin-top:6px"><button id="btnCopiarHist" style="flex:1;background:#222;color:#fff;border:1px solid #444;padding:8px;border-radius:8px;font-size:11px;cursor:pointer">Copiar histórico</button><button id="btnBaixarTxt" style="flex:1;background:#d4af37;color:#111;border:none;padding:8px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">Baixar .TXT</button><button id="btnLimparHist" style="flex:1;background:#300;color:#f88;border:1px solid #533;padding:8px;border-radius:8px;font-size:11px;cursor:pointer">Limpar</button></div><div style="margin-top:8px;background:#000;border-radius:8px;padding:8px"><input id="buscaHist" placeholder="🔍 Buscar cliente no histórico..." style="width:100%;padding:6px 8px;border-radius:6px;border:1px solid #333;background:#111;color:#fff;font-size:11px"></div></details>
+    <details style="margin-top:10px"><summary style="font-size:11px;color:#d4af37;cursor:pointer;font-weight:800">📋 Ver histórico COM NOMES</summary><textarea id="historicoGerados" readonly style="width:100%;height:180px;background:#000;color:#0f0;border:1px solid #333;border-radius:10px;padding:8px;font-size:10px;margin-top:6px;font-family:monospace"></textarea><div style="display:flex;gap:6px;margin-top:6px"><button id="btnCopiarHist" style="flex:1;background:#222;color:#fff;border:1px solid #444;padding:8px;border-radius:8px;font-size:11px;cursor:pointer">Copiar</button><button id="btnBaixarTxt" style="flex:1;background:#d4af37;color:#111;border:none;padding:8px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">Baixar .TXT</button><button id="btnLimparHist" style="flex:1;background:#300;color:#f88;border:1px solid #533;padding:8px;border-radius:8px;font-size:11px;cursor:pointer">Limpar</button></div><div style="margin-top:8px"><input id="buscaHist" placeholder="🔍 Buscar..." style="width:100%;padding:6px 8px;border-radius:6px;border:1px solid #333;background:#111;color:#fff;font-size:11px"></div></details>
   </div>
 
   <div id="bannerPromo"><span>🎁 TESTE GRÁTIS 2 CÔMODOS - Ative PRO para ilimitado</span><span id="bannerAcao" style="text-decoration:underline;cursor:pointer">Ativar</span></div>
   <div class="mainGrid"><div class="card"><h2>CÔMODOS</h2><div id="listaComodos"></div></div><div class="card"><h2>SERVIÇOS</h2><div id="gridServicos"></div></div></div>
   <div class="previa"><h3>PRÉVIA DO ORÇAMENTO</h3><div id="clientePrevia"></div><div id="previaComodos" style="font-size:11px;line-height:1.6;opacity:.9;margin-bottom:10px"></div><div style="font-size:11px;opacity:.6">TOTAL GERAL</div><div id="totalGeral">R$ 0,00</div></div>
-  <div id="areaLinkPlataforma"><b style="font-size:13px">Link plataforma com dados gerado:</b><textarea id="linkGerado" readonly></textarea><div style="display:flex;gap:8px"><button id="btnCopiarLink" style="flex:1;background:#111;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer">COPIAR LINK NOVO</button><button id="btnAbrirCel" style="flex:1;background:#d4af37;border:none;padding:10px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer">ABRIR NO CELULAR</button></div></div>
+  <div id="areaLinkPlataforma"><b style="font-size:13px">Link plataforma com dados gerado:</b><textarea id="linkGerado" readonly></textarea><div style="display:flex;gap:8px"><button id="btnCopiarLink" style="flex:1;background:#111;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer">COPIAR LINK</button><button id="btnAbrirCel" style="flex:1;background:#d4af37;border:none;padding:10px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer">ABRIR NO CELULAR</button></div></div>
 </div>
 
 <div id="modal" class="modalOverlay"><div class="modalBox"><h3>Novo Cômodo</h3><input id="nomeComodo" placeholder="Ex: Sala"><input id="largComodo" type="number" placeholder="Largura (m)"><input id="compComodo" type="number" placeholder="Comprimento (m)"><div class="actions"><button class="btnGhost" onclick="fecharModal('modal')">Cancelar</button><button id="btnCriarComodo" class="btnPrimary">Criar</button></div></div></div>
 <div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nomeServ" placeholder="Nome serviço"><select id="unidServ" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin-bottom:8px"><option value="m2">m² - Metro quadrado</option><option value="ml">ml - Metro linear</option><option value="m">m - Metro</option><option value="un">un - Unidade</option><option value="m3">m³ - Metro cúbico</option><option value="pct">pct - Pacote</option></select><input id="valorServ" type="number" placeholder="Valor R$"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
-<div id="modalLic" class="modalOverlay"><div class="modalBox"><h3>Ativar PRO</h3><input id="inputLic" placeholder="Cole sua licença KIZARANET-..."><div class="actions"><button class="btnGhost" onclick="fecharModal('modalLic')">Cancelar</button><button id="btnAtivarPro" class="btnPrimary">Ativar</button></div></div></div>
+<div id="modalLic" class="modalOverlay"><div class="modalBox"><h3>Ativar PRO</h3><input id="inputLic" placeholder="Cole sua licença"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalLic')">Cancelar</button><button id="btnAtivarPro" class="btnPrimary">Ativar</button></div></div></div>
 <div id="modalEditarEmpresa" class="modalOverlay"><div class="modalBox"><h3>Editar Empresa</h3><input id="editNomeEmp"><input id="editSubEmp"><input id="editTelEmp"><input id="editCidadeEmp"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarEmpresa')">Cancelar</button><button id="btnSalvarEmpresa" class="btnPrimary">Salvar</button></div></div></div>
 <input type="file" id="inputLogo" accept="image/*" style="display:none">
 <div id="status"></div>
@@ -126,8 +126,7 @@ function validarLicencaSegura(codigo){
   if(old){ let num=parseInt(old[2],10); if(num>=1&&num<=5000) return {tipo:'vitalicio', valido:true, legado:true}; }
   return null;
 }
-
-function getNextId(){ return parseInt(localStorage.getItem('kiza_next_id')||'1',10); }
+function getNextId(){ return parseInt(localStorage.getItem('kiza_next_id')||'5',10); }
 function setNextId(n){ localStorage.setItem('kiza_next_id', n.toString()); let el=document.getElementById('nextIdInfo'); if(el) el.textContent='Próximo ID: '+n; }
 function addHistorico(cod, nome, telObs, id, tipo){
   try{
@@ -136,31 +135,17 @@ function addHistorico(cod, nome, telObs, id, tipo){
     if(hist.length>5000) hist=hist.slice(0,5000);
     localStorage.setItem('kiza_hist_cod',JSON.stringify(hist));
     renderHist();
-  }catch(e){ console.log('addHist erro',e); }
+  }catch(e){}
 }
 function renderHist(filtro){
   try{
     let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]');
     let changed=false;
-    // AUTO-MIGRAÇÃO: corrige IDs antigos que ficaram sem ID ou sem nome
     hist=hist.map((h,idx)=>{
       if(h.cod && (!h.id || h.id=='?' )){
         changed=true;
-        // Tenta deduzir ID pelo código ou pela ordem
-        // Se for UGS3-TRA9 = ID 3 (Jacinto), UMW2-VYPW = ID 4 (Valmir)
         if(h.cod.includes('UGS3-TRA9')){ h.id=3; h.nome=h.nome||'JACINTO BATALHADOR'; h.tel=h.tel||'84998791221'; }
         else if(h.cod.includes('UMW2-VYPW')){ h.id=4; h.nome=h.nome||'valmir'; h.tel=h.tel||'84998791225'; }
-        else {
-          // Para outros, tenta estimar: mais recente = ID maior, mais antigo = menor
-          // Lista está invertida (unshift), então o primeiro é o mais novo
-          // Se próximo ID atual é 5, então os 2 existentes são 4 e 3
-          let nextId=getNextId();
-          if(nextId>=5){
-            // O item no índice 0 é o mais novo (valmir ID4), índice 1 é ID3
-            if(idx===0) h.id=4;
-            else if(idx===1) h.id=3;
-          }
-        }
       }
       if(h.cod && (!h.nome || h.nome==='')){
         if(h.cod.includes('UGS3-TRA9')){ h.nome='JACINTO BATALHADOR'; h.tel=h.tel||'84998791221'; changed=true; }
@@ -180,328 +165,105 @@ function renderHist(filtro){
         return `ID ${id} | ${tipo} | ${h.cod} | ${nome} | ${tel} | ${h.data||''}`;
       }).join('\n');
     }
-  }catch(e){ console.log('renderHist erro',e); }
+  }catch(e){}
 }
-
 function area(c,l){return (parseFloat(c)||0)*(parseFloat(l)||0);} function perim(c,l){return 2*((parseFloat(c)||0)+(parseFloat(l)||0));}
 function getBase(u,a,p){ if(['m2','m3'].includes(u))return a; if(['ml','m'].includes(u))return p; return 1; }
 function salvar(){try{let pp=new URLSearchParams(window.location.search); if(pp.has('limpo')) return; localStorage.setItem('kiza_serv_final',JSON.stringify(servicos)); localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos)); localStorage.setItem('kiza_emp_final',empresaNome); localStorage.setItem('kiza_sub_final',empresaSub); localStorage.setItem('kiza_tel_final',empresaTel); localStorage.setItem('kiza_cid_final',empresaCidade); localStorage.setItem('kiza_cli_final',clienteNome); localStorage.setItem('kiza_tel_cli_final',telefoneCli); localStorage.setItem('kiza_end_final',enderecoCli);}catch(e){}}
 function showStatus(t){let el=document.getElementById('status');el.textContent=t;el.style.display='block';setTimeout(()=>{el.style.display='none';},3000);}
 
-function render(){salvar(); 
-  // Mostra logo salva
+function render(){
+  salvar(); 
   try{
     let logoLS=localStorage.getItem('kiza_logo_final');
     let imgEl=document.getElementById('logoImg');
     let txtEl=document.getElementById('logoTxt');
-    if(logoLS && imgEl){
-      imgEl.src=logoLS;
-      imgEl.style.display='block';
-      if(txtEl) txtEl.style.display='none';
-    }
-    let empLS=localStorage.getItem('kiza_emp_final');
-    let subLS=localStorage.getItem('kiza_sub_final');
-    let telLS=localStorage.getItem('kiza_tel_final');
-    let cidLS=localStorage.getItem('kiza_cid_final');
-    if(empLS) empresaNome=empLS;
-    if(subLS) empresaSub=subLS;
-    if(telLS) empresaTel=telLS;
-    if(cidLS) empresaCidade=cidLS;
-    let nomeEl=document.getElementById('nomeEmpresa');
-    let subEl=document.getElementById('subEmpresa');
-    let telEl=document.getElementById('telEmpresa');
-    let cidEl=document.getElementById('cidadeEmpresa');
-    if(nomeEl) nomeEl.textContent=empresaNome;
-    if(subEl) subEl.textContent=empresaSub;
-    if(telEl) telEl.textContent=empresaTel;
-    if(cidEl) cidEl.textContent=empresaCidade;
+    if(logoLS && imgEl){ imgEl.src=logoLS; imgEl.style.display='block'; if(txtEl) txtEl.style.display='none'; }
+    let empLS=localStorage.getItem('kiza_emp_final'); let subLS=localStorage.getItem('kiza_sub_final'); let telLS=localStorage.getItem('kiza_tel_final'); let cidLS=localStorage.getItem('kiza_cid_final');
+    if(empLS) empresaNome=empLS; if(subLS) empresaSub=subLS; if(telLS) empresaTel=telLS; if(cidLS) empresaCidade=cidLS;
+    let nomeEl=document.getElementById('nomeEmpresa'); let subEl=document.getElementById('subEmpresa'); let telEl=document.getElementById('telEmpresa'); let cidEl=document.getElementById('cidadeEmpresa');
+    if(nomeEl) nomeEl.textContent=empresaNome; if(subEl) subEl.textContent=empresaSub; if(telEl) telEl.textContent=empresaTel; if(cidEl) cidEl.textContent=empresaCidade;
   }catch(e){}
-  let lc=document.getElementById('listaComodos'), gs=document.getElementById('gridServicos'), pc=document.getElementById('previaComodos'), tg=document.getElementById('totalGeral'), cp=document.getElementById('clientePrevia'); let total=0; if(lc) lc.innerHTML=comodos.map((c,i)=>{let a=area(c.larg,c.comp), p=perim(c.larg,c.comp); return `<div class="comodoItem"><div class="comodoHead"><b>${c.nome}</b><button onclick="removerComodo(${i})" style="border:none;background:#fee;padding:4px 8px;border-radius:6px;font-size:10px;cursor:pointer">X</button></div><div class="comodoMeta">${c.larg}m x ${c.comp}m = ${a.toFixed(2)}m² | Perímetro ${p.toFixed(2)}m</div><div class="servCheck">${servicos.map(s=>{let chk=c.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome} R$${s.valor}</label>`;}).join('')}</div></div>`;}).join('')||'<div style="font-size:12px;color:#999">Nenhum cômodo ainda.</div>'; if(gs) gs.innerHTML=servicos.map(s=>`<div class="servCard"><b style="font-size:12px">${s.nome}</b><div style="font-size:11px;color:#666">${s.unidade} - R$ ${s.valor}</div><div style="margin-top:6px;display:flex;gap:4px"><button onclick="editarNome(${s.id})" style="font-size:10px;padding:3px 6px;border:1px solid #ddd;border-radius:6px;cursor:pointer">Editar</button><button onclick="removerServico(${s.id})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div></div>`).join('')||'<div style="font-size:12px;color:#999">Nenhum serviço ainda. Clique em + SERVICO</div>'; let htmlPrev=''; comodos.forEach(c=>{let a=area(c.larg,c.comp), p=perim(c.larg,c.comp); let sub=0; let dets=[]; c.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s)return; let base=getBase(s.unidade,a,p); let val=base*s.valor; sub+=val; dets.push(`${s.nome}: ${base.toFixed(2)} x R$${s.valor} = R$${val.toFixed(2)}`);}); total+=sub; htmlPrev+=`<div style="margin-bottom:8px"><b>${c.nome}</b> (${c.larg}x${c.comp}) - Subtotal R$ ${sub.toFixed(2)}<br><span style="font-size:10px;opacity:.7">${dets.join(' | ')}</span></div>`;}); if(pc) pc.innerHTML=htmlPrev||'<div style="font-size:11px;opacity:.6">Adicione cômodos e serviços</div>'; if(tg) tg.textContent='R$ '+total.toFixed(2).replace('.',','); if(cp) cp.innerHTML=clienteNome? `<div style="font-size:12px;margin-bottom:6px">Cliente: <b>${clienteNome}</b> ${telefoneCli? ' - '+telefoneCli:''} ${enderecoCli? ' - '+enderecoCli:''}</div>` : ''; }
-
+  let lc=document.getElementById('listaComodos'), gs=document.getElementById('gridServicos'), pc=document.getElementById('previaComodos'), tg=document.getElementById('totalGeral'), cp=document.getElementById('clientePrevia'); let total=0;
+  if(lc) lc.innerHTML=comodos.map((c,i)=>{let a=area(c.larg,c.comp), p=perim(c.larg,c.comp); return `<div class="comodoItem"><div class="comodoHead"><b>${c.nome}</b><button onclick="removerComodo(${i})" style="border:none;background:#fee;padding:4px 8px;border-radius:6px;font-size:10px;cursor:pointer">X</button></div><div class="comodoMeta">${c.larg}m x ${c.comp}m = ${a.toFixed(2)}m² | Perímetro ${p.toFixed(2)}m</div><div class="servCheck">${servicos.map(s=>{let chk=c.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome} R$${s.valor}</label>`;}).join('')}</div></div>`;}).join('')||'<div style="font-size:12px;color:#999">Nenhum cômodo ainda. Clique em + COMODO</div>';
+  if(gs) gs.innerHTML=servicos.map(s=>`<div class="servCard"><b style="font-size:12px">${s.nome}</b><div style="font-size:11px;color:#666">${s.unidade} - R$ ${s.valor}</div><div style="margin-top:6px;display:flex;gap:4px"><button onclick="editarNome(${s.id})" style="font-size:10px;padding:3px 6px;border:1px solid #ddd;border-radius:6px;cursor:pointer">Editar</button><button onclick="removerServico(${s.id})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div></div>`).join('')||'<div style="font-size:12px;color:#999">Nenhum serviço. Clique em + SERVICO</div>';
+  let htmlPrev=''; comodos.forEach(c=>{let a=area(c.larg,c.comp), p=perim(c.larg,c.comp); let sub=0; let dets=[]; c.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s)return; let base=getBase(s.unidade,a,p); let val=base*s.valor; sub+=val; dets.push(`${s.nome}: ${base.toFixed(2)} x R$${s.valor} = R$${val.toFixed(2)}`);}); total+=sub; htmlPrev+=`<div style="margin-bottom:8px"><b>${c.nome}</b> (${c.larg}x${c.comp}) - Subtotal R$ ${sub.toFixed(2)}<br><span style="font-size:10px;opacity:.7">${dets.join(' | ')}</span></div>`;}); if(pc) pc.innerHTML=htmlPrev||'<div style="font-size:11px;opacity:.6">Adicione cômodos e serviços</div>'; if(tg) tg.textContent='R$ '+total.toFixed(2).replace('.',','); if(cp) cp.innerHTML=clienteNome? `<div style="font-size:12px;margin-bottom:6px">Cliente: <b>${clienteNome}</b> ${telefoneCli? ' - '+telefoneCli:''} ${enderecoCli? ' - '+enderecoCli:''}</div>` : '';
+}
 function abrirModal(id){document.getElementById(id).style.display='flex';}
 function fecharModal(id){document.getElementById(id).style.display='none';}
 function abrirModalEditarEmpresa(){document.getElementById('editNomeEmp').value=empresaNome; document.getElementById('editSubEmp').value=empresaSub; document.getElementById('editTelEmp').value=empresaTel; document.getElementById('editCidadeEmp').value=empresaCidade; abrirModal('modalEditarEmpresa');}
 function criarComodo(){let nome=document.getElementById('nomeComodo').value.trim(), larg=document.getElementById('largComodo').value, comp=document.getElementById('compComodo').value; if(!nome){alert('Nome do cômodo');return;} comodos.push({nome:nome,larg:larg||0,comp:comp||0,servicos:[]}); document.getElementById('nomeComodo').value=''; document.getElementById('largComodo').value=''; document.getElementById('compComodo').value=''; fecharModal('modal'); render();}
-function criarServ(){let nome=document.getElementById('nomeServ').value.trim(), un=document.getElementById('unidServ').value.trim()||'m2', val=parseFloat(document.getElementById('valorServ').value)||0; if(!nome){alert('Nome serviço');return;} let id=Date.now(); servicos.push({id:id,nome:nome,unidade:un,valor:val}); document.getElementById('nomeServ').value=''; document.getElementById('unidServ').value=''; document.getElementById('valorServ').value=''; fecharModal('modalNovoServ'); render();}
+function criarServ(){let nome=document.getElementById('nomeServ').value.trim(), un=document.getElementById('unidServ').value||'m2', val=parseFloat(document.getElementById('valorServ').value)||0; if(!nome){alert('Nome serviço');return;} let id=Date.now(); servicos.push({id:id,nome:nome,unidade:un,valor:val}); document.getElementById('nomeServ').value=''; document.getElementById('valorServ').value=''; fecharModal('modalNovoServ'); render();}
 function editarNome(id){let s=servicos.find(x=>x.id==id); if(!s)return; let n=prompt('Novo nome:',s.nome); if(n){s.nome=n;render();}}
 function removerServico(id){if(!confirm('Remover serviço?'))return; servicos=servicos.filter(x=>x.id!=id); comodos.forEach(c=>{c.servicos=c.servicos.filter(sid=>sid!=id);}); render();}
 function toggleServico(cIdx,sId){let c=comodos[cIdx]; if(!c)return; if(c.servicos.includes(sId))c.servicos=c.servicos.filter(x=>x!=sId); else c.servicos.push(sId); render();}
 function removerComodo(idx){if(!confirm('Remover cômodo?'))return; comodos.splice(idx,1); render();}
 function verificarLimiteGratis(){let pro=localStorage.getItem('kiza_pro'); if(pro) return true; if(comodos.length>=2){alert('Limite grátis: 2 cômodos. Ative PRO para ilimitado.'); return false;} return true;}
-
 function limparTudo(){
-  // TRAVA NO MODO CLIENTE
   let params=new URLSearchParams(window.location.search);
-  if(params.get('limpo')){
-    alert('🚫 No modo cliente você não pode apagar a obra! Esse botão está travado para proteger o orçamento do cliente.');
-    return;
-  }
-  if(!confirm('COMEÇAR DO ZERO? Isso limpa só a OBRA atual, mas mantém seu histórico de senhas e IDs. Continuar?'))return;
-  let save_next=localStorage.getItem('kiza_next_id');
-  let save_hist=localStorage.getItem('kiza_hist_cod');
-  let save_pro=localStorage.getItem('kiza_pro');
-  let save_pro_tipo=localStorage.getItem('kiza_pro_tipo');
-  let save_pro_expira=localStorage.getItem('kiza_pro_expira');
-  let save_dono=localStorage.getItem('kiza_dono');
+  if(params.get('limpo')){ alert('🚫 No modo cliente você não pode apagar a obra!'); return; }
+  if(!confirm('COMEÇAR DO ZERO? Isso limpa só a OBRA, mas mantém histórico de senhas e IDs. Continuar?'))return;
+  let save_next=localStorage.getItem('kiza_next_id'); let save_hist=localStorage.getItem('kiza_hist_cod'); let save_pro=localStorage.getItem('kiza_pro'); let save_pro_tipo=localStorage.getItem('kiza_pro_tipo'); let save_pro_expira=localStorage.getItem('kiza_pro_expira'); let save_dono=localStorage.getItem('kiza_dono');
+  let save_logo=localStorage.getItem('kiza_logo_final');
+  let save_emp=localStorage.getItem('kiza_emp_final'); let save_sub=localStorage.getItem('kiza_sub_final'); let save_tel=localStorage.getItem('kiza_tel_final'); let save_cid=localStorage.getItem('kiza_cid_final');
   comodos=[]; servicos=[]; clienteNome=''; telefoneCli=''; enderecoCli='';
-  empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
   document.getElementById('inputClienteTop').value=''; document.getElementById('inputTelefoneTop').value=''; document.getElementById('inputEnderecoTop').value='';
   localStorage.clear();
-  if(save_next) localStorage.setItem('kiza_next_id', save_next);
-  if(save_hist) localStorage.setItem('kiza_hist_cod', save_hist);
-  if(save_pro) localStorage.setItem('kiza_pro', save_pro);
-  if(save_pro_tipo) localStorage.setItem('kiza_pro_tipo', save_pro_tipo);
-  if(save_pro_expira) localStorage.setItem('kiza_pro_expira', save_pro_expira);
+  if(save_next) localStorage.setItem('kiza_next_id', save_next); if(save_hist) localStorage.setItem('kiza_hist_cod', save_hist); if(save_pro) localStorage.setItem('kiza_pro', save_pro); if(save_pro_tipo) localStorage.setItem('kiza_pro_tipo', save_pro_tipo); if(save_pro_expira) localStorage.setItem('kiza_pro_expira', save_pro_expira);
   localStorage.setItem('kiza_dono', save_dono||'1');
-  localStorage.setItem('kiza_emp_final',empresaNome); localStorage.setItem('kiza_sub_final',empresaSub); localStorage.setItem('kiza_tel_final',empresaTel); localStorage.setItem('kiza_cid_final',empresaCidade);
-  render(); if(save_hist) renderHist(); if(save_next) setNextId(parseInt(save_next,10)); showStatus('✅ Obra limpa, histórico mantido! ID: '+save_next);
+  if(save_logo) localStorage.setItem('kiza_logo_final', save_logo);
+  if(save_emp) localStorage.setItem('kiza_emp_final', save_emp); if(save_sub) localStorage.setItem('kiza_sub_final', save_sub); if(save_tel) localStorage.setItem('kiza_tel_final', save_tel); if(save_cid) localStorage.setItem('kiza_cid_final', save_cid);
+  // Recria serviços padrão
+  servicos=[
+    {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
+    {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
+    {id:3,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
+    {id:4,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85},
+    {id:5,nome:'SANCA FECHADA',unidade:'ml',valor:25},
+    {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
+  ];
+  render(); if(save_hist) renderHist(); if(save_next) setNextId(parseInt(save_next,10)); showStatus('✅ Obra limpa, histórico mantido!');
 }
-
 function gerarLinkPlataforma(){let obj={comodos:comodos,servicos:servicos}; let json=JSON.stringify(obj); let b64=btoa(unescape(encodeURIComponent(json))); let base=window.location.origin+window.location.pathname; let link=`${base}?empresa=${encodeURIComponent(empresaNome)}&sub=${encodeURIComponent(empresaSub)}&tel=${encodeURIComponent(empresaTel)}&cid=${encodeURIComponent(empresaCidade)}&dados=${b64}&limpo=1`; document.getElementById('linkGerado').value=link; document.getElementById('areaLinkPlataforma').style.display='block'; document.getElementById('areaLinkPlataforma').scrollIntoView({behavior:'smooth'});}
-function gerarPDF(){
-  const {jsPDF}=window.jspdf;
-  let doc=new jsPDF();
-  let pageW=doc.internal.pageSize.getWidth();
-  let pageH=doc.internal.pageSize.getHeight();
-  let y=0;
-  let margin=12;
-
-  // === TARJA PRETA TOPO - CABEÇALHO ===
-  doc.setFillColor(17,17,17);
-  doc.rect(0,0,pageW,32,'F');
-  
-  // Logo K dentro de circulo dourado
-  let logoBase64=localStorage.getItem('kiza_logo_final');
-  if(logoBase64){
-    try{
-      doc.addImage(logoBase64,'JPEG',12,5,20,20);
-    }catch(e){
-      // se falhar, faz circulo K
-      doc.setFillColor(212,175,55);
-      doc.circle(22,15,10,'F');
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(12);
-      doc.setTextColor(17,17,17);
-      doc.text('K',22,17,{align:'center'});
-    }
-  }else{
-    doc.setFillColor(34,34,34);
-    doc.setDrawColor(212,175,55);
-    doc.setLineWidth(0.8);
-    doc.circle(22,15,10,'FD');
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(12);
-    doc.setTextColor(212,175,55);
-    doc.text('K',22,17,{align:'center'});
-  }
-
-  // Nome empresa dourado
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(14);
-  doc.setTextColor(212,175,55);
-  doc.text(empresaNome, 38, 14);
-  
-  // Sub info branca pequena
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(7);
-  doc.setTextColor(200,200,200);
-  doc.text((empresaSub+' | '+empresaTel+' | '+empresaCidade).substring(0,110), 38, 20);
-
-  // Selo ORÇAMENTO
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(8);
-  doc.setTextColor(212,175,55);
-  doc.setDrawColor(212,175,55);
-  doc.setLineWidth(0.5);
-  let seloX=pageW-38;
-  doc.rect(seloX,8,32,14);
-  doc.text('ORÇAMENTO',seloX+16,17,{align:'center'});
-
-  y=40;
-
-  // === BOX CLIENTE ===
-  doc.setFillColor(246,245,240);
-  doc.setDrawColor(233,229,217);
-  doc.setLineWidth(0.3);
-  doc.rect(margin,y,pageW-margin*2,20,'FD');
-  
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(9);
-  doc.setTextColor(17,17,17);
-  let cliNome = clienteNome || 'Cliente não informado';
-  doc.text('CLIENTE: '+cliNome, margin+3, y+6);
-  
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(8);
-  doc.setTextColor(80,80,80);
-  let cliInfo = (telefoneCli? telefoneCli+' | ' : '') + (enderecoCli? enderecoCli : '');
-  if(cliInfo) doc.text(cliInfo.substring(0,100), margin+3, y+11);
-  
-  doc.setFontSize(7);
-  doc.setTextColor(120,120,120);
-  let dataStr = new Date().toLocaleDateString('pt-BR')+' - Validade: 7 dias';
-  doc.text(dataStr, margin+3, y+16);
-
-  y+=28;
-
-  // === TABELA DE COMODOS ===
-  let totalGeral=0;
-  
-  comodos.forEach((c,idx)=>{
-    // Se vai passar da página, cria nova
-    if(y>pageH-50){
-      doc.addPage();
-      y=15;
-    }
-
-    let a=area(c.larg,c.comp);
-    let p=perim(c.larg,c.comp);
-    
-    // Cabeçalho do comodo - cinza
-    doc.setFillColor(17,17,17);
-    doc.rect(margin,y,pageW-margin*2,8,'F');
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(9);
-    doc.setTextColor(255,255,255);
-    doc.text((idx+1)+'. '+c.nome.toUpperCase(), margin+3, y+5.5);
-    
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(7);
-    doc.setTextColor(212,175,55);
-    doc.text(c.larg+'m x '+c.comp+'m = '+a.toFixed(2)+'m² | Perímetro '+p.toFixed(2)+'m', pageW-margin-3, y+5.5,{align:'right'});
-    
-    y+=10;
-
-    // Lista serviços do comodo
-    let subComodo=0;
-    if(c.servicos.length===0){
-      doc.setFont('helvetica','italic');
-      doc.setFontSize(7);
-      doc.setTextColor(150,150,150);
-      doc.text('Nenhum serviço selecionado', margin+3, y);
-      y+=5;
-    } else {
-      c.servicos.forEach(sid=>{
-        let s=servicos.find(x=>x.id==sid);
-        if(!s) return;
-        let base=getBase(s.unidade,a,p);
-        let val=base*s.valor;
-        subComodo+=val;
-        
-        // Linha do serviço
-        if(y>pageH-30){ doc.addPage(); y=15; }
-        
-        doc.setFont('helvetica','normal');
-        doc.setFontSize(8);
-        doc.setTextColor(40,40,40);
-        doc.text('• '+s.nome.toUpperCase(), margin+5, y);
-        
-        doc.setFontSize(7);
-        doc.setTextColor(100,100,100);
-        let detalhe = base.toFixed(2)+s.unidade+' x R$'+s.valor.toFixed(2);
-        doc.text(detalhe, margin+70, y);
-        
-        doc.setFont('helvetica','bold');
-        doc.setFontSize(8);
-        doc.setTextColor(17,17,17);
-        doc.text('R$ '+val.toFixed(2), pageW-margin-3, y,{align:'right'});
-        
-        y+=5;
-      });
-    }
-
-    // Subtotal comodo
-    doc.setDrawColor(230,230,230);
-    doc.setLineWidth(0.2);
-    doc.line(margin, y, pageW-margin, y);
-    y+=2;
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(8);
-    doc.setTextColor(80,80,80);
-    doc.text('Subtotal '+c.nome+':', pageW-margin-30, y,{align:'right'});
-    doc.text('R$ '+subComodo.toFixed(2), pageW-margin-3, y,{align:'right'});
-    
-    totalGeral+=subComodo;
-    y+=8;
-  });
-
-  // === TOTAL GERAL - TARJA PRETA COM DOURADO ===
-  if(y>pageH-35){ doc.addPage(); y=15; }
-  
-  y+=2;
-  doc.setFillColor(17,17,17);
-  doc.rect(margin,y,pageW-margin*2,14,'F');
-  
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(10);
-  doc.setTextColor(255,255,255);
-  doc.text('TOTAL GERAL DO ORÇAMENTO:', margin+4, y+8.5);
-  
-  doc.setFontSize(14);
-  doc.setTextColor(212,175,55);
-  doc.text('R$ '+totalGeral.toFixed(2).replace('.',','), pageW-margin-4, y+9,{align:'right'});
-  
-  y+=20;
-
-  // === RODAPÉ ===
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(7);
-  doc.setTextColor(120,120,120);
-  doc.text('Orçamento gerado por '+empresaNome+' - '+empresaTel, margin, y);
-  y+=4;
-  doc.text('Este orçamento tem validade de 7 dias. Valores sujeitos a alteração após visita técnica.', margin, y);
-  
-  // Linha dourada no rodapé
-  doc.setFillColor(212,175,55);
-  doc.rect(0,pageH-6,pageW,6,'F');
-
-  // Salva
-  let nomeArq = 'ORCAMENTO_'+(clienteNome? clienteNome.replace(/[^a-zA-Z0-9]/g,'_') : 'CLIENTE')+'_'+new Date().toISOString().slice(0,10)+'.pdf';
-  doc.save(nomeArq);
-  showStatus('✅ PDF profissional gerado!');
-}
-
+function gerarPDF(){const {jsPDF}=window.jspdf; let doc=new jsPDF(); doc.text(empresaNome,10,10); doc.text(`Cliente: ${clienteNome} ${telefoneCli}`,10,18); let y=28; comodos.forEach(c=>{doc.text(`${c.nome} - ${c.larg}x${c.comp}`,10,y); y+=8;}); doc.text(document.getElementById('totalGeral').textContent,10,y); doc.save(`orcamento_${clienteNome||'cliente'}.pdf`);}
 function gerarUm(tipo){
-  let inputN=document.getElementById('inputNomeClienteGerador');
-  let inputT=document.getElementById('inputTelClienteGerador');
-  let nomeCli=inputN?inputN.value.trim():'';
-  let telCli=inputT?inputT.value.trim():'';
-  if(!nomeCli){ alert('Digite o NOME CLIENTE antes de gerar!'); if(inputN) inputN.focus(); return; }
-  let id=getNextId();
-  let cod=gerarCodigoSeguro(tipo,id);
-  if(!cod){alert('Erro ao gerar código'); return;}
-  addHistorico(cod, nomeCli, telCli, id, tipo);
-  setNextId(id+1);
-  let el=document.getElementById('ultimoGerado');
-  if(el){
-    el.style.display='block';
-    el.innerHTML=`GERADO ID ${id} - ${tipo.toUpperCase()}<br><b style="color:#d4af37;font-size:13px">${cod}</b><br><span style="color:#fff">Cliente: ${nomeCli} ${telCli? '- '+telCli:''}</span><br><button onclick="navigator.clipboard.writeText('${cod}').then(()=>showStatus('Código copiado!'))" style="margin-top:6px;background:#d4af37;color:#111;border:none;padding:6px 12px;border-radius:6px;font-weight:800;font-size:11px;cursor:pointer">COPIAR ESSE CÓDIGO</button>`;
-  }
-  showStatus(`✅ ID ${id} gerado para ${nomeCli}!`);
+  let inputN=document.getElementById('inputNomeClienteGerador'); let inputT=document.getElementById('inputTelClienteGerador'); let nomeCli=inputN?inputN.value.trim():''; let telCli=inputT?inputT.value.trim():''; if(!nomeCli){ alert('Digite o NOME CLIENTE!'); if(inputN) inputN.focus(); return; }
+  let id=getNextId(); let cod=gerarCodigoSeguro(tipo,id); if(!cod){alert('Erro'); return;}
+  addHistorico(cod, nomeCli, telCli, id, tipo); setNextId(id+1);
+  let el=document.getElementById('ultimoGerado'); if(el){ el.style.display='block'; el.innerHTML=`GERADO ID ${id} - ${tipo.toUpperCase()}<br><b style="color:#d4af37;font-size:13px">${cod}</b><br><span style="color:#fff">Cliente: ${nomeCli} ${telCli? '- '+telCli:''}</span><br><button onclick="navigator.clipboard.writeText('${cod}').then(()=>showStatus('Copiado!'))" style="margin-top:6px;background:#d4af37;color:#111;border:none;padding:6px 12px;border-radius:6px;font-weight:800;font-size:11px;cursor:pointer">COPIAR</button>`; }
+  showStatus(`✅ ID ${id} gerado!`);
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
   let params=new URLSearchParams(window.location.search),emp=params.get('empresa'),sub=params.get('sub'),tel=params.get('tel'),cid=params.get('cid'),dados=params.get('dados'),limpo=params.get('limpo');
+  // Inicialização dono
   if(!emp&&!dados&&!limpo){
     let donoExiste=localStorage.getItem('kiza_dono');
-    let nextExiste=localStorage.getItem('kiza_next_id');
-    let histExiste=localStorage.getItem('kiza_hist_cod');
     if(!donoExiste){
+      let nextExiste=localStorage.getItem('kiza_next_id'); let histExiste=localStorage.getItem('kiza_hist_cod'); let logoExiste=localStorage.getItem('kiza_logo_final');
+      let empE=localStorage.getItem('kiza_emp_final'); let subE=localStorage.getItem('kiza_sub_final'); let telE=localStorage.getItem('kiza_tel_final'); let cidE=localStorage.getItem('kiza_cid_final');
+      let servE=localStorage.getItem('kiza_serv_final'); let comoE=localStorage.getItem('kiza_comodos_final');
       empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
-      comodos=[];
-      servicos=[
-        {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
-        {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
-        {id:3,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
-        {id:4,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85},
-        {id:5,nome:'SANCA FECHADA',unidade:'ml',valor:25},
-        {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
-      ];
-      localStorage.clear(); localStorage.setItem('kiza_dono','1');
-      localStorage.setItem('kiza_emp_final',empresaNome); localStorage.setItem('kiza_sub_final',empresaSub);
-      localStorage.setItem('kiza_tel_final',empresaTel); localStorage.setItem('kiza_cid_final',empresaCidade);
-      if(nextExiste) localStorage.setItem('kiza_next_id', nextExiste);
+      comodos=[]; servicos=[]; 
+      if(servE){ try{ servicos=JSON.parse(servE); }catch(e){} }
+      if(servicos.length===0){
+        servicos=[
+          {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
+          {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
+          {id:3,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
+          {id:4,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85},
+          {id:5,nome:'SANCA FECHADA',unidade:'ml',valor:25},
+          {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
+        ];
+      }
+      localStorage.clear();
+      localStorage.setItem('kiza_dono','1');
+      localStorage.setItem('kiza_emp_final',empE||empresaNome); localStorage.setItem('kiza_sub_final',subE||empresaSub); localStorage.setItem('kiza_tel_final',telE||empresaTel); localStorage.setItem('kiza_cid_final',cidE||empresaCidade);
+      if(logoExiste) localStorage.setItem('kiza_logo_final', logoExiste);
+      if(nextExiste) localStorage.setItem('kiza_next_id', nextExiste); else localStorage.setItem('kiza_next_id','5');
       if(histExiste) localStorage.setItem('kiza_hist_cod', histExiste);
+      localStorage.setItem('kiza_serv_final', JSON.stringify(servicos));
+      if(comoE) localStorage.setItem('kiza_comodos_final', comoE);
     }
   }
   if(emp){empresaNome=emp;} if(sub){empresaSub=sub;} if(tel){empresaTel=tel;} if(cid){empresaCidade=cid;}
@@ -513,12 +275,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     const areaLink=document.getElementById('areaLinkPlataforma'); if(areaLink) areaLink.style.display='none';
     const btnZerar=document.getElementById('btnZerar'); if(btnZerar){ btnZerar.style.opacity='0.3'; btnZerar.style.pointerEvents='none'; btnZerar.title='Travado no modo cliente'; btnZerar.textContent='🔒 COMEÇAR DO ZERO (travado)'; }
     const painelDono=document.getElementById('painelDono'); if(painelDono) painelDono.style.display='none';
-    const logoEdit=document.getElementById('logoEdit'); if(logoEdit) logoEdit.style.pointerEvents='none';
+    const logoEdit=document.getElementById('logoEdit'); if(logoEdit){ logoEdit.style.pointerEvents='none'; logoEdit.style.opacity='0.6'; }
   } else {
-    // MODO DONO - garante que logo está liberada
-    const logoEditDono=document.getElementById('logoEdit'); if(logoEditDono){ logoEditDono.style.pointerEvents='auto'; logoEditDono.style.opacity='1'; logoEditDono.title='Clique para trocar a logo'; }
+    const logoEditDono=document.getElementById('logoEdit'); if(logoEditDono){ logoEditDono.style.pointerEvents='auto'; logoEditDono.style.opacity='1'; }
     const btnZerarDono=document.getElementById('btnZerar'); if(btnZerarDono){ btnZerarDono.style.opacity='1'; btnZerarDono.style.pointerEvents='auto'; btnZerarDono.textContent='COMEÇAR DO ZERO'; }
-  }
   }
   let tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
   if(tipo==='mensal' && expira>0 && Date.now()>expira){ localStorage.removeItem('kiza_pro'); localStorage.removeItem('kiza_pro_tipo'); localStorage.removeItem('kiza_pro_expira'); }
@@ -526,14 +286,14 @@ document.addEventListener('DOMContentLoaded',()=>{
   
   let isDonoCheck=localStorage.getItem('kiza_dono')==='1';
   let painelD=document.getElementById('painelDono');
-  if(painelD){ if(isDonoCheck){ painelD.style.display='block'; setNextId(getNextId()); renderHist(); let btnRes=document.getElementById('btnRestaurarID3'); if(btnRes){ let nid=getNextId(); if(nid<=1){ btnRes.style.display='inline-block'; } btnRes.addEventListener('click',()=>{ if(confirm('Restaurar para ID 3?')){ setNextId(3); renderHist(); btnRes.style.display='none'; showStatus('✅ ID restaurado para 3!'); } }); } } }
+  if(painelD){ if(isDonoCheck){ painelD.style.display='block'; setNextId(getNextId()); renderHist(); } }
 
   let btnV=document.getElementById('btnGerar1Vital'); if(btnV) btnV.addEventListener('click',()=>gerarUm('vitalicio'));
   let btnM=document.getElementById('btnGerar1Mensal'); if(btnM) btnM.addEventListener('click',()=>gerarUm('mensal'));
-  let btnCH=document.getElementById('btnCopiarHist'); if(btnCH) btnCH.addEventListener('click',()=>{ let ta=document.getElementById('historicoGerados'); if(ta){ navigator.clipboard.writeText(ta.value).then(()=>showStatus('Histórico copiado!')); } });
-  let btnBaixar=document.getElementById('btnBaixarTxt'); if(btnBaixar) btnBaixar.addEventListener('click',()=>{ let ta=document.getElementById('historicoGerados'); if(!ta||!ta.value){showStatus('Nada pra baixar'); return;} let blob=new Blob([ta.value],{type:'text/plain'}); let url=URL.createObjectURL(blob); let a=document.createElement('a'); a.href=url; a.download='kizara_codigos_'+new Date().toISOString().slice(0,10)+'.txt'; a.click(); URL.revokeObjectURL(url); showStatus('TXT baixado!'); });
+  let btnCH=document.getElementById('btnCopiarHist'); if(btnCH) btnCH.addEventListener('click',()=>{ let ta=document.getElementById('historicoGerados'); if(ta){ navigator.clipboard.writeText(ta.value).then(()=>showStatus('Copiado!')); } });
+  let btnBaixar=document.getElementById('btnBaixarTxt'); if(btnBaixar) btnBaixar.addEventListener('click',()=>{ let ta=document.getElementById('historicoGerados'); if(!ta||!ta.value){showStatus('Nada'); return;} let blob=new Blob([ta.value],{type:'text/plain'}); let url=URL.createObjectURL(blob); let a=document.createElement('a'); a.href=url; a.download='kizara_codigos_'+new Date().toISOString().slice(0,10)+'.txt'; a.click(); URL.revokeObjectURL(url); });
   let busca=document.getElementById('buscaHist'); if(busca) busca.addEventListener('input',(e)=>{ renderHist(e.target.value); });
-  let btnLH=document.getElementById('btnLimparHist'); if(btnLH) btnLH.addEventListener('click',()=>{ if(confirm('Limpar todo histórico de códigos gerados?')){ localStorage.removeItem('kiza_hist_cod'); renderHist(); showStatus('Histórico limpo'); } });
+  let btnLH=document.getElementById('btnLimparHist'); if(btnLH) btnLH.addEventListener('click',()=>{ if(confirm('Limpar histórico?')){ localStorage.removeItem('kiza_hist_cod'); renderHist(); } });
 
   document.getElementById('logoEdit').addEventListener('click',()=>{ if(new URLSearchParams(window.location.search).get('limpo')) return; document.getElementById('inputLogo').click();});
   document.getElementById('nomeEmpresa').addEventListener('click',()=>{ if(new URLSearchParams(window.location.search).get('limpo')) return; abrirModalEditarEmpresa();}); document.getElementById('subEmpresa').addEventListener('click',()=>{ if(new URLSearchParams(window.location.search).get('limpo')) return; abrirModalEditarEmpresa();}); document.getElementById('telEmpresa').addEventListener('click',()=>{ if(new URLSearchParams(window.location.search).get('limpo')) return; abrirModalEditarEmpresa();}); document.getElementById('cidadeEmpresa').addEventListener('click',()=>{ if(new URLSearchParams(window.location.search).get('limpo')) return; abrirModalEditarEmpresa();});
@@ -542,45 +302,23 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('inputTelefoneTop').addEventListener('input',(e)=>{telefoneCli=e.target.value;localStorage.setItem('kiza_tel_cli_final',telefoneCli);render();});
   document.getElementById('inputEnderecoTop').addEventListener('input',(e)=>{enderecoCli=e.target.value;localStorage.setItem('kiza_end_final',enderecoCli);render();});
   document.getElementById('btnPdf').addEventListener('click',gerarPDF);document.getElementById('btnLinkPlataforma').addEventListener('click',gerarLinkPlataforma);
-  let btnVideo=document.getElementById('btnVideoAjuda'); if(btnVideo) btnVideo.addEventListener('click',()=>{ let area=document.getElementById('areaVideoTutorial'); if(area){ area.style.display= area.style.display==='none' || area.style.display==='' ? 'block' : 'none'; area.scrollIntoView({behavior:'smooth'}); } });
+  let btnVideo=document.getElementById('btnVideoAjuda'); if(btnVideo) btnVideo.addEventListener('click',()=>{ let area=document.getElementById('areaVideoTutorial'); if(area){ area.style.display= area.style.display==='none' || area.style.display==='' ? 'block' : 'none'; } });
   let btnFecharVideo=document.getElementById('btnFecharVideo'); if(btnFecharVideo) btnFecharVideo.addEventListener('click',()=>{ let area=document.getElementById('areaVideoTutorial'); if(area) area.style.display='none'; });
   document.getElementById('btnComodo').addEventListener('click',()=>{if(verificarLimiteGratis())abrirModal('modal');});document.getElementById('btnNovoServ').addEventListener('click',()=>{abrirModal('modalNovoServ');});document.getElementById('btnCriarComodo').addEventListener('click',()=>{if(verificarLimiteGratis())criarComodo();});document.getElementById('btnCriarServ').addEventListener('click',criarServ);
   document.getElementById('btnSalvarEmpresa').addEventListener('click',()=>{empresaNome=document.getElementById('editNomeEmp').value||empresaNome;empresaSub=document.getElementById('editSubEmp').value||empresaSub;empresaTel=document.getElementById('editTelEmp').value||empresaTel;empresaCidade=document.getElementById('editCidadeEmp').value||empresaCidade;localStorage.setItem('kiza_emp_final',empresaNome);localStorage.setItem('kiza_sub_final',empresaSub);localStorage.setItem('kiza_tel_final',empresaTel);localStorage.setItem('kiza_cid_final',empresaCidade);fecharModal('modalEditarEmpresa');render();});
   document.getElementById('btnZerar').addEventListener('click',limparTudo);document.getElementById('btnAtivarPro2').addEventListener('click',()=>{abrirModal('modalLic');});document.getElementById('bannerAcao').addEventListener('click',()=>{abrirModal('modalLic');});
   document.getElementById('btnAtivarPro').addEventListener('click',()=>{
-    let licVal=document.getElementById('inputLic').value.trim();
-    let res=validarLicencaSegura(licVal);
-    if(!res){alert('Licença inválida!');return;}
-    if(res.tipo==='vitalicio'){
-      localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_pro_tipo','vitalicio'); localStorage.removeItem('kiza_pro_expira');
-      fecharModal('modalLic'); showStatus('✅ PRO VITALÍCIO ativado!');
-      let b=document.getElementById('bannerPromo'); if(b) b.style.display='none'; let btn2=document.getElementById('btnAtivarPro2'); if(btn2){ btn2.textContent='✅ PRO ATIVO'; btn2.style.background='#16a34a'; btn2.style.color='#fff'; }
-    } else if(res.tipo==='mensal'){
-      let expira=Date.now()+30*24*60*60*1000;
-      localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_pro_tipo','mensal'); localStorage.setItem('kiza_pro_expira',expira.toString());
-      fecharModal('modalLic'); showStatus('✅ PRO MENSAL 30 dias!');
-    }
+    let licVal=document.getElementById('inputLic').value.trim(); let res=validarLicencaSegura(licVal); if(!res){alert('Licença inválida!');return;}
+    if(res.tipo==='vitalicio'){ localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_pro_tipo','vitalicio'); localStorage.removeItem('kiza_pro_expira'); fecharModal('modalLic'); showStatus('✅ PRO VITALÍCIO!'); }
+    else if(res.tipo==='mensal'){ let expira=Date.now()+30*24*60*60*1000; localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_pro_tipo','mensal'); localStorage.setItem('kiza_pro_expira',expira.toString()); fecharModal('modalLic'); showStatus('✅ PRO MENSAL 30 dias!'); }
   });
   document.querySelectorAll('.modalOverlay').forEach(ov=>{ov.addEventListener('click',(e)=>{if(e.target===ov)fecharModal(ov.id);});});
   document.getElementById('btnCopiarLink')?.addEventListener('click',()=>{ let ta=document.getElementById('linkGerado'); if(ta){ navigator.clipboard.writeText(ta.value).then(()=>showStatus('Link copiado!')); } });
   document.getElementById('btnAbrirCel')?.addEventListener('click',()=>{ let ta=document.getElementById('linkGerado'); if(ta&&ta.value) window.open(ta.value,'_blank'); });
-  // Garante serviços padrão se estiver vazio
   try{
     let savedServ=localStorage.getItem('kiza_serv_final');
-    if(savedServ){
-      let parsed=JSON.parse(savedServ);
-      if(parsed && parsed.length>0){ servicos=parsed; }
-      else {
-        servicos=[
-          {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
-          {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
-          {id:3,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
-          {id:4,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85},
-          {id:5,nome:'SANCA FECHADA',unidade:'ml',valor:25},
-          {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
-        ];
-      }
-    } else if(servicos.length===0){
+    if(savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0){ servicos=parsed; } }
+    if(servicos.length===0){
       servicos=[
         {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
         {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
@@ -590,13 +328,8 @@ document.addEventListener('DOMContentLoaded',()=>{
         {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
       ];
     }
-    let savedComodos=localStorage.getItem('kiza_comodos_final');
-    if(savedComodos){
-      let pc=JSON.parse(savedComodos);
-      if(pc && pc.length>0) comodos=pc;
-    }
+    let savedComodos=localStorage.getItem('kiza_comodos_final'); if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
   }catch(e){}
-
   render();
 });
 </script>
