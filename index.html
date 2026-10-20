@@ -322,7 +322,13 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   if(emp) empresaNome=emp; if(sub) empresaSub=sub; if(tel) empresaTel=tel; if(cid) empresaCidade=cid;
   if(dados){try{let json=JSON.parse(decodeURIComponent(atob(dados))); if(json.comodos) comodos=json.comodos; if(json.servicos) servicos=json.servicos;}catch(e){}}
-  if(limpo){document.getElementById('avisoCliente').style.display='block'; document.getElementById('btnLinkPlataforma').style.display='none';}
+  if(limpo){
+    document.getElementById('avisoCliente').style.display='block'; 
+    let bl=document.getElementById('btnLinkPlataforma'); if(bl) bl.style.display='none';
+    let pd=document.getElementById('painelDono'); if(pd) pd.style.display='none';
+    let bp=document.getElementById('bannerPromo'); if(bp) bp.style.display='none';
+    let bz=document.getElementById('btnAtivarPro2'); if(bz) bz.style.display='none';
+  }
   let tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
   if(tipo==='mensal' && expira>0 && Date.now()>expira){ localStorage.removeItem('kiza_pro'); }
   try{
@@ -347,10 +353,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   }catch(e){}
   let isDono=localStorage.getItem('kiza_dono')==='1';
   let painelD=document.getElementById('painelDono'); 
-  if(painelD && isDono){
+  if(painelD && isDono && !limpo){
     painelD.style.display='block';
     try{ setNextId(getNextId()); renderHist(); }catch(e){ console.log(e); }
   }
+  if(limpo && painelD){ painelD.style.display='none'; }
   document.getElementById('btnGerar1Vital')?.addEventListener('click',()=>gerarUm('vitalicio'));
   document.getElementById('btnGerar1Mensal')?.addEventListener('click',()=>gerarUm('mensal'));
   document.getElementById('logoEdit').addEventListener('click',()=>{ if(limpo) return; document.getElementById('inputLogo').click();});
