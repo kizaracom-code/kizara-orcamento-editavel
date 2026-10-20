@@ -360,11 +360,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(limpo && painelD){ painelD.style.display='none'; }
   document.getElementById('btnGerar1Vital')?.addEventListener('click',()=>gerarUm('vitalicio'));
   document.getElementById('btnGerar1Mensal')?.addEventListener('click',()=>gerarUm('mensal'));
-  document.getElementById('logoEdit').addEventListener('click',()=>{ if(limpo) return; document.getElementById('inputLogo').click();});
-  document.getElementById('nomeEmpresa').addEventListener('click',()=>{ if(limpo) return; abrirModalEditarEmpresa();});
-  document.getElementById('subEmpresa').addEventListener('click',()=>{ if(limpo) return; abrirModalEditarEmpresa();});
-  document.getElementById('telEmpresa').addEventListener('click',()=>{ if(limpo) return; abrirModalEditarEmpresa();});
-  document.getElementById('cidadeEmpresa').addEventListener('click',()=>{ if(limpo) return; abrirModalEditarEmpresa();});
+  document.getElementById('logoEdit').addEventListener('click',()=>{ document.getElementById('inputLogo').click();});
+  document.getElementById('nomeEmpresa').addEventListener('click',()=>{ abrirModalEditarEmpresa();});
+  document.getElementById('subEmpresa').addEventListener('click',()=>{ abrirModalEditarEmpresa();});
+  document.getElementById('telEmpresa').addEventListener('click',()=>{ abrirModalEditarEmpresa();});
+  document.getElementById('cidadeEmpresa').addEventListener('click',()=>{ abrirModalEditarEmpresa();});
   document.getElementById('inputLogo').addEventListener('change',(e)=>{let file=e.target.files[0];if(!file)return;let reader=new FileReader();reader.onload=(ev)=>{localStorage.setItem('kiza_logo_final',ev.target.result);render();};reader.readAsDataURL(file);});
   document.getElementById('inputClienteTop').addEventListener('input',(e)=>{clienteNome=e.target.value; localStorage.setItem('kiza_cli_final',clienteNome); render();});
   document.getElementById('inputTelefoneTop').addEventListener('input',(e)=>{telefoneCli=e.target.value; localStorage.setItem('kiza_tel_cli_final',telefoneCli); render();});
