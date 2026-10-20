@@ -188,7 +188,35 @@ function getBase(u,a,p){ if(['m2','m3'].includes(u))return a; if(['ml','m'].incl
 function salvar(){try{let pp=new URLSearchParams(window.location.search); if(pp.has('limpo')) return; localStorage.setItem('kiza_serv_final',JSON.stringify(servicos)); localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos)); localStorage.setItem('kiza_emp_final',empresaNome); localStorage.setItem('kiza_sub_final',empresaSub); localStorage.setItem('kiza_tel_final',empresaTel); localStorage.setItem('kiza_cid_final',empresaCidade); localStorage.setItem('kiza_cli_final',clienteNome); localStorage.setItem('kiza_tel_cli_final',telefoneCli); localStorage.setItem('kiza_end_final',enderecoCli);}catch(e){}}
 function showStatus(t){let el=document.getElementById('status');el.textContent=t;el.style.display='block';setTimeout(()=>{el.style.display='none';},3000);}
 
-function render(){salvar(); let lc=document.getElementById('listaComodos'), gs=document.getElementById('gridServicos'), pc=document.getElementById('previaComodos'), tg=document.getElementById('totalGeral'), cp=document.getElementById('clientePrevia'); let total=0; if(lc) lc.innerHTML=comodos.map((c,i)=>{let a=area(c.larg,c.comp), p=perim(c.larg,c.comp); return `<div class="comodoItem"><div class="comodoHead"><b>${c.nome}</b><button onclick="removerComodo(${i})" style="border:none;background:#fee;padding:4px 8px;border-radius:6px;font-size:10px;cursor:pointer">X</button></div><div class="comodoMeta">${c.larg}m x ${c.comp}m = ${a.toFixed(2)}m² | Perímetro ${p.toFixed(2)}m</div><div class="servCheck">${servicos.map(s=>{let chk=c.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome} R$${s.valor}</label>`;}).join('')}</div></div>`;}).join('')||'<div style="font-size:12px;color:#999">Nenhum cômodo ainda.</div>'; if(gs) gs.innerHTML=servicos.map(s=>`<div class="servCard"><b style="font-size:12px">${s.nome}</b><div style="font-size:11px;color:#666">${s.unidade} - R$ ${s.valor}</div><div style="margin-top:6px;display:flex;gap:4px"><button onclick="editarNome(${s.id})" style="font-size:10px;padding:3px 6px;border:1px solid #ddd;border-radius:6px;cursor:pointer">Editar</button><button onclick="removerServico(${s.id})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div></div>`).join('')||'<div style="font-size:12px;color:#999">Nenhum serviço ainda. Clique em + SERVICO</div>'; let htmlPrev=''; comodos.forEach(c=>{let a=area(c.larg,c.comp), p=perim(c.larg,c.comp); let sub=0; let dets=[]; c.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s)return; let base=getBase(s.unidade,a,p); let val=base*s.valor; sub+=val; dets.push(`${s.nome}: ${base.toFixed(2)} x R$${s.valor} = R$${val.toFixed(2)}`);}); total+=sub; htmlPrev+=`<div style="margin-bottom:8px"><b>${c.nome}</b> (${c.larg}x${c.comp}) - Subtotal R$ ${sub.toFixed(2)}<br><span style="font-size:10px;opacity:.7">${dets.join(' | ')}</span></div>`;}); if(pc) pc.innerHTML=htmlPrev||'<div style="font-size:11px;opacity:.6">Adicione cômodos e serviços</div>'; if(tg) tg.textContent='R$ '+total.toFixed(2).replace('.',','); if(cp) cp.innerHTML=clienteNome? `<div style="font-size:12px;margin-bottom:6px">Cliente: <b>${clienteNome}</b> ${telefoneCli? ' - '+telefoneCli:''} ${enderecoCli? ' - '+enderecoCli:''}</div>` : ''; }
+function render(){salvar(); 
+  // Mostra logo salva
+  try{
+    let logoLS=localStorage.getItem('kiza_logo_final');
+    let imgEl=document.getElementById('logoImg');
+    let txtEl=document.getElementById('logoTxt');
+    if(logoLS && imgEl){
+      imgEl.src=logoLS;
+      imgEl.style.display='block';
+      if(txtEl) txtEl.style.display='none';
+    }
+    let empLS=localStorage.getItem('kiza_emp_final');
+    let subLS=localStorage.getItem('kiza_sub_final');
+    let telLS=localStorage.getItem('kiza_tel_final');
+    let cidLS=localStorage.getItem('kiza_cid_final');
+    if(empLS) empresaNome=empLS;
+    if(subLS) empresaSub=subLS;
+    if(telLS) empresaTel=telLS;
+    if(cidLS) empresaCidade=cidLS;
+    let nomeEl=document.getElementById('nomeEmpresa');
+    let subEl=document.getElementById('subEmpresa');
+    let telEl=document.getElementById('telEmpresa');
+    let cidEl=document.getElementById('cidadeEmpresa');
+    if(nomeEl) nomeEl.textContent=empresaNome;
+    if(subEl) subEl.textContent=empresaSub;
+    if(telEl) telEl.textContent=empresaTel;
+    if(cidEl) cidEl.textContent=empresaCidade;
+  }catch(e){}
+  let lc=document.getElementById('listaComodos'), gs=document.getElementById('gridServicos'), pc=document.getElementById('previaComodos'), tg=document.getElementById('totalGeral'), cp=document.getElementById('clientePrevia'); let total=0; if(lc) lc.innerHTML=comodos.map((c,i)=>{let a=area(c.larg,c.comp), p=perim(c.larg,c.comp); return `<div class="comodoItem"><div class="comodoHead"><b>${c.nome}</b><button onclick="removerComodo(${i})" style="border:none;background:#fee;padding:4px 8px;border-radius:6px;font-size:10px;cursor:pointer">X</button></div><div class="comodoMeta">${c.larg}m x ${c.comp}m = ${a.toFixed(2)}m² | Perímetro ${p.toFixed(2)}m</div><div class="servCheck">${servicos.map(s=>{let chk=c.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome} R$${s.valor}</label>`;}).join('')}</div></div>`;}).join('')||'<div style="font-size:12px;color:#999">Nenhum cômodo ainda.</div>'; if(gs) gs.innerHTML=servicos.map(s=>`<div class="servCard"><b style="font-size:12px">${s.nome}</b><div style="font-size:11px;color:#666">${s.unidade} - R$ ${s.valor}</div><div style="margin-top:6px;display:flex;gap:4px"><button onclick="editarNome(${s.id})" style="font-size:10px;padding:3px 6px;border:1px solid #ddd;border-radius:6px;cursor:pointer">Editar</button><button onclick="removerServico(${s.id})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div></div>`).join('')||'<div style="font-size:12px;color:#999">Nenhum serviço ainda. Clique em + SERVICO</div>'; let htmlPrev=''; comodos.forEach(c=>{let a=area(c.larg,c.comp), p=perim(c.larg,c.comp); let sub=0; let dets=[]; c.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s)return; let base=getBase(s.unidade,a,p); let val=base*s.valor; sub+=val; dets.push(`${s.nome}: ${base.toFixed(2)} x R$${s.valor} = R$${val.toFixed(2)}`);}); total+=sub; htmlPrev+=`<div style="margin-bottom:8px"><b>${c.nome}</b> (${c.larg}x${c.comp}) - Subtotal R$ ${sub.toFixed(2)}<br><span style="font-size:10px;opacity:.7">${dets.join(' | ')}</span></div>`;}); if(pc) pc.innerHTML=htmlPrev||'<div style="font-size:11px;opacity:.6">Adicione cômodos e serviços</div>'; if(tg) tg.textContent='R$ '+total.toFixed(2).replace('.',','); if(cp) cp.innerHTML=clienteNome? `<div style="font-size:12px;margin-bottom:6px">Cliente: <b>${clienteNome}</b> ${telefoneCli? ' - '+telefoneCli:''} ${enderecoCli? ' - '+enderecoCli:''}</div>` : ''; }
 
 function abrirModal(id){document.getElementById(id).style.display='flex';}
 function fecharModal(id){document.getElementById(id).style.display='none';}
@@ -486,6 +514,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     const btnZerar=document.getElementById('btnZerar'); if(btnZerar){ btnZerar.style.opacity='0.3'; btnZerar.style.pointerEvents='none'; btnZerar.title='Travado no modo cliente'; btnZerar.textContent='🔒 COMEÇAR DO ZERO (travado)'; }
     const painelDono=document.getElementById('painelDono'); if(painelDono) painelDono.style.display='none';
     const logoEdit=document.getElementById('logoEdit'); if(logoEdit) logoEdit.style.pointerEvents='none';
+  } else {
+    // MODO DONO - garante que logo está liberada
+    const logoEditDono=document.getElementById('logoEdit'); if(logoEditDono){ logoEditDono.style.pointerEvents='auto'; logoEditDono.style.opacity='1'; logoEditDono.title='Clique para trocar a logo'; }
+    const btnZerarDono=document.getElementById('btnZerar'); if(btnZerarDono){ btnZerarDono.style.opacity='1'; btnZerarDono.style.pointerEvents='auto'; btnZerarDono.textContent='COMEÇAR DO ZERO'; }
+  }
   }
   let tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
   if(tipo==='mensal' && expira>0 && Date.now()>expira){ localStorage.removeItem('kiza_pro'); localStorage.removeItem('kiza_pro_tipo'); localStorage.removeItem('kiza_pro_expira'); }
