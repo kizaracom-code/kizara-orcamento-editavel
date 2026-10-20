@@ -246,6 +246,18 @@ function gerarPDF(){
 }
 function abrirModalEditarEmpresa(){document.getElementById('editNomeEmp').value=empresaNome; document.getElementById('editSubEmp').value=empresaSub; document.getElementById('editTelEmp').value=empresaTel; document.getElementById('editCidadeEmp').value=empresaCidade; abrirModal('modalEditarEmpresa');}
 function render(){
+  // Atualizar header empresa - FIX do Editar Empresa
+  let elNome=document.getElementById('nomeEmpresa'); if(elNome) elNome.textContent=empresaNome;
+  let elSub=document.getElementById('subEmpresa'); if(elSub) elSub.textContent=empresaSub;
+  let elTel=document.getElementById('telEmpresa'); if(elTel) elTel.textContent=empresaTel;
+  let elCid=document.getElementById('cidadeEmpresa'); if(elCid) elCid.textContent=empresaCidade;
+  // Logo
+  let logoBase64=localStorage.getItem('kiza_logo_final');
+  let imgLogo=document.getElementById('logoImg');
+  let txtLogo=document.getElementById('logoTxt');
+  if(logoBase64 && imgLogo){
+    imgLogo.src=logoBase64; imgLogo.style.display='block'; if(txtLogo) txtLogo.style.display='none';
+  }
   let lc=document.getElementById('listaComodos');
   if(lc){
     if(comodos.length===0) lc.innerHTML='<div style="color:#999;font-size:11px">Nenhum cômodo - clique + COMODO</div>';
@@ -265,16 +277,15 @@ function render(){
 
 document.addEventListener('DOMContentLoaded',()=>{
   let params=new URLSearchParams(window.location.search),emp=params.get('empresa'),sub=params.get('sub'),tel=params.get('tel'),cid=params.get('cid'),dados=params.get('dados'),limpo=params.get('limpo');
-  // FIX: Não limpar tudo ao abrir sem params - preservar empresa editada
+  // FIX DEFINITIVO: Preservar tudo (empresa, logo, historico, PRO) ao abrir
   if(!emp&&!dados&&!limpo){
-    // Só limpa se nunca foi dono antes
-    let jaEhDono = localStorage.getItem('kiza_dono')==='1';
-    let temEmpresaSalva = localStorage.getItem('kiza_emp_final');
-    if(!jaEhDono && !temEmpresaSalva){
+    let jaTemDados = localStorage.getItem('kiza_emp_final') || localStorage.getItem('kiza_hist_cod') || localStorage.getItem('kiza_pro');
+    if(!jaTemDados){
       empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
-      comodos=[]; servicos=[]; localStorage.clear(); localStorage.setItem('kiza_dono','1');
+      comodos=[]; servicos=[]; 
+      localStorage.setItem('kiza_dono','1');
     } else {
-      // Preserva empresa editada (DANILO GESSO etc)
+      // Preserva tudo que já existe
       empresaNome=localStorage.getItem('kiza_emp_final')||EMPRESA_FIXA.nome;
       empresaSub=localStorage.getItem('kiza_sub_final')||EMPRESA_FIXA.sub;
       empresaTel=localStorage.getItem('kiza_tel_final')||EMPRESA_FIXA.tel;
@@ -307,7 +318,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   let painelD=document.getElementById('painelDono'); 
   if(painelD && isDono){
     painelD.style.display='block';
-    try{ setNextId(getNextId()); renderHist(); }catch(e){}
+    try{ setNextId(getNextId()); renderHist(); }catch(e){ console.log(e); }
   }
   document.getElementById('btnGerar1Vital')?.addEventListener('click',()=>gerarUm('vitalicio'));
   document.getElementById('btnGerar1Mensal')?.addEventListener('click',()=>gerarUm('mensal'));
