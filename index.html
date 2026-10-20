@@ -222,17 +222,22 @@ function toggleServico(cIdx,sId){let c=comodos[cIdx]; if(!c)return; if(c.servico
 function removerComodo(idx){if(!confirm('Remover cômodo?'))return; comodos.splice(idx,1); render();}
 function verificarLimiteGratis(){let pro=localStorage.getItem('kiza_pro'); if(pro) return true; if(comodos.length>=2){alert('Limite grátis: 2 cômodos. Ative PRO para ilimitado.'); return false;} return true;}
 function restaurarServicosPadrao(){
-  if(!confirm('Restaurar os 6 serviços padrão? Isso vai substituir os atuais.')) return;
-  servicos=[
-    {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
-    {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
-    {id:3,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
-    {id:4,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85},
-    {id:5,nome:'SANCA FECHADA',unidade:'ml',valor:25},
-    {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
-  ];
+  if(!confirm('Restaurar serviços padrão? (SANCA FECHADA e SANCA ABERTA como padrão)')) return;
+      servicos=[
+        {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
+        {id:2,nome:'SANCA FECHADA',unidade:'ml',valor:25},
+        {id:3,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45},
+        {id:4,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
+        {id:5,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
+        {id:6,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85}
+      ];
   localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));
   render();
+  showStatus('✅ Serviços padrão restaurados: SANCA FECHADA R$25 e SANCA ABERTA R$45!');
+}
+
+function limparTudo_TEMP(){
+
   showStatus('✅ 6 serviços padrão restaurados!');
 }
 
@@ -251,14 +256,14 @@ function limparTudo(){
   if(save_logo) localStorage.setItem('kiza_logo_final', save_logo);
   if(save_emp) localStorage.setItem('kiza_emp_final', save_emp); if(save_sub) localStorage.setItem('kiza_sub_final', save_sub); if(save_tel) localStorage.setItem('kiza_tel_final', save_tel); if(save_cid) localStorage.setItem('kiza_cid_final', save_cid);
   // Recria serviços padrão
-  servicos=[
-    {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
-    {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
-    {id:3,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
-    {id:4,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85},
-    {id:5,nome:'SANCA FECHADA',unidade:'ml',valor:25},
-    {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
-  ];
+        servicos=[
+        {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
+        {id:2,nome:'SANCA FECHADA',unidade:'ml',valor:25},
+        {id:3,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45},
+        {id:4,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
+        {id:5,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
+        {id:6,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85}
+      ];
   render(); if(save_hist) renderHist(); if(save_next) setNextId(parseInt(save_next,10)); showStatus('✅ Obra limpa, histórico mantido!');
 }
 function gerarLinkPlataforma(){let obj={comodos:comodos,servicos:servicos}; let json=JSON.stringify(obj); let b64=btoa(unescape(encodeURIComponent(json))); let base=window.location.origin+window.location.pathname; let link=`${base}?empresa=${encodeURIComponent(empresaNome)}&sub=${encodeURIComponent(empresaSub)}&tel=${encodeURIComponent(empresaTel)}&cid=${encodeURIComponent(empresaCidade)}&dados=${b64}&limpo=1`; document.getElementById('linkGerado').value=link; document.getElementById('areaLinkPlataforma').style.display='block'; document.getElementById('areaLinkPlataforma').scrollIntoView({behavior:'smooth'});}
@@ -395,14 +400,14 @@ document.addEventListener('DOMContentLoaded',()=>{
       comodos=[]; servicos=[]; 
       if(servE){ try{ servicos=JSON.parse(servE); }catch(e){} }
       if(servicos.length<=1){ // se só tem 1, força restaurar padrão
-        servicos=[
-          {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
-          {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
-          {id:3,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
-          {id:4,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85},
-          {id:5,nome:'SANCA FECHADA',unidade:'ml',valor:25},
-          {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
-        ];
+              servicos=[
+        {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
+        {id:2,nome:'SANCA FECHADA',unidade:'ml',valor:25},
+        {id:3,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45},
+        {id:4,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
+        {id:5,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
+        {id:6,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85}
+      ];
       }
       localStorage.clear();
       localStorage.setItem('kiza_dono','1');
@@ -500,13 +505,13 @@ document.addEventListener('DOMContentLoaded',()=>{
     let savedServ=localStorage.getItem('kiza_serv_final');
     if(savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0){ servicos=parsed; } }
     if(servicos.length<=1){ // se só tem 1, força restaurar padrão
-      servicos=[
+            servicos=[
         {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
-        {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
-        {id:3,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
-        {id:4,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85},
-        {id:5,nome:'SANCA FECHADA',unidade:'ml',valor:25},
-        {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
+        {id:2,nome:'SANCA FECHADA',unidade:'ml',valor:25},
+        {id:3,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45},
+        {id:4,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
+        {id:5,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
+        {id:6,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85}
       ];
     }
     let savedComodos=localStorage.getItem('kiza_comodos_final'); if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
