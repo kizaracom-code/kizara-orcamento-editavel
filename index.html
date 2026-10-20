@@ -95,7 +95,7 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
 <div id="modal" class="modalOverlay"><div class="modalBox"><h3>Novo Cômodo</h3><input id="nomeComodo" placeholder="Ex: Sala"><input id="largComodo" type="number" placeholder="Largura (m)"><input id="compComodo" type="number" placeholder="Comprimento (m)"><div class="actions"><button class="btnGhost" onclick="fecharModal('modal')">Cancelar</button><button id="btnCriarComodo" class="btnPrimary">Criar</button></div></div></div>
 <div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nomeServ" placeholder="Nome serviço"><select id="unidServ" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin-bottom:8px"><option value="m2">m² - Metro quadrado</option><option value="ml">ml - Metro linear</option><option value="m">m - Metro</option><option value="un">un - Unidade</option><option value="m3">m³ - Metro cúbico</option><option value="pct">pct - Pacote</option><option value="kg">kg - Quilo</option><option value="h">h - Hora</option><option value="dia">dia - Diária</option></select><input id="valorServ" type="number" placeholder="Valor R$"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
 <div id="modalLic" class="modalOverlay"><div class="modalBox"><h3>Ativar PRO</h3><input id="inputLic" placeholder="Cole sua licença"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalLic')">Cancelar</button><button id="btnAtivarPro" class="btnPrimary">Ativar</button></div></div></div>
-<div id="modalEditarEmpresa" class="modalOverlay"><div class="modalBox"><h3>Editar Empresa</h3><input id="editNomeEmp"><input id="editSubEmp"><input id="editTelEmp"><input id="editCidadeEmp"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarEmpresa')">Cancelar</button><button id="btnSalvarEmpresa" class="btnPrimary">Salvar</button></div></div></div>
+<div id="modalEditarEmpresa" class="modalOverlay"><div class="modalBox"><h3>Editar Empresa</h3><input id="editNomeEmp"><input id="editSubEmp"><input id="editTelEmp"><input id="editCidadeEmp"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarEmpresa')">Cancelar</button><button id="btnSalvarEmpresa" class="btnPrimary">💾 Salvar nome e preço</button></div></div></div>
 <input type="file" id="inputLogo" accept="image/*" style="display:none">
 <div id="status"></div>
 
@@ -190,7 +190,7 @@ function render(){
   }catch(e){}
   let lc=document.getElementById('listaComodos'), gs=document.getElementById('gridServicos'), pc=document.getElementById('previaComodos'), tg=document.getElementById('totalGeral'), cp=document.getElementById('clientePrevia'); let total=0;
   if(lc) lc.innerHTML=comodos.map((c,i)=>{let a=area(c.larg,c.comp), p=perim(c.larg,c.comp); return `<div class="comodoItem"><div class="comodoHead"><b>${c.nome}</b><button onclick="removerComodo(${i})" style="border:none;background:#fee;padding:4px 8px;border-radius:6px;font-size:10px;cursor:pointer">X</button></div><div class="comodoMeta">${c.larg}m x ${c.comp}m = ${a.toFixed(2)}m² | Perímetro ${p.toFixed(2)}m</div><div class="servCheck">${servicos.map(s=>{let chk=c.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome} R$${s.valor}</label>`;}).join('')}</div></div>`;}).join('')||'<div style="font-size:12px;color:#999">Nenhum cômodo ainda. Clique em + COMODO</div>';
-  if(gs) gs.innerHTML=servicos.map(s=>`<div class="servCard"><b style="font-size:12px">${s.nome}</b><div style="font-size:11px;color:#666">${s.unidade} - R$ ${s.valor}</div><div style="margin-top:6px;display:flex;gap:4px"><button onclick="editarNome(${s.id})" style="font-size:10px;padding:3px 6px;border:1px solid #ddd;border-radius:6px;cursor:pointer">Editar</button><button onclick="removerServico(${s.id})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div></div>`).join('')||'<div style="font-size:12px;color:#999">Nenhum serviço. Clique em + SERVICO</div>';
+  if(gs) gs.innerHTML=servicos.map(s=>`<div class="servCard" style="border:1px solid #e5ddd0;border-radius:12px;padding:10px;background:#fff"><b style="font-size:12px;display:block;margin-bottom:2px">${s.nome}</b><div style="font-size:11px;color:#666;margin-bottom:6px">${s.unidade} - R$ ${s.valor}</div><div style="display:flex;gap:6px"><button onclick="editarNome(${s.id})" style="flex:1;font-size:11px;padding:6px 8px;background:#111;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">✏️ EDITAR</button><button onclick="removerServico(${s.id})" style="font-size:11px;padding:6px 8px;background:#fee;border:1px solid #fcc;border-radius:8px;cursor:pointer">🗑️</button></div></div>`).join('')||'<div style="font-size:12px;color:#999">Nenhum serviço. Clique em + SERVICO</div>';
   let htmlPrev=''; comodos.forEach(c=>{let a=area(c.larg,c.comp), p=perim(c.larg,c.comp); let sub=0; let dets=[]; c.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s)return; let base=getBase(s.unidade,a,p); let val=base*s.valor; sub+=val; dets.push(`${s.nome}: ${base.toFixed(2)} x R$${s.valor} = R$${val.toFixed(2)}`);}); total+=sub; htmlPrev+=`<div style="margin-bottom:8px"><b>${c.nome}</b> (${c.larg}x${c.comp}) - Subtotal R$ ${sub.toFixed(2)}<br><span style="font-size:10px;opacity:.7">${dets.join(' | ')}</span></div>`;}); if(pc) pc.innerHTML=htmlPrev||'<div style="font-size:11px;opacity:.6">Adicione cômodos e serviços</div>'; if(tg) tg.textContent='R$ '+total.toFixed(2).replace('.',','); if(cp) cp.innerHTML=clienteNome? `<div style="font-size:12px;margin-bottom:6px">Cliente: <b>${clienteNome}</b> ${telefoneCli? ' - '+telefoneCli:''} ${enderecoCli? ' - '+enderecoCli:''}</div>` : '';
 }
 function abrirModal(id){document.getElementById(id).style.display='flex';}
@@ -455,10 +455,43 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('btnComodo').addEventListener('click',()=>{if(verificarLimiteGratis())abrirModal('modal');});document.getElementById('btnNovoServ').addEventListener('click',()=>{abrirModal('modalNovoServ');});document.getElementById('btnCriarComodo').addEventListener('click',()=>{if(verificarLimiteGratis())criarComodo();});document.getElementById('btnCriarServ').addEventListener('click',criarServ);
   document.getElementById('btnSalvarEmpresa').addEventListener('click',()=>{empresaNome=document.getElementById('editNomeEmp').value||empresaNome;empresaSub=document.getElementById('editSubEmp').value||empresaSub;empresaTel=document.getElementById('editTelEmp').value||empresaTel;empresaCidade=document.getElementById('editCidadeEmp').value||empresaCidade;localStorage.setItem('kiza_emp_final',empresaNome);localStorage.setItem('kiza_sub_final',empresaSub);localStorage.setItem('kiza_tel_final',empresaTel);localStorage.setItem('kiza_cid_final',empresaCidade);fecharModal('modalEditarEmpresa');render();});
   document.getElementById('btnZerar').addEventListener('click',limparTudo);document.getElementById('btnAtivarPro2').addEventListener('click',()=>{abrirModal('modalLic');});document.getElementById('bannerAcao').addEventListener('click',()=>{abrirModal('modalLic');});
+  function atualizarBotaoPro(){
+    let pro=localStorage.getItem('kiza_pro');
+    let tipo=localStorage.getItem('kiza_pro_tipo')||'';
+    let expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
+    let btn2=document.getElementById('btnAtivarPro2');
+    let banner=document.getElementById('bannerPromo');
+    if(pro){
+      if(btn2){ btn2.textContent='✅ PRO ATIVO - '+tipo.toUpperCase(); btn2.style.background='#16a34a'; btn2.style.color='#fff'; }
+      if(banner) banner.style.display='none';
+    } else {
+      if(btn2){ btn2.textContent='ATIVAR PRO'; btn2.style.background='#d4af37'; btn2.style.color='#111'; }
+      if(banner) banner.style.display='flex';
+    }
+  }
+
   document.getElementById('btnAtivarPro').addEventListener('click',()=>{
-    let licVal=document.getElementById('inputLic').value.trim(); let res=validarLicencaSegura(licVal); if(!res){alert('Licença inválida!');return;}
-    if(res.tipo==='vitalicio'){ localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_pro_tipo','vitalicio'); localStorage.removeItem('kiza_pro_expira'); fecharModal('modalLic'); showStatus('✅ PRO VITALÍCIO!'); }
-    else if(res.tipo==='mensal'){ let expira=Date.now()+30*24*60*60*1000; localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_pro_tipo','mensal'); localStorage.setItem('kiza_pro_expira',expira.toString()); fecharModal('modalLic'); showStatus('✅ PRO MENSAL 30 dias!'); }
+    let licVal=document.getElementById('inputLic').value.trim().toUpperCase();
+    let res=validarLicencaSegura(licVal);
+    console.log('Validando',licVal,res);
+    if(!res){alert('Licença inválida! Código: '+licVal+'\nVerifique se copiou certo.');return;}
+    if(res.tipo==='vitalicio'){
+      localStorage.setItem('kiza_pro','1');
+      localStorage.setItem('kiza_pro_tipo','vitalicio');
+      localStorage.removeItem('kiza_pro_expira');
+      fecharModal('modalLic');
+      atualizarBotaoPro();
+      showStatus('✅ PRO VITALÍCIO ATIVADO! Botão ficou verde!');
+    }
+    else if(res.tipo==='mensal'){
+      let expira=Date.now()+30*24*60*60*1000;
+      localStorage.setItem('kiza_pro','1');
+      localStorage.setItem('kiza_pro_tipo','mensal');
+      localStorage.setItem('kiza_pro_expira',expira.toString());
+      fecharModal('modalLic');
+      atualizarBotaoPro();
+      showStatus('✅ PRO MENSAL 30 dias ATIVADO! Botão ficou verde!');
+    }
   });
   document.querySelectorAll('.modalOverlay').forEach(ov=>{ov.addEventListener('click',(e)=>{if(e.target===ov)fecharModal(ov.id);});});
   document.getElementById('btnCopiarLink')?.addEventListener('click',()=>{ let ta=document.getElementById('linkGerado'); if(ta){ navigator.clipboard.writeText(ta.value).then(()=>showStatus('Link copiado!')); } });
@@ -479,6 +512,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     let savedComodos=localStorage.getItem('kiza_comodos_final'); if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
   }catch(e){}
   render();
+  atualizarBotaoPro();
 });
 </script>
 </body>
