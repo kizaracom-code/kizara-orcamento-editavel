@@ -89,7 +89,7 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
 </div>
 
 <div id="modal" class="modalOverlay"><div class="modalBox"><h3>Novo Cômodo</h3><input id="nomeComodo" placeholder="Ex: Sala"><input id="largComodo" type="number" placeholder="Largura (m)"><input id="compComodo" type="number" placeholder="Comprimento (m)"><div class="actions"><button class="btnGhost" onclick="fecharModal('modal')">Cancelar</button><button id="btnCriarComodo" class="btnPrimary">Criar</button></div></div></div>
-<div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nomeServ" placeholder="Nome serviço"><input id="unidServ" placeholder="Unidade: m2, ml, un"><input id="valorServ" type="number" placeholder="Valor R$"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
+<div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nomeServ" placeholder="Nome serviço"><select id="unidServ" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin-bottom:8px"><option value="m2">m² - Metro quadrado</option><option value="ml">ml - Metro linear</option><option value="m">m - Metro</option><option value="un">un - Unidade</option><option value="m3">m³ - Metro cúbico</option><option value="pct">pct - Pacote</option></select><input id="valorServ" type="number" placeholder="Valor R$"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
 <div id="modalLic" class="modalOverlay"><div class="modalBox"><h3>Ativar PRO</h3><input id="inputLic" placeholder="Cole sua licença KIZARANET-..."><div class="actions"><button class="btnGhost" onclick="fecharModal('modalLic')">Cancelar</button><button id="btnAtivarPro" class="btnPrimary">Ativar</button></div></div></div>
 <div id="modalEditarEmpresa" class="modalOverlay"><div class="modalBox"><h3>Editar Empresa</h3><input id="editNomeEmp"><input id="editSubEmp"><input id="editTelEmp"><input id="editCidadeEmp"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarEmpresa')">Cancelar</button><button id="btnSalvarEmpresa" class="btnPrimary">Salvar</button></div></div></div>
 <input type="file" id="inputLogo" accept="image/*" style="display:none">
@@ -230,7 +230,208 @@ function limparTudo(){
 }
 
 function gerarLinkPlataforma(){let obj={comodos:comodos,servicos:servicos}; let json=JSON.stringify(obj); let b64=btoa(unescape(encodeURIComponent(json))); let base=window.location.origin+window.location.pathname; let link=`${base}?empresa=${encodeURIComponent(empresaNome)}&sub=${encodeURIComponent(empresaSub)}&tel=${encodeURIComponent(empresaTel)}&cid=${encodeURIComponent(empresaCidade)}&dados=${b64}&limpo=1`; document.getElementById('linkGerado').value=link; document.getElementById('areaLinkPlataforma').style.display='block'; document.getElementById('areaLinkPlataforma').scrollIntoView({behavior:'smooth'});}
-function gerarPDF(){const {jsPDF}=window.jspdf; let doc=new jsPDF(); doc.text(empresaNome,10,10); doc.text(`Cliente: ${clienteNome} ${telefoneCli}`,10,18); let y=28; comodos.forEach(c=>{doc.text(`${c.nome} - ${c.larg}x${c.comp}`,10,y); y+=8;}); doc.text(document.getElementById('totalGeral').textContent,10,y); doc.save(`orcamento_${clienteNome||'cliente'}.pdf`);}
+function gerarPDF(){
+  const {jsPDF}=window.jspdf;
+  let doc=new jsPDF();
+  let pageW=doc.internal.pageSize.getWidth();
+  let pageH=doc.internal.pageSize.getHeight();
+  let y=0;
+  let margin=12;
+
+  // === TARJA PRETA TOPO - CABEÇALHO ===
+  doc.setFillColor(17,17,17);
+  doc.rect(0,0,pageW,32,'F');
+  
+  // Logo K dentro de circulo dourado
+  let logoBase64=localStorage.getItem('kiza_logo_final');
+  if(logoBase64){
+    try{
+      doc.addImage(logoBase64,'JPEG',12,5,20,20);
+    }catch(e){
+      // se falhar, faz circulo K
+      doc.setFillColor(212,175,55);
+      doc.circle(22,15,10,'F');
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(12);
+      doc.setTextColor(17,17,17);
+      doc.text('K',22,17,{align:'center'});
+    }
+  }else{
+    doc.setFillColor(34,34,34);
+    doc.setDrawColor(212,175,55);
+    doc.setLineWidth(0.8);
+    doc.circle(22,15,10,'FD');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(12);
+    doc.setTextColor(212,175,55);
+    doc.text('K',22,17,{align:'center'});
+  }
+
+  // Nome empresa dourado
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(14);
+  doc.setTextColor(212,175,55);
+  doc.text(empresaNome, 38, 14);
+  
+  // Sub info branca pequena
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(7);
+  doc.setTextColor(200,200,200);
+  doc.text((empresaSub+' | '+empresaTel+' | '+empresaCidade).substring(0,110), 38, 20);
+
+  // Selo ORÇAMENTO
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(8);
+  doc.setTextColor(212,175,55);
+  doc.setDrawColor(212,175,55);
+  doc.setLineWidth(0.5);
+  let seloX=pageW-38;
+  doc.rect(seloX,8,32,14);
+  doc.text('ORÇAMENTO',seloX+16,17,{align:'center'});
+
+  y=40;
+
+  // === BOX CLIENTE ===
+  doc.setFillColor(246,245,240);
+  doc.setDrawColor(233,229,217);
+  doc.setLineWidth(0.3);
+  doc.rect(margin,y,pageW-margin*2,20,'FD');
+  
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(9);
+  doc.setTextColor(17,17,17);
+  let cliNome = clienteNome || 'Cliente não informado';
+  doc.text('CLIENTE: '+cliNome, margin+3, y+6);
+  
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8);
+  doc.setTextColor(80,80,80);
+  let cliInfo = (telefoneCli? telefoneCli+' | ' : '') + (enderecoCli? enderecoCli : '');
+  if(cliInfo) doc.text(cliInfo.substring(0,100), margin+3, y+11);
+  
+  doc.setFontSize(7);
+  doc.setTextColor(120,120,120);
+  let dataStr = new Date().toLocaleDateString('pt-BR')+' - Validade: 7 dias';
+  doc.text(dataStr, margin+3, y+16);
+
+  y+=28;
+
+  // === TABELA DE COMODOS ===
+  let totalGeral=0;
+  
+  comodos.forEach((c,idx)=>{
+    // Se vai passar da página, cria nova
+    if(y>pageH-50){
+      doc.addPage();
+      y=15;
+    }
+
+    let a=area(c.larg,c.comp);
+    let p=perim(c.larg,c.comp);
+    
+    // Cabeçalho do comodo - cinza
+    doc.setFillColor(17,17,17);
+    doc.rect(margin,y,pageW-margin*2,8,'F');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.setTextColor(255,255,255);
+    doc.text((idx+1)+'. '+c.nome.toUpperCase(), margin+3, y+5.5);
+    
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(7);
+    doc.setTextColor(212,175,55);
+    doc.text(c.larg+'m x '+c.comp+'m = '+a.toFixed(2)+'m² | Perímetro '+p.toFixed(2)+'m', pageW-margin-3, y+5.5,{align:'right'});
+    
+    y+=10;
+
+    // Lista serviços do comodo
+    let subComodo=0;
+    if(c.servicos.length===0){
+      doc.setFont('helvetica','italic');
+      doc.setFontSize(7);
+      doc.setTextColor(150,150,150);
+      doc.text('Nenhum serviço selecionado', margin+3, y);
+      y+=5;
+    } else {
+      c.servicos.forEach(sid=>{
+        let s=servicos.find(x=>x.id==sid);
+        if(!s) return;
+        let base=getBase(s.unidade,a,p);
+        let val=base*s.valor;
+        subComodo+=val;
+        
+        // Linha do serviço
+        if(y>pageH-30){ doc.addPage(); y=15; }
+        
+        doc.setFont('helvetica','normal');
+        doc.setFontSize(8);
+        doc.setTextColor(40,40,40);
+        doc.text('• '+s.nome.toUpperCase(), margin+5, y);
+        
+        doc.setFontSize(7);
+        doc.setTextColor(100,100,100);
+        let detalhe = base.toFixed(2)+s.unidade+' x R$'+s.valor.toFixed(2);
+        doc.text(detalhe, margin+70, y);
+        
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(8);
+        doc.setTextColor(17,17,17);
+        doc.text('R$ '+val.toFixed(2), pageW-margin-3, y,{align:'right'});
+        
+        y+=5;
+      });
+    }
+
+    // Subtotal comodo
+    doc.setDrawColor(230,230,230);
+    doc.setLineWidth(0.2);
+    doc.line(margin, y, pageW-margin, y);
+    y+=2;
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(8);
+    doc.setTextColor(80,80,80);
+    doc.text('Subtotal '+c.nome+':', pageW-margin-30, y,{align:'right'});
+    doc.text('R$ '+subComodo.toFixed(2), pageW-margin-3, y,{align:'right'});
+    
+    totalGeral+=subComodo;
+    y+=8;
+  });
+
+  // === TOTAL GERAL - TARJA PRETA COM DOURADO ===
+  if(y>pageH-35){ doc.addPage(); y=15; }
+  
+  y+=2;
+  doc.setFillColor(17,17,17);
+  doc.rect(margin,y,pageW-margin*2,14,'F');
+  
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  doc.setTextColor(255,255,255);
+  doc.text('TOTAL GERAL DO ORÇAMENTO:', margin+4, y+8.5);
+  
+  doc.setFontSize(14);
+  doc.setTextColor(212,175,55);
+  doc.text('R$ '+totalGeral.toFixed(2).replace('.',','), pageW-margin-4, y+9,{align:'right'});
+  
+  y+=20;
+
+  // === RODAPÉ ===
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(7);
+  doc.setTextColor(120,120,120);
+  doc.text('Orçamento gerado por '+empresaNome+' - '+empresaTel, margin, y);
+  y+=4;
+  doc.text('Este orçamento tem validade de 7 dias. Valores sujeitos a alteração após visita técnica.', margin, y);
+  
+  // Linha dourada no rodapé
+  doc.setFillColor(212,175,55);
+  doc.rect(0,pageH-6,pageW,6,'F');
+
+  // Salva
+  let nomeArq = 'ORCAMENTO_'+(clienteNome? clienteNome.replace(/[^a-zA-Z0-9]/g,'_') : 'CLIENTE')+'_'+new Date().toISOString().slice(0,10)+'.pdf';
+  doc.save(nomeArq);
+  showStatus('✅ PDF profissional gerado!');
+}
 
 function gerarUm(tipo){
   let inputN=document.getElementById('inputNomeClienteGerador');
@@ -259,7 +460,16 @@ document.addEventListener('DOMContentLoaded',()=>{
     let histExiste=localStorage.getItem('kiza_hist_cod');
     if(!donoExiste){
       empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
-      comodos=[]; servicos=[]; localStorage.clear(); localStorage.setItem('kiza_dono','1');
+      comodos=[];
+      servicos=[
+        {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
+        {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
+        {id:3,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
+        {id:4,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85},
+        {id:5,nome:'SANCA FECHADA',unidade:'ml',valor:25},
+        {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
+      ];
+      localStorage.clear(); localStorage.setItem('kiza_dono','1');
       localStorage.setItem('kiza_emp_final',empresaNome); localStorage.setItem('kiza_sub_final',empresaSub);
       localStorage.setItem('kiza_tel_final',empresaTel); localStorage.setItem('kiza_cid_final',empresaCidade);
       if(nextExiste) localStorage.setItem('kiza_next_id', nextExiste);
@@ -321,6 +531,39 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.modalOverlay').forEach(ov=>{ov.addEventListener('click',(e)=>{if(e.target===ov)fecharModal(ov.id);});});
   document.getElementById('btnCopiarLink')?.addEventListener('click',()=>{ let ta=document.getElementById('linkGerado'); if(ta){ navigator.clipboard.writeText(ta.value).then(()=>showStatus('Link copiado!')); } });
   document.getElementById('btnAbrirCel')?.addEventListener('click',()=>{ let ta=document.getElementById('linkGerado'); if(ta&&ta.value) window.open(ta.value,'_blank'); });
+  // Garante serviços padrão se estiver vazio
+  try{
+    let savedServ=localStorage.getItem('kiza_serv_final');
+    if(savedServ){
+      let parsed=JSON.parse(savedServ);
+      if(parsed && parsed.length>0){ servicos=parsed; }
+      else {
+        servicos=[
+          {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
+          {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
+          {id:3,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
+          {id:4,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85},
+          {id:5,nome:'SANCA FECHADA',unidade:'ml',valor:25},
+          {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
+        ];
+      }
+    } else if(servicos.length===0){
+      servicos=[
+        {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
+        {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
+        {id:3,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
+        {id:4,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85},
+        {id:5,nome:'SANCA FECHADA',unidade:'ml',valor:25},
+        {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
+      ];
+    }
+    let savedComodos=localStorage.getItem('kiza_comodos_final');
+    if(savedComodos){
+      let pc=JSON.parse(savedComodos);
+      if(pc && pc.length>0) comodos=pc;
+    }
+  }catch(e){}
+
   render();
 });
 </script>
