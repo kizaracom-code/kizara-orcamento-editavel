@@ -89,7 +89,7 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
 </div>
 
 <div id="modal" class="modalOverlay"><div class="modalBox"><h3>Novo Cômodo</h3><input id="nomeComodo" placeholder="Ex: Sala"><input id="largComodo" type="number" placeholder="Largura (m)"><input id="compComodo" type="number" placeholder="Comprimento (m)"><div class="actions"><button class="btnGhost" onclick="fecharModal('modal')">Cancelar</button><button id="btnCriarComodo" class="btnPrimary">Criar</button></div></div></div>
-<div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nomeServ" placeholder="Nome serviço"><select id="unidServ" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin-bottom:8px"><option value="m2">m² - Metro quadrado</option><option value="ml">ml - Metro linear</option><option value="m">m - Metro</option><option value="un">un - Unidade</option><option value="m3">m³ - Metro cúbico</option><option value="pct">pct - Pacote</option></select><input id="valorServ" type="number" placeholder="Valor R$"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
+<div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nomeServ" placeholder="Nome serviço"><select id="unidServ" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin-bottom:8px"><option value="m2">m² - Metro quadrado</option><option value="ml">ml - Metro linear</option><option value="m">m - Metro</option><option value="un">un - Unidade</option><option value="m3">m³ - Metro cúbico</option><option value="pct">pct - Pacote</option><option value="kg">kg - Quilo</option><option value="h">h - Hora</option><option value="dia">dia - Diária</option></select><input id="valorServ" type="number" placeholder="Valor R$"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
 <div id="modalLic" class="modalOverlay"><div class="modalBox"><h3>Ativar PRO</h3><input id="inputLic" placeholder="Cole sua licença"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalLic')">Cancelar</button><button id="btnAtivarPro" class="btnPrimary">Ativar</button></div></div></div>
 <div id="modalEditarEmpresa" class="modalOverlay"><div class="modalBox"><h3>Editar Empresa</h3><input id="editNomeEmp"><input id="editSubEmp"><input id="editTelEmp"><input id="editCidadeEmp"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarEmpresa')">Cancelar</button><button id="btnSalvarEmpresa" class="btnPrimary">Salvar</button></div></div></div>
 <input type="file" id="inputLogo" accept="image/*" style="display:none">
@@ -194,7 +194,25 @@ function fecharModal(id){document.getElementById(id).style.display='none';}
 function abrirModalEditarEmpresa(){document.getElementById('editNomeEmp').value=empresaNome; document.getElementById('editSubEmp').value=empresaSub; document.getElementById('editTelEmp').value=empresaTel; document.getElementById('editCidadeEmp').value=empresaCidade; abrirModal('modalEditarEmpresa');}
 function criarComodo(){let nome=document.getElementById('nomeComodo').value.trim(), larg=document.getElementById('largComodo').value, comp=document.getElementById('compComodo').value; if(!nome){alert('Nome do cômodo');return;} comodos.push({nome:nome,larg:larg||0,comp:comp||0,servicos:[]}); document.getElementById('nomeComodo').value=''; document.getElementById('largComodo').value=''; document.getElementById('compComodo').value=''; fecharModal('modal'); render();}
 function criarServ(){let nome=document.getElementById('nomeServ').value.trim(), un=document.getElementById('unidServ').value||'m2', val=parseFloat(document.getElementById('valorServ').value)||0; if(!nome){alert('Nome serviço');return;} let id=Date.now(); servicos.push({id:id,nome:nome,unidade:un,valor:val}); document.getElementById('nomeServ').value=''; document.getElementById('valorServ').value=''; fecharModal('modalNovoServ'); render();}
-function editarNome(id){let s=servicos.find(x=>x.id==id); if(!s)return; let n=prompt('Novo nome:',s.nome); if(n){s.nome=n;render();}}
+
+function editarNome(id){
+  let s=servicos.find(x=>x.id==id); if(!s) return;
+  document.getElementById('editServId').value=s.id;
+  document.getElementById('editServNome').value=s.nome;
+  document.getElementById('editServUnid').value=s.unidade;
+  document.getElementById('editServValor').value=s.valor;
+  abrirModal('modalEditarServ');
+}
+function salvarEdicaoServ(){
+  let id=parseInt(document.getElementById('editServId').value,10);
+  let s=servicos.find(x=>x.id==id); if(!s) return;
+  s.nome=document.getElementById('editServNome').value.trim()||s.nome;
+  s.unidade=document.getElementById('editServUnid').value||s.unidade;
+  s.valor=parseFloat(document.getElementById('editServValor').value)||0;
+  fecharModal('modalEditarServ');
+  render();
+}
+
 function removerServico(id){if(!confirm('Remover serviço?'))return; servicos=servicos.filter(x=>x.id!=id); comodos.forEach(c=>{c.servicos=c.servicos.filter(sid=>sid!=id);}); render();}
 function toggleServico(cIdx,sId){let c=comodos[cIdx]; if(!c)return; if(c.servicos.includes(sId))c.servicos=c.servicos.filter(x=>x!=sId); else c.servicos.push(sId); render();}
 function removerComodo(idx){if(!confirm('Remover cômodo?'))return; comodos.splice(idx,1); render();}
