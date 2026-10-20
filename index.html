@@ -63,7 +63,7 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
   <div class="clienteBar"><div><label>Nome cliente obra</label><input id="inputClienteTop" placeholder="Nome do cliente"></div><div><label>Telefone cliente</label><input id="inputTelefoneTop" placeholder="(00) 00000-0000"></div><div><label>Endereço obra</label><input id="inputEnderecoTop" placeholder="Rua, número, bairro"></div></div>
   <div id="painelDono" style="display:none;background:#111;border:2px solid #d4af37;border-radius:14px;padding:14px;margin-bottom:12px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="color:#d4af37;font-size:13px">🔐 PAINEL DONO - Gerador de Licenças</b><span id="nextIdInfo" style="font-size:10px;color:#aaa"></span></div>
-    <div style="margin-bottom:8px;display:flex;gap:6px"><input id="inputNomeClienteLic" placeholder="Nome do cliente que vai receber a senha (ex: João - Lagoa Nova)" style="flex:1;background:#222;color:#fff;border:1px solid #444;border-radius:8px;padding:8px 10px;font-size:11px"><input id="inputTelClienteLic" placeholder="Tel (opcional)" style="width:120px;background:#222;color:#fff;border:1px solid #444;border-radius:8px;padding:8px 10px;font-size:11px"></div>
+    <div style="margin-bottom:8px;display:flex;gap:6px"><input id="inputNomeClienteLic" placeholder="Nome do cliente (ex: João - Lagoa Nova)" style="flex:1;background:#222;color:#fff;border:1px solid #444;border-radius:8px;padding:9px 10px;font-size:11px"><input id="inputTelClienteLic" placeholder="Tel" style="width:110px;background:#222;color:#fff;border:1px solid #444;border-radius:8px;padding:9px 10px;font-size:11px"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button id="btnGerar1Vital" style="background:#d4af37;color:#111;border:none;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR 1 VITALÍCIO</button><button id="btnGerar1Mensal" style="background:#fff;color:#111;border:1px solid #d4af37;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR 1 MENSAL (30d)</button></div>
     <div id="ultimoGerado" style="background:#000;color:#0f0;padding:10px;border-radius:10px;margin-top:10px;font-family:monospace;font-size:11px;display:none"></div>
     <textarea id="historicoGerados" style="width:100%;height:100px;margin-top:10px;background:#111;color:#aaa;border:1px solid #333;border-radius:10px;padding:8px;font-size:10px" placeholder="Histórico de códigos"></textarea>
@@ -118,35 +118,36 @@ function renderHist(){
   let ta=document.getElementById('historicoGerados'); 
   if(ta){
     ta.value=hist.map(h=>{
-      let cliente=h.cliente||h.nome||'SEM NOME';
-      let tel=h.tel? ' - '+h.tel : '';
-      let data=h.data? ' | '+h.data : '';
+      if(typeof h==='string') return h;
+      let cliente=h.cliente||'SEM NOME';
+      let tel=h.tel? ' '+h.tel : '';
+      let data=h.data? ' '+h.data : '';
       return cliente+tel+' -> '+h.cod+data;
     }).join('\n');
   }
 }
 function gerarUm(tipo){
-  let inputNome=document.getElementById('inputNomeClienteLic');
-  let inputTel=document.getElementById('inputTelClienteLic');
-  let nomeCli = inputNome ? inputNome.value.trim() : '';
-  let telCli = inputTel ? inputTel.value.trim() : '';
+  let nomeInput=document.getElementById('inputNomeClienteLic');
+  let telInput=document.getElementById('inputTelClienteLic');
+  let nomeCli = nomeInput ? nomeInput.value.trim() : '';
+  let telCli = telInput ? telInput.value.trim() : '';
   if(!nomeCli){
-    nomeCli = prompt('Nome do cliente que vai receber a senha? (ex: Danilo - Lagoa Nova)');
-    if(!nomeCli) { alert('Digite o nome do cliente!'); return; }
-    if(inputNome) inputNome.value=nomeCli;
+    nomeCli = prompt('Nome do cliente que vai receber a senha?');
+    if(!nomeCli || nomeCli.trim()===''){ alert('Digite o nome!'); return; }
+    if(nomeInput) nomeInput.value=nomeCli;
   }
   let id=getNextId();
   let cod=gerarCodigoDono(id,tipo);
   let el=document.getElementById('ultimoGerado');
   el.style.display='block';
-  el.innerHTML=`<div style="color:#d4af37">GERADO ID ${id} - ${tipo.toUpperCase()} - ${nomeCli}</div><div style="font-size:14px;font-weight:900;margin:6px 0">${cod}</div><div style="font-size:11px;color:#aaa;margin:4px 0">Cliente: ${nomeCli}${telCli?' - '+telCli:''}</div><button onclick="navigator.clipboard.writeText('${cod}')" style="background:#d4af37;color:#111;border:none;padding:6px 10px;border-radius:6px;font-weight:800;font-size:11px;cursor:pointer;margin-right:6px">COPIAR SENHA</button><button onclick="navigator.clipboard.writeText('${nomeCli} - ${cod}')" style="background:#fff;color:#111;border:1px solid #d4af37;padding:6px 10px;border-radius:6px;font-weight:800;font-size:11px;cursor:pointer">COPIAR NOME+SENHA</button>`;
+  el.innerHTML=`<div style="color:#d4af37">ID ${id} - ${tipo.toUpperCase()} - ${nomeCli}</div><div style="font-size:14px;font-weight:900;margin:6px 0">${cod}</div><div style="font-size:11px;color:#aaa">Cliente: ${nomeCli}${telCli?' - '+telCli:''}</div><button onclick="navigator.clipboard.writeText('${cod}')" style="background:#d4af37;color:#111;border:none;padding:6px 10px;border-radius:6px;font-weight:800;font-size:11px;cursor:pointer;margin-right:6px">COPIAR SENHA</button><button onclick="navigator.clipboard.writeText('${nomeCli} - ${cod}')" style="background:#fff;color:#111;border:1px solid #d4af37;padding:6px 10px;border-radius:6px;font-weight:800;font-size:11px;cursor:pointer">COPIAR NOME+SENHA</button>`;
   let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); 
-  let agora = new Date().toLocaleString('pt-BR');
+  let agora=new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR').substring(0,5);
   hist.unshift({cod:cod, cliente:nomeCli, tel:telCli, data:agora, tipo:tipo, id:id}); 
   localStorage.setItem('kiza_hist_cod',JSON.stringify(hist)); 
   renderHist();
   setNextId(id+1);
-  showStatus('✅ Gerado para '+nomeCli+': '+cod);
+  showStatus('✅ '+nomeCli+': '+cod);
 }
 
 function abrirModal(id){document.getElementById(id).style.display='flex';}
@@ -272,6 +273,18 @@ function gerarPDF(){
 }
 function abrirModalEditarEmpresa(){document.getElementById('editNomeEmp').value=empresaNome; document.getElementById('editSubEmp').value=empresaSub; document.getElementById('editTelEmp').value=empresaTel; document.getElementById('editCidadeEmp').value=empresaCidade; abrirModal('modalEditarEmpresa');}
 function render(){
+  // Atualizar header empresa - FIX do Editar Empresa
+  let elNome=document.getElementById('nomeEmpresa'); if(elNome) elNome.textContent=empresaNome;
+  let elSub=document.getElementById('subEmpresa'); if(elSub) elSub.textContent=empresaSub;
+  let elTel=document.getElementById('telEmpresa'); if(elTel) elTel.textContent=empresaTel;
+  let elCid=document.getElementById('cidadeEmpresa'); if(elCid) elCid.textContent=empresaCidade;
+  // Logo
+  let logoBase64=localStorage.getItem('kiza_logo_final');
+  let imgLogo=document.getElementById('logoImg');
+  let txtLogo=document.getElementById('logoTxt');
+  if(logoBase64 && imgLogo){
+    imgLogo.src=logoBase64; imgLogo.style.display='block'; if(txtLogo) txtLogo.style.display='none';
+  }
   let lc=document.getElementById('listaComodos');
   if(lc){
     if(comodos.length===0) lc.innerHTML='<div style="color:#999;font-size:11px">Nenhum cômodo - clique + COMODO</div>';
@@ -291,16 +304,15 @@ function render(){
 
 document.addEventListener('DOMContentLoaded',()=>{
   let params=new URLSearchParams(window.location.search),emp=params.get('empresa'),sub=params.get('sub'),tel=params.get('tel'),cid=params.get('cid'),dados=params.get('dados'),limpo=params.get('limpo');
-  // FIX: Não limpar tudo ao abrir sem params - preservar empresa editada
+  // FIX DEFINITIVO: Preservar tudo (empresa, logo, historico, PRO) ao abrir
   if(!emp&&!dados&&!limpo){
-    // Só limpa se nunca foi dono antes
-    let jaEhDono = localStorage.getItem('kiza_dono')==='1';
-    let temEmpresaSalva = localStorage.getItem('kiza_emp_final');
-    if(!jaEhDono && !temEmpresaSalva){
+    let jaTemDados = localStorage.getItem('kiza_emp_final') || localStorage.getItem('kiza_hist_cod') || localStorage.getItem('kiza_pro');
+    if(!jaTemDados){
       empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
-      comodos=[]; servicos=[]; localStorage.clear(); localStorage.setItem('kiza_dono','1');
+      comodos=[]; servicos=[]; 
+      localStorage.setItem('kiza_dono','1');
     } else {
-      // Preserva empresa editada (DANILO GESSO etc)
+      // Preserva tudo que já existe
       empresaNome=localStorage.getItem('kiza_emp_final')||EMPRESA_FIXA.nome;
       empresaSub=localStorage.getItem('kiza_sub_final')||EMPRESA_FIXA.sub;
       empresaTel=localStorage.getItem('kiza_tel_final')||EMPRESA_FIXA.tel;
@@ -333,7 +345,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   let painelD=document.getElementById('painelDono'); 
   if(painelD && isDono){
     painelD.style.display='block';
-    try{ setNextId(getNextId()); renderHist(); }catch(e){}
+    try{ setNextId(getNextId()); renderHist(); }catch(e){ console.log(e); }
   }
   document.getElementById('btnGerar1Vital')?.addEventListener('click',()=>gerarUm('vitalicio'));
   document.getElementById('btnGerar1Mensal')?.addEventListener('click',()=>gerarUm('mensal'));
