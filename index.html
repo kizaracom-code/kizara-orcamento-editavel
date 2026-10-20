@@ -371,6 +371,19 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('inputEnderecoTop').addEventListener('input',(e)=>{enderecoCli=e.target.value; localStorage.setItem('kiza_end_final',enderecoCli); render();});
   document.getElementById('btnPdf').addEventListener('click',gerarPDF);
   document.getElementById('btnLinkPlataforma').addEventListener('click',gerarLinkPlataforma);
+  document.getElementById('btnCopiarLink')?.addEventListener('click',()=>{
+    let ta=document.getElementById('linkGerado');
+    if(ta && ta.value){
+      navigator.clipboard.writeText(ta.value);
+      showStatus('🔗 Link copiado! Cole no WhatsApp do cliente');
+    }
+  });
+  document.getElementById('btnAbrirCel')?.addEventListener('click',()=>{
+    let ta=document.getElementById('linkGerado');
+    if(ta && ta.value){
+      window.open(ta.value,'_blank');
+    }
+  });
   document.getElementById('btnComodo').addEventListener('click',()=>{if(verificarLimiteGratis())abrirModal('modal');});
   document.getElementById('btnNovoServ').addEventListener('click',()=>{abrirModal('modalNovoServ');});
   document.getElementById('btnCriarComodo').addEventListener('click',()=>{if(verificarLimiteGratis())criarComodo();});
