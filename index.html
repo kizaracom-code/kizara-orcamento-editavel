@@ -83,6 +83,10 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
   </div>
 
   <div id="bannerPromo"><span>🎁 TESTE GRÁTIS 2 CÔMODOS - Ative PRO para ilimitado</span><span id="bannerAcao" style="text-decoration:underline;cursor:pointer">Ativar</span></div>
+  <div style="display:flex;gap:8px;margin-bottom:10px">
+    <button onclick="restaurarServicosPadrao()" style="background:#fff;border:1px dashed #d4af37;color:#8a6d00;padding:8px 12px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer">↩️ Restaurar 6 serviços padrão</button>
+    <button onclick="if(confirm('Limpar todos os cômodos?')){comodos=[];localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));render();}" style="background:#fff;border:1px dashed #ccc;color:#666;padding:8px 12px;border-radius:10px;font-size:11px;cursor:pointer">🗑️ Limpar só cômodos</button>
+  </div>
   <div class="mainGrid"><div class="card"><h2>CÔMODOS</h2><div id="listaComodos"></div></div><div class="card"><h2>SERVIÇOS</h2><div id="gridServicos"></div></div></div>
   <div class="previa"><h3>PRÉVIA DO ORÇAMENTO</h3><div id="clientePrevia"></div><div id="previaComodos" style="font-size:11px;line-height:1.6;opacity:.9;margin-bottom:10px"></div><div style="font-size:11px;opacity:.6">TOTAL GERAL</div><div id="totalGeral">R$ 0,00</div></div>
   <div id="areaLinkPlataforma"><b style="font-size:13px">Link plataforma com dados gerado:</b><textarea id="linkGerado" readonly></textarea><div style="display:flex;gap:8px"><button id="btnCopiarLink" style="flex:1;background:#111;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer">COPIAR LINK</button><button id="btnAbrirCel" style="flex:1;background:#d4af37;border:none;padding:10px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer">ABRIR NO CELULAR</button></div></div>
@@ -217,6 +221,21 @@ function removerServico(id){if(!confirm('Remover serviço?'))return; servicos=se
 function toggleServico(cIdx,sId){let c=comodos[cIdx]; if(!c)return; if(c.servicos.includes(sId))c.servicos=c.servicos.filter(x=>x!=sId); else c.servicos.push(sId); render();}
 function removerComodo(idx){if(!confirm('Remover cômodo?'))return; comodos.splice(idx,1); render();}
 function verificarLimiteGratis(){let pro=localStorage.getItem('kiza_pro'); if(pro) return true; if(comodos.length>=2){alert('Limite grátis: 2 cômodos. Ative PRO para ilimitado.'); return false;} return true;}
+function restaurarServicosPadrao(){
+  if(!confirm('Restaurar os 6 serviços padrão? Isso vai substituir os atuais.')) return;
+  servicos=[
+    {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
+    {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
+    {id:3,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
+    {id:4,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85},
+    {id:5,nome:'SANCA FECHADA',unidade:'ml',valor:25},
+    {id:6,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45}
+  ];
+  localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));
+  render();
+  showStatus('✅ 6 serviços padrão restaurados!');
+}
+
 function limparTudo(){
   let params=new URLSearchParams(window.location.search);
   if(params.get('limpo')){ alert('🚫 No modo cliente você não pode apagar a obra!'); return; }
@@ -375,7 +394,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
       comodos=[]; servicos=[]; 
       if(servE){ try{ servicos=JSON.parse(servE); }catch(e){} }
-      if(servicos.length===0){
+      if(servicos.length<=1){ // se só tem 1, força restaurar padrão
         servicos=[
           {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
           {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
@@ -447,7 +466,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   try{
     let savedServ=localStorage.getItem('kiza_serv_final');
     if(savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0){ servicos=parsed; } }
-    if(servicos.length===0){
+    if(servicos.length<=1){ // se só tem 1, força restaurar padrão
       servicos=[
         {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
         {id:2,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
