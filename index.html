@@ -265,9 +265,22 @@ function render(){
 
 document.addEventListener('DOMContentLoaded',()=>{
   let params=new URLSearchParams(window.location.search),emp=params.get('empresa'),sub=params.get('sub'),tel=params.get('tel'),cid=params.get('cid'),dados=params.get('dados'),limpo=params.get('limpo');
+  // FIX: Não limpar tudo ao abrir sem params - preservar empresa editada
   if(!emp&&!dados&&!limpo){
-    empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
-    comodos=[]; servicos=[]; localStorage.clear(); localStorage.setItem('kiza_dono','1');
+    // Só limpa se nunca foi dono antes
+    let jaEhDono = localStorage.getItem('kiza_dono')==='1';
+    let temEmpresaSalva = localStorage.getItem('kiza_emp_final');
+    if(!jaEhDono && !temEmpresaSalva){
+      empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
+      comodos=[]; servicos=[]; localStorage.clear(); localStorage.setItem('kiza_dono','1');
+    } else {
+      // Preserva empresa editada (DANILO GESSO etc)
+      empresaNome=localStorage.getItem('kiza_emp_final')||EMPRESA_FIXA.nome;
+      empresaSub=localStorage.getItem('kiza_sub_final')||EMPRESA_FIXA.sub;
+      empresaTel=localStorage.getItem('kiza_tel_final')||EMPRESA_FIXA.tel;
+      empresaCidade=localStorage.getItem('kiza_cid_final')||EMPRESA_FIXA.cid;
+      localStorage.setItem('kiza_dono','1');
+    }
   }
   if(emp) empresaNome=emp; if(sub) empresaSub=sub; if(tel) empresaTel=tel; if(cid) empresaCidade=cid;
   if(dados){try{let json=JSON.parse(decodeURIComponent(atob(dados))); if(json.comodos) comodos=json.comodos; if(json.servicos) servicos=json.servicos;}catch(e){}}
@@ -291,7 +304,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     let savedComodos=localStorage.getItem('kiza_comodos_final'); if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
   }catch(e){}
   let isDono=localStorage.getItem('kiza_dono')==='1';
-  let painelD=document.getElementById('painelDono'); if(painelD && isDono) painelD.style.display='block';
+  let painelD=document.getElementById('painelDono'); 
+  if(painelD && isDono){
+    painelD.style.display='block';
+    try{ setNextId(getNextId()); renderHist(); }catch(e){}
+  }
   document.getElementById('btnGerar1Vital')?.addEventListener('click',()=>gerarUm('vitalicio'));
   document.getElementById('btnGerar1Mensal')?.addEventListener('click',()=>gerarUm('mensal'));
   document.getElementById('logoEdit').addEventListener('click',()=>{ if(limpo) return; document.getElementById('inputLogo').click();});
