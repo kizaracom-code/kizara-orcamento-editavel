@@ -84,7 +84,7 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
 
   <div id="bannerPromo"><span>🎁 TESTE GRÁTIS 2 CÔMODOS - Ative PRO para ilimitado</span><span id="bannerAcao" style="text-decoration:underline;cursor:pointer">Ativar</span></div>
   <div style="display:flex;gap:8px;margin-bottom:10px">
-    <button onclick="restaurarServicosPadrao()" style="background:#fff;border:1px dashed #d4af37;color:#8a6d00;padding:8px 12px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer">↩️ Restaurar 6 serviços padrão</button>
+    <button onclick="restaurarServicosPadrao()" style="background:#fff;border:1px dashed #d4af37;color:#8a6d00;padding:8px 12px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer">↩️ Restaurar 7 serviços padrão</button>
     <button onclick="if(confirm('Limpar todos os cômodos?')){comodos=[];localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));render();}" style="background:#fff;border:1px dashed #ccc;color:#666;padding:8px 12px;border-radius:10px;font-size:11px;cursor:pointer">🗑️ Limpar só cômodos</button>
   </div>
   <div class="mainGrid"><div class="card"><h2>CÔMODOS</h2><div id="listaComodos"></div></div><div class="card"><h2>SERVIÇOS</h2><div id="gridServicos"></div></div></div>
@@ -199,7 +199,7 @@ function abrirModalEditarEmpresa(){document.getElementById('editNomeEmp').value=
 function criarComodo(){let nome=document.getElementById('nomeComodo').value.trim(), larg=document.getElementById('largComodo').value, comp=document.getElementById('compComodo').value; if(!nome){alert('Nome do cômodo');return;} comodos.push({nome:nome,larg:larg||0,comp:comp||0,servicos:[]}); document.getElementById('nomeComodo').value=''; document.getElementById('largComodo').value=''; document.getElementById('compComodo').value=''; fecharModal('modal'); render();}
 function criarServ(){let nome=document.getElementById('nomeServ').value.trim(), un=document.getElementById('unidServ').value||'m2', val=parseFloat(document.getElementById('valorServ').value)||0; if(!nome){alert('Nome serviço');return;} let id=Date.now(); servicos.push({id:id,nome:nome,unidade:un,valor:val}); document.getElementById('nomeServ').value=''; document.getElementById('valorServ').value=''; fecharModal('modalNovoServ'); render();}
 
-function editarNome(id){
+window.editarNome = function(id){
   let s=servicos.find(x=>x.id==id); if(!s) return;
   document.getElementById('editServId').value=s.id;
   document.getElementById('editServNome').value=s.nome;
@@ -207,7 +207,7 @@ function editarNome(id){
   document.getElementById('editServValor').value=s.valor;
   abrirModal('modalEditarServ');
 }
-function salvarEdicaoServ(){
+window.salvarEdicaoServ = function(){
   let id=parseInt(document.getElementById('editServId').value,10);
   let s=servicos.find(x=>x.id==id); if(!s) return;
   s.nome=document.getElementById('editServNome').value.trim()||s.nome;
@@ -222,19 +222,21 @@ function toggleServico(cIdx,sId){let c=comodos[cIdx]; if(!c)return; if(c.servico
 function removerComodo(idx){if(!confirm('Remover cômodo?'))return; comodos.splice(idx,1); render();}
 function verificarLimiteGratis(){let pro=localStorage.getItem('kiza_pro'); if(pro) return true; if(comodos.length>=2){alert('Limite grátis: 2 cômodos. Ative PRO para ilimitado.'); return false;} return true;}
 function restaurarServicosPadrao(){
-  if(!confirm('Restaurar serviços padrão? (SANCA FECHADA e SANCA ABERTA como padrão)')) return;
+  if(!confirm('Restaurar 7 serviços padrão?')) return;
       servicos=[
-        {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
-        {id:2,nome:'SANCA FECHADA',unidade:'ml',valor:25},
-        {id:3,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45},
-        {id:4,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
-        {id:5,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
-        {id:6,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85}
+        {id:1,nome:'FORRO DE GESSO LISO',unidade:'m2',valor:38},
+        {id:2,nome:'DILATAÇÃO/TABICA',unidade:'ml',valor:18},
+        {id:3,nome:'RODA TETO EM GESSO',unidade:'ml',valor:14},
+        {id:4,nome:'MODURA EM GESSO',unidade:'ml',valor:13},
+        {id:5,nome:'REBOLCO EM GESSO PAREDE IMESTRADA',unidade:'m2',valor:32},
+        {id:6,nome:'REBOLCO DE GESSO EM PAREDE SARRAFIADA',unidade:'m2',valor:28},
+        {id:7,nome:'PILICULA EM GESSO',unidade:'m2',valor:14}
       ];
   localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));
   render();
-  showStatus('✅ Serviços padrão restaurados: SANCA FECHADA R$25 e SANCA ABERTA R$45!');
+  showStatus('✅ 7 serviços padrão restaurados!');
 }
+
 
 function limparTudo_TEMP(){
 
@@ -256,13 +258,14 @@ function limparTudo(){
   if(save_logo) localStorage.setItem('kiza_logo_final', save_logo);
   if(save_emp) localStorage.setItem('kiza_emp_final', save_emp); if(save_sub) localStorage.setItem('kiza_sub_final', save_sub); if(save_tel) localStorage.setItem('kiza_tel_final', save_tel); if(save_cid) localStorage.setItem('kiza_cid_final', save_cid);
   // Recria serviços padrão
-        servicos=[
-        {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
-        {id:2,nome:'SANCA FECHADA',unidade:'ml',valor:25},
-        {id:3,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45},
-        {id:4,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
-        {id:5,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
-        {id:6,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85}
+              servicos=[
+        {id:1,nome:'FORRO DE GESSO LISO',unidade:'m2',valor:38},
+        {id:2,nome:'DILATAÇÃO/TABICA',unidade:'ml',valor:18},
+        {id:3,nome:'RODA TETO EM GESSO',unidade:'ml',valor:14},
+        {id:4,nome:'MODURA EM GESSO',unidade:'ml',valor:13},
+        {id:5,nome:'REBOLCO EM GESSO PAREDE IMESTRADA',unidade:'m2',valor:32},
+        {id:6,nome:'REBOLCO DE GESSO EM PAREDE SARRAFIADA',unidade:'m2',valor:28},
+        {id:7,nome:'PILICULA EM GESSO',unidade:'m2',valor:14}
       ];
   render(); if(save_hist) renderHist(); if(save_next) setNextId(parseInt(save_next,10)); showStatus('✅ Obra limpa, histórico mantido!');
 }
@@ -400,13 +403,14 @@ document.addEventListener('DOMContentLoaded',()=>{
       comodos=[]; servicos=[]; 
       if(servE){ try{ servicos=JSON.parse(servE); }catch(e){} }
       if(servicos.length<=1){ // se só tem 1, força restaurar padrão
-              servicos=[
-        {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
-        {id:2,nome:'SANCA FECHADA',unidade:'ml',valor:25},
-        {id:3,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45},
-        {id:4,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
-        {id:5,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
-        {id:6,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85}
+                    servicos=[
+        {id:1,nome:'FORRO DE GESSO LISO',unidade:'m2',valor:38},
+        {id:2,nome:'DILATAÇÃO/TABICA',unidade:'ml',valor:18},
+        {id:3,nome:'RODA TETO EM GESSO',unidade:'ml',valor:14},
+        {id:4,nome:'MODURA EM GESSO',unidade:'ml',valor:13},
+        {id:5,nome:'REBOLCO EM GESSO PAREDE IMESTRADA',unidade:'m2',valor:32},
+        {id:6,nome:'REBOLCO DE GESSO EM PAREDE SARRAFIADA',unidade:'m2',valor:28},
+        {id:7,nome:'PILICULA EM GESSO',unidade:'m2',valor:14}
       ];
       }
       localStorage.clear();
@@ -505,13 +509,14 @@ document.addEventListener('DOMContentLoaded',()=>{
     let savedServ=localStorage.getItem('kiza_serv_final');
     if(savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0){ servicos=parsed; } }
     if(servicos.length<=1){ // se só tem 1, força restaurar padrão
-            servicos=[
-        {id:1,nome:'FORRO DE GESSO',unidade:'m2',valor:35},
-        {id:2,nome:'SANCA FECHADA',unidade:'ml',valor:25},
-        {id:3,nome:'SANCA ABERTA C/ LED',unidade:'ml',valor:45},
-        {id:4,nome:'DILATAÇÃO / TABICA',unidade:'ml',valor:16},
-        {id:5,nome:'FORRO GESSO ACARTONADO',unidade:'m2',valor:55},
-        {id:6,nome:'DIVISÓRIA GESSO',unidade:'m2',valor:85}
+                  servicos=[
+        {id:1,nome:'FORRO DE GESSO LISO',unidade:'m2',valor:38},
+        {id:2,nome:'DILATAÇÃO/TABICA',unidade:'ml',valor:18},
+        {id:3,nome:'RODA TETO EM GESSO',unidade:'ml',valor:14},
+        {id:4,nome:'MODURA EM GESSO',unidade:'ml',valor:13},
+        {id:5,nome:'REBOLCO EM GESSO PAREDE IMESTRADA',unidade:'m2',valor:32},
+        {id:6,nome:'REBOLCO DE GESSO EM PAREDE SARRAFIADA',unidade:'m2',valor:28},
+        {id:7,nome:'PILICULA EM GESSO',unidade:'m2',valor:14}
       ];
     }
     let savedComodos=localStorage.getItem('kiza_comodos_final'); if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
