@@ -327,7 +327,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(tipo==='mensal' && expira>0 && Date.now()>expira){ localStorage.removeItem('kiza_pro'); }
   try{
     let savedServ=localStorage.getItem('kiza_serv_final');
-    if(savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0) servicos=parsed; }
+    // Só carrega serviço salvo se NÃO veio do link grande (?dados)
+    if(!dados && savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0) servicos=parsed; }
     if(servicos.length<7){
       servicos=[
         {id:1,nome:'FORRO DE GESSO LISO',unidade:'m2',un:'m2',valor:38},
@@ -339,7 +340,10 @@ document.addEventListener('DOMContentLoaded',()=>{
         {id:7,nome:'PILICULA EM GESSO',unidade:'m2',un:'m2',valor:14}
       ];
     }
-    let savedComodos=localStorage.getItem('kiza_comodos_final'); if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
+    // FIX LINK GRANDE: se tem ?dados, NÃO sobrescrever com comodos salvos local
+    if(!dados){
+      let savedComodos=localStorage.getItem('kiza_comodos_final'); if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
+    }
   }catch(e){}
   let isDono=localStorage.getItem('kiza_dono')==='1';
   let painelD=document.getElementById('painelDono'); 
