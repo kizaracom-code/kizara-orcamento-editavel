@@ -23,7 +23,6 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
 #btnNovoServ{background:#fff;border:1px solid #111}
 #btnLinkPlataforma{background:#d4af37;color:#111}
 #btnPdf{background:#16a34a;color:#fff}
-#btnRestaurar{background:#fff;border:1px dashed #d4af37;color:#8a6d00}
 .card{background:#fff;border-radius:16px;border:1px solid #eee;padding:16px}
 #listaComodos{display:flex;flex-direction:column;gap:10px}
 .comodoItem{border:1px solid #eee;border-radius:12px;padding:10px 12px}
@@ -58,56 +57,45 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
 <body>
 <div id="app">
   <div class="header"><div id="logoEdit"><img id="logoImg" alt="logo"><span id="logoTxt">K</span></div><div class="empresaBox"><div id="nomeEmpresa">kizaranet.com</div><div><span id="subEmpresa">CNPJ 42.103.065/0001-02</span> <span id="telEmpresa">Tel: (84)998791222</span> <span id="cidadeEmpresa">LAGOA NOVA RN</span></div></div><button id="btnAtivarPro2" style="background:#d4af37;border:none;padding:8px 12px;border-radius:20px;font-weight:800;font-size:11px;cursor:pointer">ATIVAR PRO</button></div>
-  <div class="topbar"><button id="btnZerar">COMEÇAR DO ZERO</button><button id="btnComodo">+ ITEM / LOCAL</button><button id="btnNovoServ">+ SERVICO</button><button id="btnRestaurar" style="display:none"></button><button id="btnLinkPlataforma">LINK PLATAFORMA COM DADOS</button><button id="btnPdf">BAIXAR PDF</button></div>
+  <div class="topbar"><button id="btnZerar">COMEÇAR DO ZERO</button><button id="btnComodo">+ ITEM / LOCAL</button><button id="btnNovoServ">+ SERVICO</button><button id="btnLinkPlataforma">LINK PLATAFORMA COM DADOS</button><button id="btnPdf">BAIXAR PDF</button></div>
   <div id="avisoCliente">📱 MODO CLIENTE - COMEÇAR DO ZERO travado. Cliente não apaga obra.</div>
   <div class="clienteBar"><div><label>Nome cliente obra</label><input id="inputClienteTop" placeholder="Nome do cliente"></div><div><label>Telefone cliente</label><input id="inputTelefoneTop" placeholder="(00) 00000-0000"></div><div><label>Endereço obra</label><input id="inputEnderecoTop" placeholder="Rua, número, bairro"></div></div>
   <div id="painelDono" style="display:none;background:#111;border:2px solid #d4af37;border-radius:14px;padding:14px;margin-bottom:12px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="color:#d4af37;font-size:13px">🔐 PAINEL DONO - Gerador de Licenças</b><span id="nextIdInfo" style="font-size:10px;color:#aaa"></span></div>
     <div style="margin-bottom:8px;display:flex;gap:6px"><input id="inputNomeClienteLic" placeholder="Nome do cliente (ex: João - Lagoa Nova)" style="flex:1;background:#222;color:#fff;border:1px solid #444;border-radius:8px;padding:9px 10px;font-size:11px"><input id="inputTelClienteLic" placeholder="Tel" style="width:110px;background:#222;color:#fff;border:1px solid #444;border-radius:8px;padding:9px 10px;font-size:11px"></div>
     <div style="margin-bottom:8px;display:flex;gap:6px"><button id="btnLimparHist" style="flex:1;background:#222;color:#ff6b6b;border:1px solid #ff6b6b;border-radius:8px;padding:8px;font-size:11px;font-weight:700;cursor:pointer">🗑️ LIMPAR HISTÓRICO - Deixar só 1º cliente (DANILO)</button></div>
-    <div style="margin-bottom:8px;display:flex;gap:6px"><input id="inputDeviceIdCliente" placeholder="ID do celular do cliente (ex: A7F9K2L0) - para vitalício com trava" style="flex:1;background:#111;color:#0f0;border:1px solid #0f0;border-radius:8px;padding:9px 10px;font-size:11px;font-weight:700"><button id="btnColarIdExemplo" style="background:#222;color:#0f0;border:1px solid #0f0;border-radius:8px;padding:8px 10px;font-size:10px;cursor:pointer">COLAR ID</button></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button id="btnGerar1VitalTravado" style="background:#0f0;color:#111;border:none;padding:12px;border-radius:10px;font-weight:900;font-size:11px;cursor:pointer">🔒 GERAR VITALICIO COM TRAVA ID</button><button id="btnGerar1Vital" style="background:#d4af37;color:#111;border:none;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR 1 VITALÍCIO</button><button id="btnGerar1Mensal" style="background:#fff;color:#111;border:1px solid #d4af37;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR MENSAL (30d)</button><button id="btnGerarMensalTravado" style="background:#222;color:#fff;border:1px solid #666;padding:12px;border-radius:10px;font-weight:700;font-size:11px;cursor:pointer">MENSAL COM TRAVA ID</button></div>
+    <div style="margin-bottom:8px;display:flex;gap:6px"><input id="inputDeviceIdCliente" placeholder="ID do celular do cliente (ex: A7F9K2L0) - para trava" style="flex:1;background:#111;color:#0f0;border:1px solid #0f0;border-radius:8px;padding:9px 10px;font-size:11px;font-weight:700"><button id="btnColarId" style="background:#222;color:#0f0;border:1px solid #0f0;border-radius:8px;padding:8px 10px;font-size:10px;cursor:pointer">COLAR ID</button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button id="btnGerarVitalTravado" style="background:#0f0;color:#111;border:none;padding:12px;border-radius:10px;font-weight:900;font-size:11px;cursor:pointer">🔒 GERAR COM TRAVA ID</button><button id="btnGerar1Vital" style="background:#d4af37;color:#111;border:none;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR 1 VITALÍCIO</button><button id="btnGerar1Mensal" style="background:#fff;color:#111;border:1px solid #d4af37;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR 1 MENSAL (30d)</button></div>
     <div id="ultimoGerado" style="background:#000;color:#0f0;padding:10px;border-radius:10px;margin-top:10px;font-family:monospace;font-size:11px;display:none"></div>
     <textarea id="historicoGerados" style="width:100%;height:100px;margin-top:10px;background:#111;color:#aaa;border:1px solid #333;border-radius:10px;padding:8px;font-size:10px" placeholder="Histórico de códigos"></textarea>
   </div>
   <div id="bannerPromo"><span>🎁 TESTE GRÁTIS 2 ITENS / LOCAIS - Ative PRO para ilimitado</span><span id="bannerAcao" style="text-decoration:underline;cursor:pointer">Ativar</span></div>
   <div class="mainGrid">
     <div class="card"><h3 style="font-size:13px;margin-bottom:10px">ITENS / LOCAIS</h3><div id="listaComodos"></div></div>
-    <div class="card"><h3 style="font-size:13px;margin-bottom:10px">SERVIÇOS</h3><div id="gridServicos"></div></div>
+    <div class="card"><h3 style="font-size:13px;margin-bottom:10px">SERVIÇOS - 7 PADRÃO</h3><div id="gridServicos"></div></div>
   </div>
   <div class="previa"><div style="font-size:11px;opacity:0.7">TOTAL GERAL</div><div id="totalGeral">R$ 0,00</div></div>
   <div id="areaLinkPlataforma"><b style="font-size:13px">Link plataforma com dados:</b><textarea id="linkGerado" readonly></textarea><div style="display:flex;gap:8px"><button id="btnCopiarLink" style="flex:1;background:#111;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer">COPIAR LINK</button><button id="btnAbrirCel" style="flex:1;background:#d4af37;border:none;padding:10px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer">ABRIR</button></div></div>
   <div id="status"></div>
-  <div id="modal" class="modalOverlay"><div class="modalBox"><h3>Novo Item / Local</h3><input id="mNome" placeholder="Ex: Sala 5x4 ou Gol Branco Placa ABC"><div style="background:#fff8e1;border:1px solid #f3d98a;border-radius:8px;padding:8px;margin:8px 0"><div style="font-size:11px;font-weight:700;color:#8a6d00;margin-bottom:6px">📏 Medidas (opcional - só para gesso/construção):</div><div style="display:flex;gap:8px"><input id="mC" type="number" step="0.01" placeholder="Compr. (m) - opcional"><input id="mL" type="number" step="0.01" placeholder="Largura (m) - opcional"></div><div style="font-size:10px;color:#888;margin-top:4px">Deixe em branco para lava jato, mecânico, etc (conta como 1 unidade)</div></div><div style="display:flex;gap:8px;margin-bottom:8px"><input id="mQ" type="number" step="1" placeholder="Qtd - padrão 1" style="width:100px"><span style="font-size:11px;color:#666;display:flex;align-items:center">Quantidade (ex: 2 carros)</span></div><div class="actions"><button class="btnGhost" onclick="fecharModal('modal')">Cancelar</button><button id="btnCriarComodo" class="btnPrimary">Criar Item / Local</button></div></div></div>
+  <div id="modal" class="modalOverlay"><div class="modalBox"><h3>Novo Item / Local</h3><input id="mNome" placeholder="Ex: Sala 5x4 ou Gol Branco"><div style="background:#fff8e1;border:1px solid #f3d98a;border-radius:8px;padding:8px;margin:8px 0"><div style="font-size:11px;font-weight:700;color:#8a6d00;margin-bottom:6px">📏 Medidas (opcional - só construção):</div><div style="display:flex;gap:8px"><input id="mC" type="number" step="0.01" placeholder="Compr. opcional"><input id="mL" type="number" step="0.01" placeholder="Larg. opcional"></div><div style="font-size:10px;color:#888;margin-top:4px">Deixe em branco para carro, lava jato, etc (conta como 1 un)</div></div><div class="actions"><button class="btnGhost" onclick="fecharModal('modal')">Cancelar</button><button id="btnCriarComodo" class="btnPrimary">Criar Item / Local</button></div></div></div>
   <div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nsNome" placeholder="Nome"><input id="nsPreco" type="number" step="0.01" placeholder="Preço"><select id="nsUn"><option value="m2">m²</option><option value="ml">ml</option><option value="m">m</option><option value="un">un</option><option value="m3">m³</option><option value="pct">pct</option><option value="kg">kg</option><option value="hora">h</option><option value="dia">dia</option><option value="vb">vb</option></select><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
   <div id="modalEditarServ" class="modalOverlay"><div class="modalBox"><h3>✏️ Editar Serviço - Nome e Preço</h3><input type="hidden" id="editServId"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Nome</label><input id="editServNome"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Unidade</label><select id="editServUnid"><option value="m2">m² - Metro quadrado</option><option value="ml">ml - Metro linear</option><option value="m">m - Metro</option><option value="un">un - Unidade</option><option value="m3">m³ - Metro cúbico</option><option value="pct">pct - Pacote</option><option value="kg">kg - Quilo</option><option value="hora">h - Hora</option><option value="dia">dia - Diária</option><option value="vb">vb - Verba</option></select><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Preço R$</label><input id="editServValor" type="number" step="0.01"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarServ')">Cancelar</button><button onclick="salvarEdicaoServ()" class="btnPrimary">💾 Salvar nome e preço</button></div></div></div>
-  <div id="modalLic" class="modalOverlay"><div class="modalBox"><h3>🔒 Ativar PRO</h3>
-  <div id="boxDeviceId" style="background:#111;border:1px solid #d4af37;border-radius:10px;padding:10px;margin-bottom:10px"><div style="font-size:10px;color:#aaa">SEU ID ÚNICO (para vitalício com trava):</div><div id="meuDeviceIdDisplay" style="font-family:monospace;font-size:16px;font-weight:900;color:#0f0;letter-spacing:2px;margin:4px 0">CARREGANDO...</div><div style="display:flex;gap:6px"><button id="btnCopiarMeuId" style="flex:1;background:#d4af37;color:#111;border:none;padding:8px;border-radius:8px;font-weight:800;font-size:11px;cursor:pointer">📋 COPIAR MEU ID</button><button id="btnWhatsappId" style="flex:1;background:#25D366;color:#fff;border:none;padding:8px;border-radius:8px;font-weight:800;font-size:11px;cursor:pointer">💬 WHATSAPP</button></div></div>
-  <input id="inputLic" placeholder="KIZARANET-VITALICIO-XXXX-YYYY"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalLic')">Depois</button><button id="btnAtivarPro" class="btnPrimary">Ativar PRO</button></div></div></div>
+  <div id="modalLic" class="modalOverlay"><div class="modalBox"><h3>🔒 Ativar PRO</h3><input id="inputLic" placeholder="KIZARANET-VITALICIO-XXXX-YYYY"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalLic')">Depois</button><button id="btnAtivarPro" class="btnPrimary">Ativar PRO</button></div></div></div>
   <div id="modalEditarEmpresa" class="modalOverlay"><div class="modalBox"><h3>Editar Empresa</h3><input id="editNomeEmp" placeholder="Nome"><input id="editSubEmp" placeholder="CNPJ"><input id="editTelEmp" placeholder="Tel"><input id="editCidadeEmp" placeholder="Cidade"><input id="inputLogo" type="file" accept="image/*" style="display:none"><button onclick="document.getElementById('inputLogo').click()" style="width:100%;padding:8px;border:1px dashed #d4af37;border-radius:10px;background:#fff8e1;font-size:11px;font-weight:700;margin-bottom:8px;cursor:pointer">Trocar Logo</button><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarEmpresa')">Cancelar</button><button id="btnSalvarEmpresa" class="btnPrimary">Salvar</button></div></div></div>
 </div>
 <script>
 const SECRETO = 1397670, MOD = 1679616;
-
 function getDeviceId(){
-  let id = localStorage.getItem('kiza_device_id');
+  let id=localStorage.getItem('kiza_device_id');
   if(id) return id;
-  let rand = Math.random().toString(36).substring(2,6).toUpperCase();
-  let fp = (navigator.userAgent.length + screen.width + screen.height).toString(36).toUpperCase();
-  let raw = (rand + fp).replace(/[^A-Z0-9]/g,'').substring(0,8).padEnd(8,'X');
-  if(raw.length<8) raw = raw + Math.random().toString(36).substring(2,10).toUpperCase().substring(0,8-raw.length);
-  raw = raw.substring(0,8);
-  localStorage.setItem('kiza_device_id', raw);
-  return raw;
+  let r=Math.random().toString(36).substring(2,6).toUpperCase();
+  let fp=(navigator.userAgent.length+screen.width+screen.height).toString(36).toUpperCase();
+  let raw=(r+fp).replace(/[^A-Z0-9]/g,'').substring(0,8).padEnd(8,'X').substring(0,8);
+  localStorage.setItem('kiza_device_id',raw); return raw;
 }
-function getDeviceIdFormatted(){ let id=getDeviceId(); return id.substring(0,4)+'-'+id.substring(4,8); }
-function gerarCodigoComDevice(deviceId, tipo){
+function gerarCodigoComDevice(deviceId){
   deviceId=deviceId.replace(/[^A-Z0-9]/g,'').toUpperCase().substring(0,8).padEnd(8,'X');
-  let deviceVal=fromB36(deviceId);
-  let obf=(deviceVal * 7919 + SECRETO) % MOD;
-  let chk=(obf*13 + SECRETO*7) % MOD;
-  let xxxx=toB36(obf,4), yyyy=toB36(chk,4);
-  return `KIZARANET-VITAL-${deviceId}-${xxxx}-${yyyy}`;
+  let dv=fromB36(deviceId), obf=(dv*7919+SECRETO)%MOD, chk=(obf*13+SECRETO*7)%MOD;
+  return `KIZARANET-VITAL-${deviceId}-${toB36(obf,4)}-${toB36(chk,4)}`;
 }
 
 const EMPRESA_FIXA = { nome: 'kizaranet.com', sub: 'CNPJ 42.103.065/0001-02', tel: 'Tel: (84)998791222', cid: 'LAGOA NOVA RN' };
@@ -117,30 +105,26 @@ function toB36(n,len){let c="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",r="";for(let 
 function fromB36(s){return parseInt(s,36);}
 function validarLicencaSegura(codigo){
   codigo=codigo.trim().toUpperCase();
-  let m2 = codigo.match(/^KIZARANET-VITAL-([A-Z0-9]{8})-([A-Z0-9]{4})-([A-Z0-9]{4})$/);
-  if(!m2) m2 = codigo.match(/^KIZARANET-VITALICIO-([A-Z0-9]{8})-([A-Z0-9]{4})-([A-Z0-9]{4})$/);
+  let m2=codigo.match(/^KIZARANET-VITAL-([A-Z0-9]{8})-([A-Z0-9]{4})-([A-Z0-9]{4})$/);
   if(m2){
-    let deviceId=m2[1], xxxx=m2[2], yyyy=m2[3];
-    let deviceVal=fromB36(deviceId);
-    let xv=fromB36(xxxx), yv=fromB36(yyyy);
-    if(isNaN(deviceVal)||isNaN(xv)||isNaN(yv)) return null;
-    let esperadoObf = (deviceVal * 7919 + SECRETO) % MOD;
-    if(xv!==esperadoObf) return null;
-    let esperadoChk = (xv*13 + SECRETO*7) % MOD;
-    if(yv!==esperadoChk) return null;
-    let meuId = getDeviceId();
-    if(deviceId!==meuId){
-      return {tipo:'vitalicio', valido:false, motivo:'device_mismatch', esperado:deviceId, meu:meuId};
-    }
-    return {tipo:'vitalicio', valido:true, travado:true, device:deviceId};
+    let dev=m2[1], xxxx=m2[2], yyyy=m2[3];
+    let dv=fromB36(dev), xv=fromB36(xxxx), yv=fromB36(yyyy);
+    if(isNaN(dv)||isNaN(xv)||isNaN(yv)) return null;
+    let expObf=(dv*7919+SECRETO)%MOD;
+    if(xv!==expObf) return null;
+    let expChk=(xv*13+SECRETO*7)%MOD;
+    if(yv!==expChk) return null;
+    let meu=getDeviceId();
+    if(dev!==meu) return {tipo:'vitalicio', valido:false, motivo:'device_mismatch', esperado:dev, meu:meu};
+    return {tipo:'vitalicio', valido:true, travado:true};
   }
-  let m = codigo.match(/^KIZARANET-(VITALICIO|MENSAL)-([A-Z0-9]{4})-([A-Z0-9]{4})$/);
+  let m=codigo.match(/^KIZARANET-(VITALICIO|MENSAL)-([A-Z0-9]{4})-([A-Z0-9]{4})$/);
   if(m){
     let tipo=m[1], xxxx=m[2], yyyy=m[3];
     let xv=fromB36(xxxx), yv=fromB36(yyyy);
     if(isNaN(xv)||isNaN(yv)) return null;
-    let esperado=(xv*13 + SECRETO*7) % MOD;
-    if(yv===esperado){ return {tipo:tipo.toLowerCase(), valido:true, travado:false}; }
+    let esperado=(xv*13+SECRETO*7)%MOD;
+    if(yv===esperado) return {tipo:tipo.toLowerCase(), valido:true};
     return null;
   }
   return null;
@@ -169,28 +153,7 @@ function renderHist(){
     }).join('\n');
   }
 }
-function gerarUm(tipo, comTrava){
-  let nomeInput=document.getElementById('inputNomeClienteLic');
-  let telInput=document.getElementById('inputTelClienteLic');
-  let deviceInput=document.getElementById('inputDeviceIdCliente');
-  let nomeCli = nomeInput ? nomeInput.value.trim() : '';
-  let telCli = telInput ? telInput.value.trim() : '';
-  let deviceIdCli = deviceInput ? deviceInput.value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'').substring(0,8) : '';
-  if(!nomeCli){ nomeCli = prompt('Nome do cliente?'); if(!nomeCli) return; }
-  let cod='';
-  let id=getNextId();
-  if(comTrava){
-    if(!deviceIdCli || deviceIdCli.length<8){ deviceIdCli = prompt('Cole o ID de 8 caracteres do celular do cliente:'); if(!deviceIdCli) return; deviceIdCli = deviceIdCli.toUpperCase().replace(/[^A-Z0-9]/g,'').substring(0,8); if(deviceInput) deviceInput.value=deviceIdCli; }
-    cod=gerarCodigoComDevice(deviceIdCli, tipo);
-  }else{ cod=gerarCodigoDono(id,tipo); }
-  let el=document.getElementById('ultimoGerado'); el.style.display='block';
-  el.innerHTML=`<div>${nomeCli} - ${cod}</div><button onclick="navigator.clipboard.writeText('${cod}')">COPIAR</button>`;
-  let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); hist.unshift({cod:cod, cliente:nomeCli, tel:telCli, device:deviceIdCli||'', data:new Date().toLocaleString('pt-BR'), tipo:tipo+(comTrava?'_travado':''), id:id}); localStorage.setItem('kiza_hist_cod',JSON.stringify(hist)); renderHist(); if(!comTrava) setNextId(id+1); showStatus('✅ '+cod);
-}
-function gerarUmLivre(tipo){ gerarUm(tipo,false); }
-function gerarUmTravado(tipo){ gerarUm(tipo,true); }
-function gerarUmLegacy(tipo){
-
+function gerarUm(tipo){
   let nomeInput=document.getElementById('inputNomeClienteLic');
   let telInput=document.getElementById('inputTelClienteLic');
   let nomeCli = nomeInput ? nomeInput.value.trim() : '';
@@ -255,33 +218,26 @@ function limparTudo(){
   comodos=[]; clienteNome=''; telefoneCli=''; enderecoCli='';
   document.getElementById('inputClienteTop').value=''; document.getElementById('inputTelefoneTop').value=''; document.getElementById('inputEnderecoTop').value='';
   render();
-  showStatus('Obra limpa - 7 serviços mantidos');
+  showStatus('Obra limpa - plataforma vazia');
 }
 function criarComodo(){
   let nome=document.getElementById('mNome').value.trim(),
       c=document.getElementById('mC').value,
-      l=document.getElementById('mL').value,
-      q=document.getElementById('mQ') ? document.getElementById('mQ').value : '1';
+      l=document.getElementById('mL').value;
   if(!nome){alert('Nome obrigatório');return;}
-  // Medidas opcionais agora - universal!
-  let comp = parseFloat(c)||0;
-  let larg = parseFloat(l)||0;
-  let quant = parseFloat(q)||1;
-  // Se não tem medida, cria como UNIDADE (para lava jato, carro, etc)
+  let comp=parseFloat(c)||0;
+  let larg=parseFloat(l)||0;
   if(comp===0 && larg===0){
-    comodos.push({nome:nome,c:1,l:1,q:quant,unidade:'un',servicos:[], isUnidade:true});
+    comodos.push({nome:nome,c:1,l:1,isUnidade:true,q:1,servicos:[]});
   }else{
     if(comp===0) comp=1;
     if(larg===0) larg=1;
-    comodos.push({nome:nome,c:comp,l:larg,q:quant,servicos:[], isUnidade:false});
+    comodos.push({nome:nome,c:comp,l:larg,isUnidade:false,q:1,servicos:[]});
   }
   document.getElementById('mNome').value='';
   document.getElementById('mC').value='';
   document.getElementById('mL').value='';
-  if(document.getElementById('mQ')) document.getElementById('mQ').value='';
-  fecharModal('modal');
-  render();
-  showStatus('✅ Item criado: '+nome);
+  fecharModal('modal'); render(); showStatus('✅ Item criado: '+nome);
 }
 function criarServ(){let nome=document.getElementById('nsNome').value.trim(),preco=parseFloat(document.getElementById('nsPreco').value)||0,un=document.getElementById('nsUn').value; if(!nome){alert('Nome obrigatório');return;} let id=Date.now(); servicos.push({id:id,nome:nome,valor:preco,unidade:un,un:un}); document.getElementById('nsNome').value=''; document.getElementById('nsPreco').value=''; fecharModal('modalNovoServ'); render(); }
 function verificarLimiteGratis(){
@@ -327,7 +283,7 @@ function gerarPDF(){
   let totalGeral=0;
   comodos.forEach((c,idx)=>{
     if(y>pageH-45){ doc.addPage(); y=12; }
-    let cValP=c.c||1; let lValP=c.l||1; let qValP=c.q||1; let a=(c.isUnidade ? qValP : cValP*lValP*qValP); let p=(c.isUnidade ? qValP : 2*(cValP+lValP)*qValP);
+    let cVP=c.c||1, lVP=c.l||1, qVP=c.q||1; let a=(c.isUnidade? qVP : cVP*lVP*qVP); let p=(c.isUnidade? qVP : 2*(cVP+lVP)*qVP);
     doc.setFillColor(17,17,17); doc.rect(margin,y,pageW-margin*2,8,'F');
     doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(255,255,255);
     doc.text((idx+1)+'. '+c.nome.toUpperCase(), margin+3, y+5.5);
@@ -368,18 +324,23 @@ function render(){
   }
   let lc=document.getElementById('listaComodos');
   if(lc){
-    if(comodos.length===0) lc.innerHTML='<div style="color:#999;font-size:11px">Nenhum cômodo - clique + ITEM / LOCAL</div>';
+    if(comodos.length===0) lc.innerHTML='<div style="color:#999;font-size:11px">Nenhum item - clique + ITEM / LOCAL</div>';
     else lc.innerHTML=comodos.map((co,i)=>{
-      let a=(co.isUnidade ? (co.q||1) : (co.c||1)*(co.l||1)*(co.q||1));
-      return `<div class="comodoItem"><div class="comodoHead"><b style="font-size:12px">${co.nome}</b><span class="comodoMeta">${co.isUnidade ? (co.q||1)+' un' : co.c+'x'+co.l+'m = '+a.toFixed(2)+'m²'}</span><button onclick="removerComodo(${i})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div><div class="servCheck">${servicos.map(s=>{let chk=co.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome}</label>`}).join('')}</div></div>`
+      let cV=co.c||1, lV=co.l||1, qV=co.q||1; let a=(co.isUnidade? qV : cV*lV*qV);
+      let metaTxt = co.isUnidade ? `${qV} un` : `${cV}x${lV}m = ${a.toFixed(2)}m²`;
+      return `<div class="comodoItem"><div class="comodoHead"><b style="font-size:12px">${co.nome}</b><span class="comodoMeta">${metaTxt}</span><button onclick="removerComodo(${i})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div><div class="servCheck">${servicos.map(s=>{let chk=co.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome}</label>`}).join('')}</div></div>`
     }).join('');
   }
   let gs=document.getElementById('gridServicos');
   if(gs){
-    if(servicos.length===0) gs.innerHTML='<div style="color:#999;font-size:11px;padding:12px;text-align:center">Nenhum serviço cadastrado<br>Clique em + SERVIÇO para começar<br><br>Ex: Lavagem completa R$60<br>Forro de gesso R$38/m²</div>';
-    else gs.innerHTML=servicos.map(s=>{let unid=s.un||s.unidade||'m2'; return `<div class="servCard"><b style="font-size:11px;display:block;margin-bottom:2px;line-height:1.2">${s.nome}</b><div style="font-size:11px;color:#666;margin-bottom:6px">${unid} - R$ ${s.valor}</div><div style="display:flex;gap:6px"><button onclick="editarNome(${s.id})" style="flex:1;font-size:11px;padding:7px 8px;background:#111;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">✏️ EDITAR</button><button onclick="removerServico(${s.id})" style="font-size:11px;padding:7px 8px;background:#fee;border:1px solid #fcc;border-radius:8px;cursor:pointer">🗑️</button></div></div>`}).join('');
+    if(servicos.length===0){
+      gs.innerHTML='<div style="color:#999;font-size:11px;padding:14px;text-align:center;border:1px dashed #ddd;border-radius:12px">Nenhum serviço cadastrado<br>Clique em <b>+ SERVICO</b> para começar<br><br>Exemplos:<br>Lava jato: Lavagem completa R$60<br>Gesso: Forro liso R$38/m²<br>Mecânico: Troca óleo R$120</div>';
+    }else{
+      gs.innerHTML=servicos.map(s=>{let unid=s.un||s.unidade||'m2'; return `<div class="servCard"><b style="font-size:11px;display:block;margin-bottom:2px;line-height:1.2">${s.nome}</b><div style="font-size:11px;color:#666;margin-bottom:6px">${unid} - R$ ${s.valor}</div><div style="display:flex;gap:6px"><button onclick="editarNome(${s.id})" style="flex:1;font-size:11px;padding:7px 8px;background:#111;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">✏️ EDITAR</button><button onclick="removerServico(${s.id})" style="font-size:11px;padding:7px 8px;background:#fee;border:1px solid #fcc;border-radius:8px;cursor:pointer">🗑️</button></div></div>`}).join('');
+    }
+  }
   let total=0;
-  comodos.forEach(co=>{let cVal=co.c||1; let lVal=co.l||1; let qVal=co.q||1; let a=(co.isUnidade ? qVal : cVal*lVal*qVal); let p=(co.isUnidade ? qVal : 2*(cVal+lVal)*qVal); co.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s) return; let base=(s.unidade==='ml'||s.un==='ml')?p:a; if(s.unidade==='un'||s.un==='un') base=1; total+=base*s.valor;});});
+  comodos.forEach(co=>{let cV=co.c||1, lV=co.l||1, qV=co.q||1; let a=(co.isUnidade? qV : cV*lV*qV); let p=(co.isUnidade? qV : 2*(cV+lV)*qV); co.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s) return; let base=(s.unidade==='ml'||s.un==='ml')?p:a; if(s.unidade==='un'||s.un==='un') base=1; total+=base*s.valor;});});
   let tg=document.getElementById('totalGeral'); if(tg) tg.textContent='R$ '+total.toFixed(2).replace('.',',');
   localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));
   localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));
@@ -416,21 +377,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(tipo==='mensal' && expira>0 && Date.now()>expira){ localStorage.removeItem('kiza_pro'); }
   try{
     let savedServ=localStorage.getItem('kiza_serv_final');
-    try{
-      if(savedServ){
-        let tmp=JSON.parse(savedServ);
-        // Se for os 7 de gesso antigos, limpa para vir limpo universal
-        if(tmp && tmp.length===7 && tmp[0] && tmp[0].nome && tmp[0].nome.includes('FORRO')){
-          localStorage.removeItem('kiza_serv_final');
-          savedServ=null;
-        }
-      }
-    }catch(e){}
-    savedServ=localStorage.getItem('kiza_serv_final');
     // Só carrega serviço salvo se NÃO veio do link grande (?dados)
     if(!dados && savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0) servicos=parsed; }
+    // SEM SERVIÇOS PADRÃO - cliente cadastra do zero (universal)
+    // servicos permanece vazio se não tiver nada salvo
     if(servicos.length===0){
-      // Plataforma limpa - sem serviços padrão, cliente cadastra do zero
       servicos=[];
     }
     // FIX LINK GRANDE: se tem ?dados, NÃO sobrescrever com comodos salvos local
@@ -477,7 +428,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     try{ setNextId(getNextId()); renderHist(); }catch(e){ console.log(e); }
   }
   if(limpo && painelD){ painelD.style.display='none'; }
-  document.getElementById('btnGerar1Vital')?.addEventListener('click',()=>gerarUmLivre('vitalicio')); document.getElementById('btnGerar1VitalTravado')?.addEventListener('click',()=>gerarUmTravado('vitalicio')); document.getElementById('btnGerar1Mensal')?.addEventListener('click',()=>gerarUmLivre('mensal')); document.getElementById('btnGerarMensalTravado')?.addEventListener('click',()=>gerarUmTravado('mensal')); document.getElementById('btnColarIdExemplo')?.addEventListener('click',()=>{ let d=prompt('Cole ID:'); if(d) document.getElementById('inputDeviceIdCliente').value=d; }); document.getElementById('btnCopiarMeuId')?.addEventListener('click',()=>{ let id=getDeviceId(); navigator.clipboard.writeText(id); showStatus('ID copiado: '+id); }); document.getElementById('btnWhatsappId')?.addEventListener('click',()=>{ let id=getDeviceId(); let msg=encodeURIComponent('Quero vitalício KIZARA. Meu ID: '+id); window.open('https://wa.me/5584998791222?text='+msg,'_blank'); });
+  document.getElementById('btnGerar1Vital')?.addEventListener('click',()=>gerarUm('vitalicio'));
   document.getElementById('btnGerar1Mensal')?.addEventListener('click',()=>gerarUm('mensal'));
   document.getElementById('btnLimparHist')?.addEventListener('click',()=>{
     if(!confirm('Limpar histórico e deixar só DANILO GESSO LTDA -> KIZARANET-MENSAL-V57Z-2L0T ?')) return;
@@ -497,43 +448,22 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('inputEnderecoTop').addEventListener('input',(e)=>{enderecoCli=e.target.value; localStorage.setItem('kiza_end_final',enderecoCli); render();});
   document.getElementById('btnPdf').addEventListener('click',gerarPDF);
   document.getElementById('btnLinkPlataforma').addEventListener('click',gerarLinkPlataforma);
-  function copiarTextoRobusto(texto){
+  function copiarTextoRobusto(txt){
     if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(texto).then(()=>{ showStatus('🔗 Link copiado! Cole no WhatsApp do cliente'); }).catch(()=>{
-        fallbackCopy(texto);
-      });
-    }else{
-      fallbackCopy(texto);
-    }
+      navigator.clipboard.writeText(txt).then(()=>showStatus('🔗 Link copiado!')).catch(()=>fallbackCopy(txt));
+    }else fallbackCopy(txt);
   }
-  function fallbackCopy(texto){
+  function fallbackCopy(txt){
     let ta=document.getElementById('linkGerado');
-    if(ta){
-      ta.select();
-      ta.setSelectionRange(0,999999);
-      try{
-        document.execCommand('copy');
-        showStatus('🔗 Link copiado! (modo compatível)');
-      }catch(e){
-        prompt('Copie o link manualmente (Ctrl+C):', texto);
-      }
-    }
+    if(ta){ ta.select(); ta.setSelectionRange(0,999999); try{ document.execCommand('copy'); showStatus('🔗 Link copiado!'); }catch(e){ prompt('Copie manualmente:', txt); } }
   }
   document.getElementById('btnCopiarLink')?.addEventListener('click',()=>{
     let ta=document.getElementById('linkGerado');
-    if(ta && ta.value){
-      copiarTextoRobusto(ta.value);
-    }else{
-      showStatus('❌ Nenhum link gerado! Clique em LINK PLATAFORMA primeiro');
-    }
+    if(ta && ta.value){ copiarTextoRobusto(ta.value); }else showStatus('❌ Gere o link primeiro');
   });
   document.getElementById('btnAbrirCel')?.addEventListener('click',()=>{
     let ta=document.getElementById('linkGerado');
-    if(ta && ta.value){
-      window.open(ta.value,'_blank');
-    }else{
-      showStatus('❌ Clique em LINK PLATAFORMA COM DADOS primeiro');
-    }
+    if(ta && ta.value){ window.open(ta.value,'_blank'); }else showStatus('❌ Gere o link primeiro');
   });
   document.getElementById('btnComodo').addEventListener('click',()=>{if(verificarLimiteGratis())abrirModal('modal');});
   document.getElementById('btnNovoServ').addEventListener('click',()=>{abrirModal('modalNovoServ');});
@@ -541,13 +471,12 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('btnCriarServ').addEventListener('click',criarServ);
   document.getElementById('btnSalvarEmpresa').addEventListener('click',()=>{empresaNome=document.getElementById('editNomeEmp').value||empresaNome;empresaSub=document.getElementById('editSubEmp').value||empresaSub;empresaTel=document.getElementById('editTelEmp').value||empresaTel;empresaCidade=document.getElementById('editCidadeEmp').value||empresaCidade;localStorage.setItem('kiza_emp_final',empresaNome);localStorage.setItem('kiza_sub_final',empresaSub);localStorage.setItem('kiza_tel_final',empresaTel);localStorage.setItem('kiza_cid_final',empresaCidade);fecharModal('modalEditarEmpresa');render();});
   document.getElementById('btnZerar').addEventListener('click',limparTudo);
-  document.getElementById('btnRestaurar').addEventListener('click',restaurarServicosPadrao);
   document.getElementById('btnAtivarPro2').addEventListener('click',()=>{abrirModal('modalLic');});
   document.getElementById('bannerAcao').addEventListener('click',()=>{abrirModal('modalLic');});
   document.getElementById('btnAtivarPro').addEventListener('click',()=>{
     let licVal=document.getElementById('inputLic').value.trim().toUpperCase();
     let res=validarLicencaSegura(licVal);
-    if(!res){alert('Licença inválida!');return;} if(res.valido===false && res.motivo==='device_mismatch'){ alert('❌ Licença travada em outro celular! ID da licença: '+res.esperado+' Seu ID: '+res.meu); return; }
+    if(!res){alert('Licença inválida!');return;}
     if(res.tipo==='vitalicio'){ localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_pro_tipo','vitalicio'); localStorage.removeItem('kiza_pro_expira'); fecharModal('modalLic'); showStatus('✅ PRO VITALÍCIO!'); document.getElementById('btnAtivarPro2').textContent='✅ PRO ATIVO'; document.getElementById('btnAtivarPro2').style.background='#16a34a'; document.getElementById('btnAtivarPro2').style.color='#fff'; document.getElementById('bannerPromo').style.display='none'; }
     else if(res.tipo==='mensal'){ let expira=Date.now()+30*24*60*60*1000; localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_pro_tipo','mensal'); localStorage.setItem('kiza_pro_expira',expira.toString()); fecharModal('modalLic'); showStatus('✅ PRO MENSAL 30 dias!'); document.getElementById('btnAtivarPro2').textContent='✅ PRO ATIVO - MENSAL'; document.getElementById('btnAtivarPro2').style.background='#16a34a'; document.getElementById('btnAtivarPro2').style.color='#fff'; document.getElementById('bannerPromo').style.display='none'; }
   });
