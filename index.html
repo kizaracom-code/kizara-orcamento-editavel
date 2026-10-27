@@ -347,21 +347,18 @@ function render(){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
-  let params=new URLSearchParams(window.location.search),emp=params.get('empresa'),sub=params.get('sub'),tel=params.get('tel'),cid=params.get('cid'),dados=params.get('dados'),limpo=params.get('limpo');
-  // FIX DEFINITIVO: Preservar tudo (empresa, logo, historico, PRO) ao abrir
+  let params=new URLSearchParams(window.location.search),emp=params.get('empresa'),sub=params.get('sub'),tel=params.get('tel'),cid=params.get('cid'),dados=params.get('dados'),limpo=params.get('limpo'),donoParam=params.get('dono')||params.get('admin');
+  if(donoParam==='1'){ localStorage.setItem('kiza_dono','1'); localStorage.setItem('kiza_mostrar_painel','1'); }
   if(!emp&&!dados&&!limpo){
     let jaTemDados = localStorage.getItem('kiza_emp_final') || localStorage.getItem('kiza_hist_cod') || localStorage.getItem('kiza_pro');
     if(!jaTemDados){
       empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
-      comodos=[]; servicos=[]; 
-      localStorage.setItem('kiza_dono','1');
+      comodos=[]; servicos=[];
     } else {
-      // Preserva tudo que já existe
       empresaNome=localStorage.getItem('kiza_emp_final')||EMPRESA_FIXA.nome;
       empresaSub=localStorage.getItem('kiza_sub_final')||EMPRESA_FIXA.sub;
       empresaTel=localStorage.getItem('kiza_tel_final')||EMPRESA_FIXA.tel;
       empresaCidade=localStorage.getItem('kiza_cid_final')||EMPRESA_FIXA.cid;
-      localStorage.setItem('kiza_dono','1');
     }
   }
   if(emp) empresaNome=emp; if(sub) empresaSub=sub; if(tel) empresaTel=tel; if(cid) empresaCidade=cid;
@@ -370,8 +367,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('avisoCliente').style.display='block'; 
     let bl=document.getElementById('btnLinkPlataforma'); if(bl) bl.style.display='none';
     let pd=document.getElementById('painelDono'); if(pd) pd.style.display='none';
-    let bp=document.getElementById('bannerPromo'); if(bp) bp.style.display='none';
-    let bz=document.getElementById('btnAtivarPro2'); if(bz) bz.style.display='none';
+    // NÃO esconde ATIVAR PRO e banner - cliente precisa ver para pagar PRO
+    // let bp=document.getElementById('bannerPromo'); if(bp) bp.style.display='none';
+    // let bz=document.getElementById('btnAtivarPro2'); if(bz) bz.style.display='none';
+    let bz2=document.getElementById('btnZerar'); if(bz2) bz2.style.display='none'; // esconde Começar do zero pro cliente não apagar
   }
   let tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
   if(tipo==='mensal' && expira>0 && Date.now()>expira){ localStorage.removeItem('kiza_pro'); }
