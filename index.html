@@ -397,14 +397,32 @@ document.addEventListener('DOMContentLoaded',()=>{
   }catch(e){}
   let isDono=localStorage.getItem('kiza_dono')==='1';
   let painelD=document.getElementById('painelDono');
-  // SEM AUTO-LIMPEZA - histórico preservado para sempre
+  // SEM AUTO-LIMPEZA - histórico preservado com chave real do Gilmar
   try{
     let histFinal=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]');
     if(histFinal.length===0){
-      let oficial={cliente:'danilo gesso ltda', cod:'KIZARANET-MENSAL-V57Z-2L0T', data:'20/10/2026 14:26', tipo:'mensal', id:1};
-      localStorage.setItem('kiza_hist_cod', JSON.stringify([oficial]));
+      let oficial1={cliente:'danilo gesso ltda', cod:'KIZARANET-MENSAL-V57Z-2L0T', data:'20/10/2026 14:26', tipo:'mensal', id:1};
+      let oficial2={cliente:'aelcio gimar pereira - GILMAR', cod:'KIZARANET-VITAL-BGVH123X-OU09-SJ8F', data:'26/10/2026 21:51', tipo:'vitalicio_travado', id:2, device:'BGVH123X'};
+      localStorage.setItem('kiza_hist_cod', JSON.stringify([oficial2, oficial1]));
+      localStorage.setItem('kiza_next_id','3');
+    }else{
+      // Se já tem histórico, garante que Gilmar com chave BGVH123X esteja lá
+      let temGilmar = histFinal.some(h=> (h.cod||'').includes('BGVH123X') || (h.cod||'').includes('OU09-SJ8F'));
+      if(!temGilmar){
+        let gilmar={cliente:'aelcio gimar pereira - GILMAR', cod:'KIZARANET-VITAL-BGVH123X-OU09-SJ8F', data:'26/10/2026 21:51', tipo:'vitalicio_travado', id:2, device:'BGVH123X'};
+        histFinal.unshift(gilmar);
+        localStorage.setItem('kiza_hist_cod', JSON.stringify(histFinal));
+      }
+      // Se tem aelcio com código antigo UAO4, substitui pela chave real
+      histFinal = JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]');
+      let idx = histFinal.findIndex(h=> (h.cliente||'').toLowerCase().includes('aelcio') && !(h.cod||'').includes('BGVH123X'));
+      if(idx!==-1){
+        histFinal[idx].cod='KIZARANET-VITAL-BGVH123X-OU09-SJ8F';
+        histFinal[idx].device='BGVH123X';
+        histFinal[idx].tipo='vitalicio_travado';
+        localStorage.setItem('kiza_hist_cod', JSON.stringify(histFinal));
+      }
     }
-    // NÃO apaga mais ninguém - todos ficam salvos (Aélcio Gilmar incluso)
   }catch(e){ console.log('hist',e); }
 
   if(painelD && isDono && !limpo){
