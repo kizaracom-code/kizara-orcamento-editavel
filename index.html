@@ -71,7 +71,7 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
   <div id="bannerPromo"><span>🎁 TESTE GRÁTIS 2 ITENS / LOCAIS - Ative PRO para ilimitado</span><span id="bannerAcao" style="text-decoration:underline;cursor:pointer">Ativar</span></div>
   <div class="mainGrid">
     <div class="card"><h3 style="font-size:13px;margin-bottom:10px">ITENS / LOCAIS</h3><div id="listaComodos"></div></div>
-    <div class="card"><h3 style="font-size:13px;margin-bottom:10px">SERVIÇOS - 7 PADRÃO</h3><div id="gridServicos"></div></div>
+    <div class="card"><h3 style="font-size:13px;margin-bottom:10px">SERVIÇOS</h3><div id="gridServicos"></div></div>
   </div>
   <div class="previa"><div style="font-size:11px;opacity:0.7">TOTAL GERAL</div><div id="totalGeral">R$ 0,00</div></div>
   <div id="areaLinkPlataforma"><b style="font-size:13px">Link plataforma com dados:</b><textarea id="linkGerado" readonly></textarea><div style="display:flex;gap:8px"><button id="btnCopiarLink" style="flex:1;background:#111;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer">COPIAR LINK</button><button id="btnAbrirCel" style="flex:1;background:#d4af37;border:none;padding:10px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer">ABRIR</button></div></div>
@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   }
   if(emp) empresaNome=emp; if(sub) empresaSub=sub; if(tel) empresaTel=tel; if(cid) empresaCidade=cid;
-  if(dados){try{let json=JSON.parse(decodeURIComponent(atob(dados))); if(json.comodos) comodos=json.comodos; if(json.servicos) servicos=json.servicos;}catch(e){}}
+  // dados tratado abaixo com lógica de persistência - não sobrescrever aqui
   if(limpo){
     document.getElementById('avisoCliente').style.display='block'; 
     let bl=document.getElementById('btnLinkPlataforma'); if(bl) bl.style.display='none';
@@ -382,17 +382,23 @@ document.addEventListener('DOMContentLoaded',()=>{
   let tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
   if(tipo==='mensal' && expira>0 && Date.now()>expira){ localStorage.removeItem('kiza_pro'); }
   try{
+    // Carrega sempre o salvo primeiro (para persistir Lava motor etc)
     let savedServ=localStorage.getItem('kiza_serv_final');
-    // Só carrega serviço salvo se NÃO veio do link grande (?dados)
-    if(!dados && savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0) servicos=parsed; }
-    // SEM SERVIÇOS PADRÃO - cliente cadastra do zero (universal)
-    // servicos permanece vazio se não tiver nada salvo
-    if(servicos.length===0){
-      servicos=[];
-    }
-    // FIX LINK GRANDE: se tem ?dados, NÃO sobrescrever com comodos salvos local
-    if(!dados){
-      let savedComodos=localStorage.getItem('kiza_comodos_final'); if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
+    if(savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0) servicos=parsed; }
+    if(servicos.length===0){ servicos=[]; }
+    let savedComodos=localStorage.getItem('kiza_comodos_final');
+    if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
+    // Se veio link com ?dados, só usa dados se ainda não tem nada salvo (primeira vez)
+    // Assim quando cliente cria Lava motor e sai/entra, não perde
+    if(dados){
+      try{
+        let json=JSON.parse(decodeURIComponent(atob(dados)));
+        let hasSaved = comodos.length>0 || servicos.length>0;
+        if(!hasSaved){
+          if(json.comodos) comodos=json.comodos;
+          if(json.servicos) servicos=json.servicos;
+        }
+      }catch(e){}
     }
   }catch(e){}
   let isDono=localStorage.getItem('kiza_dono')==='1';
