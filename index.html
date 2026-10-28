@@ -298,7 +298,11 @@ function gerarPDF(){
     let sub=0;
     c.servicos.forEach(sid=>{
       let s=servicos.find(x=>x.id==sid); if(!s) return;
-      let base=(s.unidade==='ml'||s.un==='ml')?p:a; if(s.unidade==='un'||s.un==='un') base=1;
+      let un = (s.unidade||s.un||'m2').toString().toLowerCase().trim();
+      let base = a;
+      if(un==='ml' || un==='m') base = p;
+      else if(un==='un' || un==='pct' || un==='kg' || un==='hora' || un==='dia' || un==='vb' || un==='h') base = 1;
+      else base = a;
       let val=base*s.valor; sub+=val;
       doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(40,40,40);
       doc.text('• '+s.nome, margin+6, y);
@@ -347,7 +351,22 @@ function render(){
     }
   }
   let total=0;
-  comodos.forEach(co=>{let cV=co.c||1, lV=co.l||1, qV=co.q||1; let a=(co.isUnidade? qV : cV*lV*qV); let p=(co.isUnidade? qV : 2*(cV+lV)*qV); co.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s) return; let base=(s.unidade==='ml'||s.un==='ml')?p:a; if(s.unidade==='un'||s.un==='un') base=1; total+=base*s.valor;});});
+  // Cálculo corrigido: m2 usa área (c*l), ml usa perímetro (2*(c+l)), un usa 1
+  comodos.forEach(co=>{
+    let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1;
+    let a=(co.isUnidade? qV : cV*lV*qV);
+    let p=(co.isUnidade? qV : 2*(cV+lV)*qV);
+    co.servicos.forEach(sid=>{
+      let s=servicos.find(x=>x.id==sid);
+      if(!s) return;
+      let un = (s.unidade||s.un||'m2').toString().toLowerCase().trim();
+      let base = a;
+      if(un==='ml' || un==='m') base = p;
+      else if(un==='un' || un==='pct' || un==='kg' || un==='hora' || un==='dia' || un==='vb' || un==='h') base = 1;
+      else base = a; // m2 e m3 usam área
+      total+=base*s.valor;
+    });
+  });
   let tg=document.getElementById('totalGeral'); if(tg) tg.textContent='R$ '+total.toFixed(2).replace('.',',');
   localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));
   localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));
