@@ -71,22 +71,51 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
   <div id="bannerPromo"><span>🎁 TESTE GRÁTIS 2 ITENS / LOCAIS - Ative PRO para ilimitado</span><span id="bannerAcao" style="text-decoration:underline;cursor:pointer">Ativar</span></div>
   <div class="mainGrid">
     <div class="card"><h3 style="font-size:13px;margin-bottom:10px">ITENS / LOCAIS</h3><div id="listaComodos"></div></div>
-    <div class="card"><h3 style="font-size:13px;margin-bottom:10px">SERVIÇOS</h3><div id="gridServicos"></div></div>
+    <div class="card"><h3 style="font-size:13px;margin-bottom:10px">SERVIÇOS - 7 PADRÃO</h3><div id="gridServicos"></div></div>
   </div>
-  <div class="previa"><div style="font-size:11px;opacity:0.7">TOTAL GERAL</div><div id="totalGeral">R$ 0,00</div></div>
+  <div class="card" style="margin-top:12px;border:2px solid #16a34a;background:#f0fdf4">
+    <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:13px">💰 CUSTO DESSA OBRA - Simples (não é fixo)</h3><button id="btnToggleCustoObra" style="background:#fff;border:1px solid #16a34a;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">MOSTRAR / ESCONDER</button></div>
+    <div id="areaCustoObraSimples" style="display:block;margin-top:10px">
+      <div style="font-size:11px;color:#666;margin-bottom:8px">Cada obra muda! O programa soma os metros, você só joga a despesa total dessa obra (combustível + mão de obra + placa + gesso pó + sisal + arame + tabica + cola + alimentação) e ele divide sozinho.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL M²</div><div id="totM2Display" style="font-size:18px;font-weight:900">0,00</div><div style="font-size:10px;color:#999">soma das áreas</div></div>
+        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL ML</div><div id="totMlDisplay" style="font-size:18px;font-weight:900">0,00</div><div style="font-size:10px;color:#999">soma perímetros</div></div>
+        <div style="background:#111;color:#fff;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;opacity:0.7">M² + ML</div><div id="totSomaMetrosDisplay" style="font-size:18px;font-weight:900;color:#d4af37">0,00</div><div style="font-size:10px;opacity:0.7">soma dos dois</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label style="font-size:11px;font-weight:700">💸 Despesa total dessa obra R$</label><input id="despesaTotalObra" type="number" step="0.01" placeholder="Ex: 850 - soma automática dos campos abaixo" style="width:100%;padding:10px;border:2px solid #16a34a;border-radius:10px;font-size:14px;font-weight:700"><div id="hintDespesaAuto" style="font-size:10px;color:#16a34a;font-weight:700;margin-top:3px">Preencha os campos detalhados abaixo que ele soma sozinho aqui!</div></div>
+        <div><label style="font-size:11px;font-weight:700">📦 Custo por metro (automático)</label><div id="custoPorMetroDisplay" style="padding:10px;background:#fff;border:1px dashed #16a34a;border-radius:10px;font-weight:900;font-size:14px;text-align:center">R$ 0,00 / metro</div></div>
+      </div>
+      <div id="resumoCustoSimples" style="background:#fff;border-radius:10px;padding:10px;margin-top:10px;font-size:12px;line-height:1.7"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px;border:2px solid #f3d98a">
+    <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:13px">💰 MEUS CUSTOS DETALHADOS - 95% DOS GASTOS (opcional)</h3><button id="btnToggleCustos" style="background:#fff8e1;border:1px solid #d4af37;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">MOSTRAR / ESCONDER</button></div>
+    <div id="areaCustos" style="display:none;margin-top:10px">
+      <div style="font-size:11px;color:#666;margin-bottom:8px">Preencha uma vez, o app já calcula seu custo por m² e seu lucro real. Só você vê, cliente não vê.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label style="font-size:11px;font-weight:700">⛽ Combustível dessa obra R$</label><input id="cCombustivel" type="number" step="0.01" placeholder="Ex: 80" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div>
+        <div><label style="font-size:11px;font-weight:700">👷 Mão dele nessa obra R$</label><input id="cMaoDele" type="number" step="0.01" placeholder="Ex: 150" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div>
+        <div><label style="font-size:11px;font-weight:700">👷‍♂️ Mão funcionários nessa obra R$</label><input id="cMaoFunc" type="number" step="0.01" placeholder="Ex: 200 (1 ou 2 funcionários)" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div>
+        <div><label style="font-size:11px;font-weight:700">🍽️ Alimentação nessa obra R$</label><input id="cAlimentacao" type="number" step="0.01" placeholder="Ex: 60" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div>
+        <div><label style="font-size:11px;font-weight:700">📦 Placa de gesso nessa obra R$</label><input id="cPlaca" type="number" step="0.01" placeholder="Ex: 8" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div>
+        <div><label style="font-size:11px;font-weight:700">🧱 Gesso em pó nessa obra R$</label><input id="cGessoPo" type="number" step="0.01" placeholder="Ex: 3" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div>
+        <div><label style="font-size:11px;font-weight:700">🧵 Fibra de sisal nessa obra R$</label><input id="cSisal" type="number" step="0.01" placeholder="Ex: 1.5" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div>
+        <div><label style="font-size:11px;font-weight:700">🔗 Arame nessa obra R$</label><input id="cArame" type="number" step="0.01" placeholder="Ex: 1" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div>
+        <div><label style="font-size:11px;font-weight:700">📏 Tabica de forma nessa obra R$</label><input id="cTabica" type="number" step="0.01" placeholder="Ex: 2" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div>
+        <div><label style="font-size:11px;font-weight:700">🧴 Cola nessa obra R$</label><input id="cCola" type="number" step="0.01" placeholder="Ex: 0.8" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px"><button id="btnSalvarCustos" style="flex:1;background:#111;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;cursor:pointer">💾 SALVAR MEUS CUSTOS</button><button id="btnAplicarCustoServicos" style="flex:1;background:#16a34a;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;cursor:pointer">✨ APLICAR CUSTO NOS SERVIÇOS</button></div>
+      <div id="resumoCustos" style="background:#f6f5f0;border-radius:10px;padding:10px;margin-top:10px;font-size:12px;line-height:1.6"></div>
+    </div>
+  </div>
+  <div class="previa"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:11px;opacity:0.7">TOTAL GERAL (VENDA)</div><div id="totalGeral">R$ 0,00</div><div id="totalCustoLucro" style="font-size:11px;margin-top:6px;opacity:0.9">Custo: R$ 0,00 | Lucro: R$ 0,00</div><div id="totalCustoObra" style="font-size:11px;margin-top:4px;opacity:0.9"></div></div><div style="text-align:right;font-size:10px;opacity:0.7">Só você vê custo/lucro<br>Cliente vê só total venda no PDF</div></div></div>
   <div id="areaLinkPlataforma"><b style="font-size:13px">Link plataforma com dados:</b><textarea id="linkGerado" readonly></textarea><div style="display:flex;gap:8px"><button id="btnCopiarLink" style="flex:1;background:#111;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer">COPIAR LINK</button><button id="btnAbrirCel" style="flex:1;background:#d4af37;border:none;padding:10px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer">ABRIR</button></div></div>
   <div id="status"></div>
   <div id="modal" class="modalOverlay"><div class="modalBox"><h3>Novo Item / Local</h3><input id="mNome" placeholder="Ex: Sala 5x4 ou Gol Branco"><div style="background:#fff8e1;border:1px solid #f3d98a;border-radius:8px;padding:8px;margin:8px 0"><div style="font-size:11px;font-weight:700;color:#8a6d00;margin-bottom:6px">📏 Medidas (opcional - só construção):</div><div style="display:flex;gap:8px"><input id="mC" type="number" step="0.01" placeholder="Compr. opcional"><input id="mL" type="number" step="0.01" placeholder="Larg. opcional"></div><div style="font-size:10px;color:#888;margin-top:4px">Deixe em branco para carro, lava jato, etc (conta como 1 un)</div></div><div class="actions"><button class="btnGhost" onclick="fecharModal('modal')">Cancelar</button><button id="btnCriarComodo" class="btnPrimary">Criar Item / Local</button></div></div></div>
-  <div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nsNome" placeholder="Nome"><input id="nsPreco" type="number" step="0.01" placeholder="Preço"><select id="nsUn"><option value="m2">m²</option><option value="ml">ml</option><option value="m">m</option><option value="un">un</option><option value="m3">m³</option><option value="pct">pct</option><option value="kg">kg</option><option value="hora">h</option><option value="dia">dia</option><option value="vb">vb</option></select><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
-  <div id="modalEditarServ" class="modalOverlay"><div class="modalBox"><h3>✏️ Editar Serviço - Nome e Preço</h3><input type="hidden" id="editServId"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Nome</label><input id="editServNome"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Unidade</label><select id="editServUnid"><option value="m2">m² - Metro quadrado</option><option value="ml">ml - Metro linear</option><option value="m">m - Metro</option><option value="un">un - Unidade</option><option value="m3">m³ - Metro cúbico</option><option value="pct">pct - Pacote</option><option value="kg">kg - Quilo</option><option value="hora">h - Hora</option><option value="dia">dia - Diária</option><option value="vb">vb - Verba</option></select><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Preço R$</label><input id="editServValor" type="number" step="0.01"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarServ')">Cancelar</button><button onclick="salvarEdicaoServ()" class="btnPrimary">💾 Salvar nome e preço</button></div></div></div>
-  <div id="modalLic" class="modalOverlay"><div class="modalBox"><h3>🔒 Ativar PRO</h3>
-  <div id="boxDeviceId" style="background:#111;border:1px solid #d4af37;border-radius:10px;padding:10px;margin-bottom:10px">
-    <div style="font-size:10px;color:#aaa">SEU ID ÚNICO (para vitalício com trava):</div>
-    <div id="meuDeviceIdDisplay" style="font-family:monospace;font-size:18px;font-weight:900;color:#0f0;letter-spacing:2px;margin:6px 0">CARREGANDO...</div>
-    <div style="display:flex;gap:6px"><button id="btnCopiarMeuId" style="flex:1;background:#d4af37;color:#111;border:none;padding:8px;border-radius:8px;font-weight:800;font-size:11px;cursor:pointer">📋 COPIAR MEU ID</button><button id="btnWhatsappId" style="flex:1;background:#25D366;color:#fff;border:none;padding:8px;border-radius:8px;font-weight:800;font-size:11px;cursor:pointer">💬 ENVIAR ID NO WHATSAPP</button></div>
-    <div style="font-size:10px;color:#888;margin-top:6px">Copie seu ID e mande pro dono (84)99879-1222.</div>
-  </div>
-  <input id="inputLic" placeholder="KIZARANET-VITALICIO-XXXX-YYYY ou KIZARANET-VITAL-XXXXXXXX-XXXX-YYYY"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalLic')">Depois</button><button id="btnAtivarPro" class="btnPrimary">Ativar PRO</button></div></div></div>
+  <div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nsNome" placeholder="Nome - ex: Forro de gesso liso"><input id="nsPreco" type="number" step="0.01" placeholder="Preço de venda R$ - ex: 38"><input id="nsCusto" type="number" step="0.01" placeholder="Custo R$ por unidade - ex: 20 (material + mão de obra) - opcional"><select id="nsUn"><option value="m2">m²</option><option value="ml">ml</option><option value="m">m</option><option value="un">un</option><option value="m3">m³</option><option value="pct">pct</option><option value="kg">kg</option><option value="hora">h</option><option value="dia">dia</option><option value="vb">vb</option></select><div style="font-size:11px;color:#666;background:#f6f5f0;padding:8px;border-radius:8px;margin-bottom:8px">Ex: Vende a R$38, custa R$20 = Lucro R$18 por m². Se deixar custo em branco, conta como R$0.</div><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
+  <div id="modalEditarServ" class="modalOverlay"><div class="modalBox"><h3>✏️ Editar Serviço - Nome, Preço e Custo</h3><input type="hidden" id="editServId"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Nome</label><input id="editServNome"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Unidade</label><select id="editServUnid"><option value="m2">m² - Metro quadrado</option><option value="ml">ml - Metro linear</option><option value="m">m - Metro</option><option value="un">un - Unidade</option><option value="m3">m³ - Metro cúbico</option><option value="pct">pct - Pacote</option><option value="kg">kg - Quilo</option><option value="hora">h - Hora</option><option value="dia">dia - Diária</option><option value="vb">vb - Verba</option></select><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Preço de venda R$</label><input id="editServValor" type="number" step="0.01"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Custo R$ por unidade (material + mão de obra)</label><input id="editServCusto" type="number" step="0.01" placeholder="Ex: 20"><div id="lucroPreview" style="font-size:12px;font-weight:700;color:#16a34a;margin:4px 0"></div><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarServ')">Cancelar</button><button onclick="salvarEdicaoServ()" class="btnPrimary">💾 Salvar nome, preço e custo</button></div></div></div>
+  <div id="modalLic" class="modalOverlay"><div class="modalBox"><h3>🔒 Ativar PRO</h3><input id="inputLic" placeholder="KIZARANET-VITALICIO-XXXX-YYYY"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalLic')">Depois</button><button id="btnAtivarPro" class="btnPrimary">Ativar PRO</button></div></div></div>
   <div id="modalEditarEmpresa" class="modalOverlay"><div class="modalBox"><h3>Editar Empresa</h3><input id="editNomeEmp" placeholder="Nome"><input id="editSubEmp" placeholder="CNPJ"><input id="editTelEmp" placeholder="Tel"><input id="editCidadeEmp" placeholder="Cidade"><input id="inputLogo" type="file" accept="image/*" style="display:none"><button onclick="document.getElementById('inputLogo').click()" style="width:100%;padding:8px;border:1px dashed #d4af37;border-radius:10px;background:#fff8e1;font-size:11px;font-weight:700;margin-bottom:8px;cursor:pointer">Trocar Logo</button><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarEmpresa')">Cancelar</button><button id="btnSalvarEmpresa" class="btnPrimary">Salvar</button></div></div></div>
 </div>
 <script>
@@ -194,6 +223,8 @@ function editarNome(id){
   document.getElementById('editServNome').value=s.nome;
   document.getElementById('editServUnid').value=s.un||s.unidade||'m2';
   document.getElementById('editServValor').value=s.valor;
+  document.getElementById('editServCusto').value=s.custo||0;
+  let lp=document.getElementById('lucroPreview'); if(lp){ let lucro=(s.valor||0)-(s.custo||0); lp.textContent='Lucro por unidade: R$ '+lucro.toFixed(2); }
   abrirModal('modalEditarServ');
 }
 function salvarEdicaoServ(){
@@ -203,9 +234,10 @@ function salvarEdicaoServ(){
   let unid=document.getElementById('editServUnid').value;
   s.un=unid; s.unidade=unid;
   s.valor=parseFloat(document.getElementById('editServValor').value)||0;
+  s.custo=parseFloat(document.getElementById('editServCusto')?document.getElementById('editServCusto').value:0)||0;
   fecharModal('modalEditarServ');
   render();
-  showStatus('✅ Editado: '+s.nome+' R$'+s.valor);
+  showStatus('✅ Editado: '+s.nome+' Venda R$'+s.valor+' Custo R$'+s.custo+' Lucro R$'+(s.valor-s.custo).toFixed(2));
 }
 function editarPreco(id){ editarNome(id); }
 function removerServico(id){if(!confirm('Remover serviço?'))return; servicos=servicos.filter(x=>x.id!=id); comodos.forEach(c=>{c.servicos=c.servicos.filter(sid=>sid!=id);}); render();}
@@ -246,7 +278,7 @@ function criarComodo(){
   document.getElementById('mL').value='';
   fecharModal('modal'); render(); showStatus('✅ Item criado: '+nome);
 }
-function criarServ(){let nome=document.getElementById('nsNome').value.trim(),preco=parseFloat(document.getElementById('nsPreco').value)||0,un=document.getElementById('nsUn').value; if(!nome){alert('Nome obrigatório');return;} let id=Date.now(); servicos.push({id:id,nome:nome,valor:preco,unidade:un,un:un}); document.getElementById('nsNome').value=''; document.getElementById('nsPreco').value=''; fecharModal('modalNovoServ'); render(); }
+function criarServ(){let nome=document.getElementById('nsNome').value.trim(),preco=parseFloat(document.getElementById('nsPreco').value)||0,custo=parseFloat(document.getElementById('nsCusto')?document.getElementById('nsCusto').value:0)||0,un=document.getElementById('nsUn').value; if(!nome){alert('Nome obrigatório');return;} let id=Date.now(); servicos.push({id:id,nome:nome,valor:preco,custo:custo,unidade:un,un:un}); document.getElementById('nsNome').value=''; document.getElementById('nsPreco').value=''; if(document.getElementById('nsCusto')) document.getElementById('nsCusto').value=''; fecharModal('modalNovoServ'); render(); }
 function verificarLimiteGratis(){
   let pro=localStorage.getItem('kiza_pro'), tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
   let isPro=false;
@@ -298,11 +330,7 @@ function gerarPDF(){
     let sub=0;
     c.servicos.forEach(sid=>{
       let s=servicos.find(x=>x.id==sid); if(!s) return;
-      let un = (s.unidade||s.un||'m2').toString().toLowerCase().trim();
-      let base = a;
-      if(un==='ml' || un==='m') base = p;
-      else if(un==='un' || un==='pct' || un==='kg' || un==='hora' || un==='dia' || un==='vb' || un==='h') base = 1;
-      else base = a;
+      let base=(s.unidade==='ml'||s.un==='ml')?p:a; if(s.unidade==='un'||s.un==='un') base=1;
       let val=base*s.valor; sub+=val;
       doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(40,40,40);
       doc.text('• '+s.nome, margin+6, y);
@@ -337,11 +365,9 @@ function render(){
   if(lc){
     if(comodos.length===0) lc.innerHTML='<div style="color:#999;font-size:11px">Nenhum item - clique + ITEM / LOCAL</div>';
     else lc.innerHTML=comodos.map((co,i)=>{
-      let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1;
-      let a=(co.isUnidade? qV : cV*lV*qV);
-      let p=(co.isUnidade? qV : 2*(cV+lV)*qV);
-      let metaTxt = co.isUnidade ? `${qV} un` : `${cV}x${lV}m = ${a.toFixed(2)}m² | ${p.toFixed(2)}ml`;
-      return `<div class="comodoItem"><div class="comodoHead"><b style="font-size:12px">${co.nome}</b><span class="comodoMeta" title="Área: ${a.toFixed(2)}m² | Perímetro: ${p.toFixed(2)}ml">${metaTxt}</span><button onclick="removerComodo(${i})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div><div class="servCheck">${servicos.map(s=>{let chk=co.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome}</label>`}).join('')}</div></div>`
+      let cV=co.c||1, lV=co.l||1, qV=co.q||1; let a=(co.isUnidade? qV : cV*lV*qV);
+      let metaTxt = co.isUnidade ? `${qV} un` : `${cV}x${lV}m = ${a.toFixed(2)}m²`;
+      return `<div class="comodoItem"><div class="comodoHead"><b style="font-size:12px">${co.nome}</b><span class="comodoMeta">${metaTxt}</span><button onclick="removerComodo(${i})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div><div class="servCheck">${servicos.map(s=>{let chk=co.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome}</label>`}).join('')}</div></div>`
     }).join('');
   }
   let gs=document.getElementById('gridServicos');
@@ -349,29 +375,102 @@ function render(){
     if(servicos.length===0){
       gs.innerHTML='<div style="color:#999;font-size:11px;padding:14px;text-align:center;border:1px dashed #ddd;border-radius:12px">Nenhum serviço cadastrado<br>Clique em <b>+ SERVICO</b> para começar<br><br>Exemplos:<br>Lava jato: Lavagem completa R$60<br>Gesso: Forro liso R$38/m²<br>Mecânico: Troca óleo R$120</div>';
     }else{
-      gs.innerHTML=servicos.map(s=>{let unid=s.un||s.unidade||'m2'; return `<div class="servCard"><b style="font-size:11px;display:block;margin-bottom:2px;line-height:1.2">${s.nome}</b><div style="font-size:11px;color:#666;margin-bottom:6px">${unid} - R$ ${s.valor}</div><div style="display:flex;gap:6px"><button onclick="editarNome(${s.id})" style="flex:1;font-size:11px;padding:7px 8px;background:#111;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">✏️ EDITAR</button><button onclick="removerServico(${s.id})" style="font-size:11px;padding:7px 8px;background:#fee;border:1px solid #fcc;border-radius:8px;cursor:pointer">🗑️</button></div></div>`}).join('');
+      gs.innerHTML=servicos.map(s=>{let unid=s.un||s.unidade||'m2'; let custo=s.custo||0; let lucro=(s.valor||0)-custo; let lucroTxt = custo>0 ? `<div style="font-size:10px;color:#16a34a;font-weight:700">Custo R$ ${custo.toFixed(2)} | Lucro R$ ${lucro.toFixed(2)}</div>` : `<div style="font-size:10px;color:#999">Sem custo - clique EDITAR para colocar</div>`; return `<div class="servCard"><b style="font-size:11px;display:block;margin-bottom:2px;line-height:1.2">${s.nome}</b><div style="font-size:11px;color:#666;margin-bottom:2px">${unid} - Venda R$ ${s.valor}</div>${lucroTxt}<div style="display:flex;gap:6px;margin-top:6px"><button onclick="editarNome(${s.id})" style="flex:1;font-size:11px;padding:7px 8px;background:#111;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">✏️ EDITAR</button><button onclick="removerServico(${s.id})" style="font-size:11px;padding:7px 8px;background:#fee;border:1px solid #fcc;border-radius:8px;cursor:pointer">🗑️</button></div></div>`}).join('');
     }
   }
-  let total=0;
-  // Cálculo corrigido: m2 usa área (c*l), ml usa perímetro (2*(c+l)), un usa 1
-  comodos.forEach(co=>{
-    let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1;
-    let a=(co.isUnidade? qV : cV*lV*qV);
-    let p=(co.isUnidade? qV : 2*(cV+lV)*qV);
-    co.servicos.forEach(sid=>{
-      let s=servicos.find(x=>x.id==sid);
-      if(!s) return;
-      let un = (s.unidade||s.un||'m2').toString().toLowerCase().trim();
-      let base = a;
-      if(un==='ml' || un==='m') base = p;
-      else if(un==='un' || un==='pct' || un==='kg' || un==='hora' || un==='dia' || un==='vb' || un==='h') base = 1;
-      else base = a; // m2 e m3 usam área
-      total+=base*s.valor;
-    });
-  });
+  let total=0, totalCusto=0;
+  comodos.forEach(co=>{let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1; let a=(co.isUnidade? qV : cV*lV*qV); let p=(co.isUnidade? qV : 2*(cV+lV)*qV); co.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s) return; let un=(s.unidade||s.un||'m2').toString().toLowerCase().trim(); let base=a; if(un==='ml'||un==='m') base=p; else if(un==='un'||un==='pct'||un==='kg'||un==='hora'||un==='dia'||un==='vb'||un==='h') base=1; else base=a; total+=base*s.valor; totalCusto+=base*(s.custo||0);});});
   let tg=document.getElementById('totalGeral'); if(tg) tg.textContent='R$ '+total.toFixed(2).replace('.',',');
+  let tc=document.getElementById('totalCustoLucro'); if(tc){ let lucro=total-totalCusto; tc.innerHTML=`Custo: R$ ${totalCusto.toFixed(2).replace('.',',')} | Lucro: <b style="color:#4ade80">R$ ${lucro.toFixed(2).replace('.',',')}</b> (${total>0 ? ((lucro/total)*100).toFixed(0) : 0}% de margem)`; }
   localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));
   localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));
+  try{ atualizarResumoCustos(); }catch(e){}
+}
+function atualizarCustoSimples(){
+  let totalM2=0, totalMl=0, totalVenda=0;
+  comodos.forEach(co=>{ let cv=parseFloat(co.c)||1, lv=parseFloat(co.l)||1, qv=parseFloat(co.q)||1; let a=(co.isUnidade? qv : cv*lv*qv); let p=(co.isUnidade? qv : 2*(cv+lv)*qv); totalM2+=a; totalMl+=p; co.servicos.forEach(sid=>{ let s=servicos.find(x=>x.id==sid); if(!s) return; let un=(s.un||s.unidade||'m2').toString().toLowerCase().trim(); let base=a; if(un==='ml'||un==='m') base=p; else if(un==='un'||un==='pct'||un==='kg'||un==='hora'||un==='dia'||un==='vb'||un==='h') base=1; else base=a; totalVenda+=base*s.valor; }); });
+  let soma = totalM2 + totalMl;
+  let despesa = parseFloat(document.getElementById('despesaTotalObra')?.value || localStorage.getItem('kiza_despesa_obra') || '0') || 0;
+  let custoPorMetro = soma>0 ? despesa/soma : 0;
+  let lucro = totalVenda - despesa;
+  let elM2=document.getElementById('totM2Display'); if(elM2) elM2.textContent=totalM2.toFixed(2).replace('.',',');
+  let elMl=document.getElementById('totMlDisplay'); if(elMl) elMl.textContent=totalMl.toFixed(2).replace('.',',');
+  let elSoma=document.getElementById('totSomaMetrosDisplay'); if(elSoma) elSoma.textContent=soma.toFixed(2).replace('.',',');
+  let elCpm=document.getElementById('custoPorMetroDisplay'); if(elCpm) elCpm.textContent='R$ '+custoPorMetro.toFixed(2).replace('.',',')+' / metro';
+  let elRes=document.getElementById('resumoCustoSimples');
+  if(elRes){
+    if(despesa===0){
+      elRes.innerHTML='👉 <b>Exemplo:</b> Sala 1 tem 6,25m² + 10ml = <b>16,25 metros</b>. Se você gastou R$850 nessa obra (combustível + mão + placa + gesso pó + sisal + arame + tabica + cola + alimentação), o custo fica <b>R$850 / 16,25 = R$52,31 por metro</b>. Digite sua despesa ali em cima!';
+    }else{
+      elRes.innerHTML=`📐 <b>Soma:</b> ${totalM2.toFixed(2)}m² + ${totalMl.toFixed(2)}ml = <b>${soma.toFixed(2)} metros</b><br>💸 <b>Despesa total:</b> R$ ${despesa.toFixed(2)}<br>📦 <b>Custo por metro:</b> R$ ${despesa.toFixed(2)} / ${soma.toFixed(2)} = <b>R$ ${custoPorMetro.toFixed(2)}</b><br>💰 <b>Venda:</b> R$ ${totalVenda.toFixed(2)} - Despesa R$ ${despesa.toFixed(2)} = <b style="color:${lucro>=0?'#16a34a':'#dc2626'}">Lucro R$ ${lucro.toFixed(2)}</b> (${totalVenda>0 ? ((lucro/totalVenda)*100).toFixed(0) : 0}% de margem)`;
+    }
+  }
+  // Atualiza total geral com despesa simples se houver
+  let tc=document.getElementById('totalCustoLucro'); if(tc && despesa>0){ tc.innerHTML=`Despesa dessa obra: R$ ${despesa.toFixed(2).replace('.',',')} | Lucro: <b style="color:#4ade80">R$ ${lucro.toFixed(2).replace('.',',')}</b> (Custo R$ ${custoPorMetro.toFixed(2)}/metro)`; }
+}
+function somarDespesasDetalhadas(){
+  // Soma tudo que ele for preenchendo nos campos detalhados e joga no total
+  let ids=['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'];
+  let soma=0;
+  ids.forEach(id=>{ let el=document.getElementById(id); let v=parseFloat(el?.value||'0')||0; soma+=v; });
+  let totalEl=document.getElementById('despesaTotalObra');
+  if(totalEl && soma>0){
+    totalEl.value = soma.toFixed(2);
+    localStorage.setItem('kiza_despesa_obra', soma.toFixed(2));
+    // Mostra que veio dos campos detalhados
+    let hint=document.getElementById('hintDespesaAuto'); if(hint) hint.textContent='✅ Somado automaticamente dos campos detalhados abaixo!';
+  }
+  return soma;
+}
+function getCustos(){
+  let g=(id)=> parseFloat(document.getElementById(id)?.value||localStorage.getItem('kiza_custo_'+id)||'0')||0;
+  return {
+    combustivel: g('cCombustivel'),
+    maoDele: g('cMaoDele'),
+    maoFunc: g('cMaoFunc'),
+    alimentacao: g('cAlimentacao'),
+    placa: g('cPlaca'),
+    gessoPo: g('cGessoPo'),
+    sisal: g('cSisal'),
+    arame: g('cArame'),
+    tabica: g('cTabica'),
+    cola: g('cCola')
+  };
+}
+function salvarCustos(){
+  let c=getCustos();
+  Object.keys(c).forEach(k=>{ let el=document.getElementById('c'+k.charAt(0).toUpperCase()+k.slice(1)); let idMap={combustivel:'cCombustivel', maoDele:'cMaoDele', maoFunc:'cMaoFunc', alimentacao:'cAlimentacao', placa:'cPlaca', gessoPo:'cGessoPo', sisal:'cSisal', arame:'cArame', tabica:'cTabica', cola:'cCola'}; localStorage.setItem('kiza_custo_'+idMap[k], c[k].toString()); });
+  atualizarResumoCustos();
+  showStatus('✅ Custos salvos! 95% dos gastos do gesseiro já calculados');
+}
+function atualizarResumoCustos(){
+  let c=getCustos();
+  let custoMatM2 = c.placa + c.gessoPo + c.sisal + c.arame + c.cola;
+  let custoDiario = c.combustivel + c.maoDele + c.maoFunc + c.alimentacao;
+  let totalArea = 0, totalPerim = 0;
+  comodos.forEach(co=>{ let cv=parseFloat(co.c)||1, lv=parseFloat(co.l)||1, qv=parseFloat(co.q)||1; totalArea += (co.isUnidade? qv : cv*lv*qv); totalPerim += (co.isUnidade? qv : 2*(cv+lv)*qv); });
+  let custoMatTotal = custoMatM2 * totalArea + c.tabica * totalPerim;
+  let custoObra = custoMatTotal + custoDiario;
+  let el=document.getElementById('resumoCustos');
+  if(el){
+    let somaDetalhada = c.combustivel + c.maoDele + c.maoFunc + c.alimentacao + c.placa + c.gessoPo + c.sisal + c.arame + c.tabica + c.cola;
+    el.innerHTML = `✅ <b>Soma automática:</b> Combustível R$${c.combustivel.toFixed(2)} + Mão dele R$${c.maoDele.toFixed(2)} + Funcionários R$${c.maoFunc.toFixed(2)} + Alimentação R$${c.alimentacao.toFixed(2)} + Placa R$${c.placa.toFixed(2)} + Gesso pó R$${c.gessoPo.toFixed(2)} + Sisal R$${c.sisal.toFixed(2)} + Arame R$${c.arame.toFixed(2)} + Tabica R$${c.tabica.toFixed(2)} + Cola R$${c.cola.toFixed(2)} = <b>R$ ${somaDetalhada.toFixed(2)}</b><br>📐 <b>Obra atual:</b> ${totalArea.toFixed(2)}m² | ${totalPerim.toFixed(2)}ml`;
+  }
+  let tc=document.getElementById('totalCustoObra');
+  if(tc && totalArea>0){ tc.innerHTML = `Custo real da obra (matéria + diária): R$ ${custoObra.toFixed(2)}`; }
+}
+function aplicarCustoNosServicos(){
+  let c=getCustos();
+  let custoM2 = c.placa + c.gessoPo + c.sisal + c.arame + c.cola + (c.combustivel + c.maoDele + c.maoFunc + c.alimentacao) / 20; // distribui diária em ~20m² por dia
+  let custoMl = c.tabica + 2; // tabica + parte da mão de obra
+  let mudou=0;
+  servicos.forEach(s=>{
+    let un=(s.un||s.unidade||'m2').toLowerCase();
+    if(un==='m2'){ if(!s.custo || s.custo===0){ s.custo = Math.round(custoM2*100)/100; mudou++; } }
+    else if(un==='ml'){ if(!s.custo || s.custo===0){ s.custo = Math.round(custoMl*100)/100; mudou++; } }
+  });
+  render();
+  showStatus('✅ Custo aplicado em '+mudou+' serviços! Ex: Forro m² custo ~R$'+custoM2.toFixed(2));
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -393,39 +492,57 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   }
   if(emp) empresaNome=emp; if(sub) empresaSub=sub; if(tel) empresaTel=tel; if(cid) empresaCidade=cid;
-  // dados tratado abaixo com lógica de persistência - não sobrescrever aqui
+  if(dados){try{let json=JSON.parse(decodeURIComponent(atob(dados))); if(json.comodos) comodos=json.comodos; if(json.servicos) servicos=json.servicos;}catch(e){}}
   if(limpo){
     document.getElementById('avisoCliente').style.display='block'; 
     let bl=document.getElementById('btnLinkPlataforma'); if(bl) bl.style.display='none';
     let pd=document.getElementById('painelDono'); if(pd) pd.style.display='none';
-    // Mantém ATIVAR PRO visível para cliente - corrigido
+    let bp=document.getElementById('bannerPromo'); if(bp) bp.style.display='none';
+    let bz=document.getElementById('btnAtivarPro2'); if(bz) bz.style.display='none';
   }
   let tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
   if(tipo==='mensal' && expira>0 && Date.now()>expira){ localStorage.removeItem('kiza_pro'); }
   try{
-    // Carrega sempre o salvo primeiro (para persistir Lava motor etc)
     let savedServ=localStorage.getItem('kiza_serv_final');
-    if(savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0) servicos=parsed; }
-    if(servicos.length===0){ servicos=[]; }
-    let savedComodos=localStorage.getItem('kiza_comodos_final');
-    if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
-    // Se veio link com ?dados, só usa dados se ainda não tem nada salvo (primeira vez)
-    // Assim quando cliente cria Lava motor e sai/entra, não perde
-    if(dados){
-      try{
-        let json=JSON.parse(decodeURIComponent(atob(dados)));
-        let hasSaved = comodos.length>0 || servicos.length>0;
-        if(!hasSaved){
-          if(json.comodos) comodos=json.comodos;
-          if(json.servicos) servicos=json.servicos;
-        }
-      }catch(e){}
+    // Só carrega serviço salvo se NÃO veio do link grande (?dados)
+    if(!dados && savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0) servicos=parsed; }
+    // SEM SERVIÇOS PADRÃO - cliente cadastra do zero (universal)
+    // servicos permanece vazio se não tiver nada salvo
+    if(servicos.length===0){
+      servicos=[];
+    }
+    // FIX LINK GRANDE: se tem ?dados, NÃO sobrescrever com comodos salvos local
+    if(!dados){
+      let savedComodos=localStorage.getItem('kiza_comodos_final'); if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
     }
   }catch(e){}
   let isDono=localStorage.getItem('kiza_dono')==='1';
   let painelD=document.getElementById('painelDono');
-  // HISTÓRICO PRESERVADO - sem auto-limpeza + Gilmar com chave real
+  // AUTO-LIMPEZA: Deixa só o primeiro cliente DANILO GESSO LTDA V57Z-2L0T
   try{
+    let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]');
+    if(hist && hist.length>1){
+      let primeiro = hist.find(h=> (h.cod && h.cod.includes('V57Z-2L0T')) || (typeof h==='string' && h.includes('V57Z-2L0T')) );
+      if(!primeiro){
+        // se não achou pelo código, tenta pelo que tem DANILO
+        primeiro = hist.find(h=> {
+          let txt = typeof h==='string'? h : (h.cliente||'');
+          return txt.toUpperCase().includes('DANILO');
+        });
+      }
+      if(!primeiro && hist.length>0) primeiro = hist[0];
+      // Se achou o primeiro cliente, recria histórico só com ele
+      if(primeiro && hist.length>1){
+        // Verifica se é o primeiro cliente real
+        let codPrimeiro = typeof primeiro==='string'? primeiro : primeiro.cod;
+        if(codPrimeiro && codPrimeiro.includes('V57Z-2L0T')){
+          // Mantém só ele
+          let novoHist = [primeiro];
+          localStorage.setItem('kiza_hist_cod', JSON.stringify(novoHist));
+        }
+      }
+    }
+    // Se histórico vazio, cria o primeiro cliente oficial
     let histFinal=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]');
     if(histFinal.length===0){
       let oficial1={cliente:'danilo gesso ltda', cod:'KIZARANET-MENSAL-V57Z-2L0T', data:'20/10/2026 14:26', tipo:'mensal', id:1};
@@ -438,11 +555,9 @@ document.addEventListener('DOMContentLoaded',()=>{
         let gilmar={cliente:'aelcio gimar pereira - GILMAR', cod:'KIZARANET-VITAL-BGVH123X-OU09-SJ8F', data:'26/10/2026 21:51', tipo:'vitalicio_travado', id:2, device:'BGVH123X'};
         histFinal.unshift(gilmar);
         localStorage.setItem('kiza_hist_cod', JSON.stringify(histFinal));
-        let nid = Math.max(3, parseInt(localStorage.getItem('kiza_next_id')||'2',10));
-        localStorage.setItem('kiza_next_id', nid.toString());
       }
     }
-  }catch(e){ console.log('hist',e); }
+  }catch(e){ console.log('limpeza hist',e); }
 
   if(painelD && isDono && !limpo){
     painelD.style.display='block';
@@ -467,6 +582,15 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('inputClienteTop').addEventListener('input',(e)=>{clienteNome=e.target.value; localStorage.setItem('kiza_cli_final',clienteNome); render();});
   document.getElementById('inputTelefoneTop').addEventListener('input',(e)=>{telefoneCli=e.target.value; localStorage.setItem('kiza_tel_cli_final',telefoneCli); render();});
   document.getElementById('inputEnderecoTop').addEventListener('input',(e)=>{enderecoCli=e.target.value; localStorage.setItem('kiza_end_final',enderecoCli); render();});
+  document.getElementById('btnToggleCustoObra')?.addEventListener('click',()=>{ let a=document.getElementById('areaCustoObraSimples'); if(a){ a.style.display = a.style.display==='none'?'block':'none'; } });
+  document.getElementById('despesaTotalObra')?.addEventListener('input',(e)=>{ localStorage.setItem('kiza_despesa_obra', e.target.value); atualizarCustoSimples(); });
+  let despSalva = localStorage.getItem('kiza_despesa_obra'); if(despSalva && document.getElementById('despesaTotalObra')){ document.getElementById('despesaTotalObra').value=despSalva; }
+  document.getElementById('btnToggleCustos')?.addEventListener('click',()=>{ let a=document.getElementById('areaCustos'); if(a){ a.style.display = a.style.display==='none'?'block':'none'; } });
+  document.getElementById('btnSalvarCustos')?.addEventListener('click',salvarCustos);
+  document.getElementById('btnAplicarCustoServicos')?.addEventListener('click',aplicarCustoNosServicos);
+  ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(id=>{ let el=document.getElementById(id); if(el){ let v=localStorage.getItem('kiza_custo_'+id); if(v) el.value=v; el.addEventListener('input',()=>{ localStorage.setItem('kiza_custo_'+id, el.value); somarDespesasDetalhadas(); atualizarResumoCustos(); atualizarCustoSimples(); }); } });
+  // Se já tem valores salvos nos detalhados, soma na hora ao abrir
+  setTimeout(()=>{ try{ somarDespesasDetalhadas(); atualizarCustoSimples(); }catch(e){} }, 1000);
   document.getElementById('btnPdf').addEventListener('click',gerarPDF);
   document.getElementById('btnLinkPlataforma').addEventListener('click',gerarLinkPlataforma);
   function copiarTextoRobusto(txt){
@@ -492,11 +616,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('btnCriarServ').addEventListener('click',criarServ);
   document.getElementById('btnSalvarEmpresa').addEventListener('click',()=>{empresaNome=document.getElementById('editNomeEmp').value||empresaNome;empresaSub=document.getElementById('editSubEmp').value||empresaSub;empresaTel=document.getElementById('editTelEmp').value||empresaTel;empresaCidade=document.getElementById('editCidadeEmp').value||empresaCidade;localStorage.setItem('kiza_emp_final',empresaNome);localStorage.setItem('kiza_sub_final',empresaSub);localStorage.setItem('kiza_tel_final',empresaTel);localStorage.setItem('kiza_cid_final',empresaCidade);fecharModal('modalEditarEmpresa');render();});
   document.getElementById('btnZerar').addEventListener('click',limparTudo);
-  document.getElementById('btnAtivarPro2').addEventListener('click',()=>{abrirModal('modalLic'); atualizarMeuIdDisplay();});
-  function atualizarMeuIdDisplay(){ let el=document.getElementById('meuDeviceIdDisplay'); if(el){ let id=getDeviceId(); el.textContent=id.substring(0,4)+'-'+id.substring(4,8); } }
-  document.getElementById('btnCopiarMeuId')?.addEventListener('click',()=>{ let id=getDeviceId(); if(navigator.clipboard){ navigator.clipboard.writeText(id); } showStatus('📋 ID copiado: '+id); });
-  document.getElementById('btnWhatsappId')?.addEventListener('click',()=>{ let id=getDeviceId(); let msg=encodeURIComponent('Olá! Quero ativar vitalício KIZARA. Meu ID é: '+id); window.open('https://wa.me/5584998791222?text='+msg,'_blank'); });
-  document.getElementById('btnColarId')?.addEventListener('click',()=>{ let d=prompt('Cole o ID do cliente:'); if(d){ document.getElementById('inputDeviceIdCliente').value=d.toUpperCase().replace(/[^A-Z0-9]/g,'').substring(0,8); } });
+  document.getElementById('btnAtivarPro2').addEventListener('click',()=>{abrirModal('modalLic');});
   document.getElementById('bannerAcao').addEventListener('click',()=>{abrirModal('modalLic');});
   document.getElementById('btnAtivarPro').addEventListener('click',()=>{
     let licVal=document.getElementById('inputLic').value.trim().toUpperCase();
