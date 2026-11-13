@@ -74,7 +74,7 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
     <div class="card"><h3 style="font-size:13px;margin-bottom:10px">SERVIÇOS - 7 PADRÃO</h3><div id="gridServicos"></div></div>
   </div>
   <div class="card" style="margin-top:12px;border:2px solid #16a34a;background:#f0fdf4">
-    <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:13px">💰 CUSTO DESSA OBRA - Simples (não é fixo)</h3><button id="btnToggleCustoObra" onclick="let a=document.getElementById('areaCustoObraSimples'); if(a) a.style.display=a.style.display==='none'?'block':'none';" style="background:#fff;border:1px solid #16a34a;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">MOSTRAR / ESCONDER</button></div>
+    <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:13px">💰 CUSTO DESSA OBRA - Simples (não é fixo)</h3><button id="btnToggleCustoObra" onclick="let a=document.getElementById('areaCustoObraSimples'); if(a){ let escondido=a.style.display==='none'; a.style.display=escondido?'block':'none'; this.textContent=escondido?'ESCONDER ▲':'MOSTRAR CUSTO ▼'; }" style="background:#fff;border:1px solid #16a34a;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">ESCONDER ▲</button></div>
     <div id="areaCustoObraSimples" style="display:block;margin-top:10px">
       <div style="font-size:11px;color:#666;margin-bottom:8px">Cada obra muda! O programa soma os metros, você só joga a despesa total dessa obra e ele divide sozinho.</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px">
@@ -535,7 +535,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('inputClienteTop').addEventListener('input',(e)=>{clienteNome=e.target.value; localStorage.setItem('kiza_cli_final',clienteNome); render();});
   document.getElementById('inputTelefoneTop').addEventListener('input',(e)=>{telefoneCli=e.target.value; localStorage.setItem('kiza_tel_cli_final',telefoneCli); render();});
   document.getElementById('inputEnderecoTop').addEventListener('input',(e)=>{enderecoCli=e.target.value; localStorage.setItem('kiza_end_final',enderecoCli); render();});
-  document.getElementById('btnToggleCustoObra')?.addEventListener('click',()=>{ let a=document.getElementById('areaCustoObraSimples'); if(a) a.style.display=a.style.display==='none'?'block':'none'; });
   document.getElementById('despesaTotalObra')?.addEventListener('input',(e)=>{ try{localStorage.setItem('kiza_despesa_obra', e.target.value);}catch(err){} atualizarCustoSimples(); });
   try{ let despSalva=localStorage.getItem('kiza_despesa_obra'); if(despSalva && document.getElementById('despesaTotalObra')) document.getElementById('despesaTotalObra').value=despSalva; }catch(e){}
   ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(id=>{ let el=document.getElementById(id); if(el){ try{ let v=localStorage.getItem('kiza_custo_'+id); if(v) el.value=v; }catch(e){} el.addEventListener('input',()=>{ try{localStorage.setItem('kiza_custo_'+id, el.value);}catch(e){} somarDespesasDetalhadas(); atualizarCustoSimples(); }); } });
