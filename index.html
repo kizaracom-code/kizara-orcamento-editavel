@@ -76,8 +76,8 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
   <div class="previa"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:11px;opacity:0.7">TOTAL GERAL (VENDA)</div><div id="totalGeral">R$ 0,00</div><div id="totalCustoLucro" style="font-size:11px;margin-top:6px;opacity:0.9">Custo: R$ 0,00 | Lucro: R$ 0,00</div></div><div style="text-align:right;font-size:10px;opacity:0.7">Só você vê custo/lucro<br>Cliente vê só total venda no PDF</div></div></div>
   <div id="areaLinkPlataforma"><b style="font-size:13px">Link plataforma com dados:</b><textarea id="linkGerado" readonly></textarea><div style="display:flex;gap:8px"><button id="btnCopiarLink" style="flex:1;background:#111;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer">COPIAR LINK</button><button id="btnAbrirCel" style="flex:1;background:#d4af37;border:none;padding:10px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer">ABRIR</button></div></div>
   <div id="status"></div>
-  <div id="modal" class="modalOverlay"><div class="modalBox"><h3>Novo Item / Local</h3><input id="mNome" placeholder="Ex: Sala 5x4 ou Gol Branco"><div style="background:#fff8e1;border:1px solid #f3d98a;border-radius:8px;padding:8px;margin:8px 0"><div style="font-size:11px;font-weight:700;color:#8a6d00;margin-bottom:6px">📏 Medidas (opcional - só construção):</div><div style="display:flex;gap:8px"><input id="mC" type="number" step="0.01" placeholder="Compr. opcional"><input id="mL" type="number" step="0.01" placeholder="Larg. opcional"></div><div style="margin-top:8px"><div style="font-size:11px;font-weight:700;color:#8a6d00;margin-bottom:4px">📐 Altura da parede (pé direito) - VARIAVEL, cada cômodo muda:</div><div style="display:flex;gap:6px;margin-bottom:6px"><button type="button" onclick="document.getElementById('mH').value='2.60'" style="flex:1;padding:7px;border:1px solid #d4af37;border-radius:8px;background:#fff;font-weight:700;cursor:pointer">2,60</button><button type="button" onclick="document.getElementById('mH').value='2.70'" style="flex:1;padding:7px;border:1px solid #d4af37;border-radius:8px;background:#fff;font-weight:700;cursor:pointer">2,70</button><button type="button" onclick="document.getElementById('mH').value='2.80'" style="flex:1;padding:7px;border:1px solid #d4af37;border-radius:8px;background:#fff8e1;font-weight:700;cursor:pointer">2,80</button><button type="button" onclick="document.getElementById('mH').value='3.00'" style="flex:1;padding:7px;border:1px solid #d4af37;border-radius:8px;background:#fff;font-weight:700;cursor:pointer">3,00</button></div><input id="mH" type="number" step="0.01" placeholder="Ou digite outra: ex 2.65, 2.90, 3.20..."></div><div style="font-size:10px;color:#888;margin-top:4px">Deixe em branco para carro, lava jato, etc (conta como 1 un)<br>Altura é só para <b>reboco e película</b> (4 paredes). Forro usa chão, tabica usa volta. <b>Não é fixa!</b> Cada cômodo você coloca a altura dele.</div></div><div class="actions"><button class="btnGhost" onclick="fecharModal('modal')">Cancelar</button><button id="btnCriarComodo" class="btnPrimary">Criar Item / Local</button></div></div></div>
-  <div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nsNome" placeholder="Nome - ex: Forro de gesso liso"><input id="nsPreco" type="number" step="0.01" placeholder="Preço de venda R$ - ex: 38"><input id="nsCusto" type="number" step="0.01" placeholder="Custo R$ por unidade - ex: 20 (material + mão de obra) - opcional"><label style="font-size:11px;font-weight:700;display:block;margin:4px 0 3px">Onde calcula?</label><select id="nsTipo"><option value="forro">🏠 Forro / Chão - lado x lado (m² chão)</option><option value="parede">🧱 Parede - 4 paredes (perímetro x altura)</option><option value="linear">📏 Linear - volta do cômodo (ml)</option><option value="un">🔢 Unidade - 1 por item</option></select><select id="nsUn"><option value="m2">m²</option><option value="ml">ml</option><option value="m">m</option><option value="un">un</option><option value="m3">m³</option><option value="pct">pct</option><option value="kg">kg</option><option value="hora">h</option><option value="dia">dia</option><option value="vb">vb</option></select><div style="font-size:11px;color:#666;background:#f6f5f0;padding:8px;border-radius:8px;margin-bottom:8px">Ex: Vende a R$38, custa R$20 = Lucro R$18 por m². Se deixar custo em branco, conta como R$0.</div><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
+  <div id="modal" class="modalOverlay"><div class="modalBox"><h3>Novo Item / Local</h3><input id="mNome" placeholder="Ex: Sala 5x4 ou Gol Branco"><div style="background:#fff8e1;border:1px solid #f3d98a;border-radius:8px;padding:8px;margin:8px 0"><div style="font-size:11px;font-weight:700;color:#8a6d00;margin-bottom:6px">📏 Medidas (opcional - só construção):</div><div style="display:flex;gap:8px"><input id="mC" type="number" step="0.01" placeholder="Compr. opcional"><input id="mL" type="number" step="0.01" placeholder="Larg. opcional"></div><div style="font-size:10px;color:#888;margin-top:4px">Deixe em branco para carro, lava jato, etc (conta como 1 un)</div></div><div class="actions"><button class="btnGhost" onclick="fecharModal('modal')">Cancelar</button><button id="btnCriarComodo" class="btnPrimary">Criar Item / Local</button></div></div></div>
+  <div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nsNome" placeholder="Nome - ex: Forro de gesso liso"><input id="nsPreco" type="number" step="0.01" placeholder="Preço de venda R$ - ex: 38"><input id="nsCusto" type="number" step="0.01" placeholder="Custo R$ por unidade - ex: 20 (material + mão de obra) - opcional"><select id="nsUn"><option value="m2">m²</option><option value="ml">ml</option><option value="m">m</option><option value="un">un</option><option value="m3">m³</option><option value="pct">pct</option><option value="kg">kg</option><option value="hora">h</option><option value="dia">dia</option><option value="vb">vb</option></select><div style="font-size:11px;color:#666;background:#f6f5f0;padding:8px;border-radius:8px;margin-bottom:8px">Ex: Vende a R$38, custa R$20 = Lucro R$18 por m². Se deixar custo em branco, conta como R$0.</div><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
   <div id="modalEditarServ" class="modalOverlay"><div class="modalBox"><h3>✏️ Editar Serviço - Nome, Preço e Custo</h3><input type="hidden" id="editServId"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Nome</label><input id="editServNome"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Unidade</label><select id="editServUnid"><option value="m2">m² - Metro quadrado</option><option value="ml">ml - Metro linear</option><option value="m">m - Metro</option><option value="un">un - Unidade</option><option value="m3">m³ - Metro cúbico</option><option value="pct">pct - Pacote</option><option value="kg">kg - Quilo</option><option value="hora">h - Hora</option><option value="dia">dia - Diária</option><option value="vb">vb - Verba</option></select><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Preço de venda R$</label><input id="editServValor" type="number" step="0.01"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Custo R$ por unidade (material + mão de obra)</label><input id="editServCusto" type="number" step="0.01" placeholder="Ex: 20"><div id="lucroPreview" style="font-size:12px;font-weight:700;color:#16a34a;margin:4px 0"></div><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarServ')">Cancelar</button><button onclick="salvarEdicaoServ()" class="btnPrimary">💾 Salvar nome, preço e custo</button></div></div></div>
   <div id="modalLic" class="modalOverlay"><div class="modalBox"><h3>🔒 Ativar PRO</h3><input id="inputLic" placeholder="KIZARANET-VITALICIO-XXXX-YYYY"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalLic')">Depois</button><button id="btnAtivarPro" class="btnPrimary">Ativar PRO</button></div></div></div>
   <div id="modalEditarEmpresa" class="modalOverlay"><div class="modalBox"><h3>Editar Empresa</h3><input id="editNomeEmp" placeholder="Nome"><input id="editSubEmp" placeholder="CNPJ"><input id="editTelEmp" placeholder="Tel"><input id="editCidadeEmp" placeholder="Cidade"><input id="inputLogo" type="file" accept="image/*" style="display:none"><button onclick="document.getElementById('inputLogo').click()" style="width:100%;padding:8px;border:1px dashed #d4af37;border-radius:10px;background:#fff8e1;font-size:11px;font-weight:700;margin-bottom:8px;cursor:pointer">Trocar Logo</button><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarEmpresa')">Cancelar</button><button id="btnSalvarEmpresa" class="btnPrimary">Salvar</button></div></div></div>
@@ -101,35 +101,6 @@ function gerarCodigoComDevice(deviceId){
 const EMPRESA_FIXA = { nome: 'kizaranet.com', sub: 'CNPJ 42.103.065/0001-02', tel: 'Tel: (84)998791222', cid: 'LAGOA NOVA RN' };
 let empresaNome=EMPRESA_FIXA.nome,empresaSub=EMPRESA_FIXA.sub,empresaTel=EMPRESA_FIXA.tel,empresaCidade=EMPRESA_FIXA.cid,clienteNome='',telefoneCli='',enderecoCli='',comodos=[],servicos=[];
 
-function calcBase(co, s){
-  let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1, hV=parseFloat(co.h)||2.8;
-  let a=(co.isUnidade? qV : cV*lV*qV);
-  let p=(co.isUnidade? qV : 2*(cV+lV)*qV);
-  let parede=(co.isUnidade? qV : p*hV);
-  let tipo=(s.tipo||'auto');
-  if(tipo==='auto'){
-    let n=(s.nome||'').toLowerCase();
-    if(n.includes('reboco')||n.includes('pelicula')||n.includes('película')||n.includes('massa')||n.includes('pintura')) tipo='parede';
-    else if(n.includes('tabica')||n.includes('dilata')||n.includes('roda')||n.includes('moldura')||n.includes('modura')) tipo='linear';
-    else if((s.un||s.unidade||'').toLowerCase()==='ml') tipo='linear';
-    else if((s.un||s.unidade||'').toLowerCase()==='un') tipo='un';
-    else tipo='forro';
-  }
-  if(tipo==='parede') return {base: parede, label: parede.toFixed(2)+' m² parede', tipo:'parede', a:a, p:p, parede:parede};
-  if(tipo==='linear') return {base: p, label: p.toFixed(2)+' ml', tipo:'linear', a:a, p:p, parede:parede};
-  if(tipo==='un') return {base: 1, label: '1 un', tipo:'un', a:a, p:p, parede:parede};
-  return {base: a, label: a.toFixed(2)+' m² chão', tipo:'forro', a:a, p:p, parede:parede};
-}
-function editarAltura(i){
-  let co=comodos[i]; if(!co) return;
-  let atual=(parseFloat(co.h)||2.8).toFixed(2);
-  let nova = prompt('Altura da parede de '+co.nome+' (pé direito)?\nAtual: '+atual+'m\nDigite a altura certa desse cômodo: ex 2.60, 2.70, 2.80, 3.00', atual);
-  if(nova===null) return;
-  let v=parseFloat(nova.replace(',','.'))||2.8;
-  co.h=v;
-  render();
-  showStatus('✅ Altura de '+co.nome+' atualizada para '+v.toFixed(2)+'m - cada cômodo tem sua altura!');
-}
 function toB36(n,len){let c="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",r="";for(let i=0;i<len;i++){r=c[n%36]+r;n=Math.floor(n/36);}return r;}
 function fromB36(s){return parseInt(s,36);}
 function validarLicencaSegura(codigo){
@@ -266,12 +237,12 @@ function criarComodo(){
     if(larg===0) larg=1;
     comodos.push({nome:nome,c:comp,l:larg,isUnidade:false,q:1,servicos:[]});
   }
-  document.getElementById('mNome').value=''; if(document.getElementById('mH')) document.getElementById('mH').value='';
+  document.getElementById('mNome').value='';
   document.getElementById('mC').value='';
   document.getElementById('mL').value='';
   fecharModal('modal'); render(); showStatus('✅ Item criado: '+nome);
 }
-function criarServ(){let nome=document.getElementById('nsNome').value.trim(),preco=parseFloat(document.getElementById('nsPreco').value)||0,custo=parseFloat(document.getElementById('nsCusto')?document.getElementById('nsCusto').value:0)||0,un=document.getElementById('nsUn').value, tipo=document.getElementById('nsTipo')?document.getElementById('nsTipo').value:'auto'; if(!nome){alert('Nome obrigatório');return;} if(tipo==='auto' || !tipo){ let n=nome.toLowerCase(); if(n.includes('reboco')||n.includes('pelicula')||n.includes('película')||n.includes('massa')||n.includes('pintura')) tipo='parede'; else if(n.includes('tabica')||n.includes('dilata')||n.includes('roda')||n.includes('moldura')) tipo='linear'; else tipo='forro'; } let id=Date.now(); servicos.push({id:id,nome:nome,valor:preco,custo:custo,unidade:un,un:un,tipo:tipo}); document.getElementById('nsNome').value=''; document.getElementById('nsPreco').value=''; if(document.getElementById('nsCusto')) document.getElementById('nsCusto').value=''; fecharModal('modalNovoServ'); render(); }
+function criarServ(){let nome=document.getElementById('nsNome').value.trim(),preco=parseFloat(document.getElementById('nsPreco').value)||0,custo=parseFloat(document.getElementById('nsCusto')?document.getElementById('nsCusto').value:0)||0,un=document.getElementById('nsUn').value; if(!nome){alert('Nome obrigatório');return;} let id=Date.now(); servicos.push({id:id,nome:nome,valor:preco,custo:custo,unidade:un,un:un}); document.getElementById('nsNome').value=''; document.getElementById('nsPreco').value=''; if(document.getElementById('nsCusto')) document.getElementById('nsCusto').value=''; fecharModal('modalNovoServ'); render(); }
 function verificarLimiteGratis(){
   let pro=localStorage.getItem('kiza_pro'), tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
   let isPro=false;
@@ -316,28 +287,26 @@ function gerarPDF(){
   comodos.forEach((c,idx)=>{
     if(y>pageH-45){ doc.addPage(); y=12; }
     let cVP=c.c||1, lVP=c.l||1, qVP=c.q||1; let a=(c.isUnidade? qVP : cVP*lVP*qVP); let p=(c.isUnidade? qVP : 2*(cVP+lVP)*qVP);
-    doc.setFillColor(255,243,205); doc.rect(margin,y,pageW-margin*2,11,'F');
-    doc.setDrawColor(212,175,55); doc.setLineWidth(0.4); doc.rect(margin,y,pageW-margin*2,11,'S');
-    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(17,17,17);
-    let hV=parseFloat(c.h)||2.8; let paredePdf=(c.isUnidade? qVP : (2*(cVP+lVP)*qVP)*hV);
-    doc.text((idx+1)+'. '+c.nome.toUpperCase() + (c.isUnidade ? '' : '  -  '+a.toFixed(2)+'m² chão | '+p.toFixed(2)+'ml | '+paredePdf.toFixed(2)+'m² parede (h '+hV.toFixed(2)+')'), margin+3, y+7.5);
-    y+=15;
+    doc.setFillColor(17,17,17); doc.rect(margin,y,pageW-margin*2,8,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(255,255,255);
+    doc.text((idx+1)+'. '+c.nome.toUpperCase(), margin+3, y+5.5);
+    y+=10;
     let sub=0;
     c.servicos.forEach(sid=>{
       let s=servicos.find(x=>x.id==sid); if(!s) return;
-      let cb=calcBase(c,s); let base=cb.base;
+      let base=(s.unidade==='ml'||s.un==='ml')?p:a; if(s.unidade==='un'||s.un==='un') base=1;
       let val=base*s.valor; sub+=val;
-      doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(40,40,40);
-      doc.text('• '+s.nome+' ('+base.toFixed(2)+' x R$ '+s.valor.toFixed(2)+')', margin+6, y);
-      doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(17,17,17); doc.text('R$ '+val.toFixed(2), pageW-margin-3, y,{align:'right'});
-      y+=7;
+      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(40,40,40);
+      doc.text('• '+s.nome, margin+6, y);
+      doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17); doc.text('R$ '+val.toFixed(2), pageW-margin-3, y,{align:'right'});
+      y+=5;
     });
     totalGeral+=sub; y+=4;
     doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.text('Subtotal: R$ '+sub.toFixed(2), pageW-margin-3, y,{align:'right'}); y+=8;
   });
-  doc.setFillColor(212,175,55); doc.rect(margin,y,pageW-margin*2,16,'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(17,17,17); doc.text('R$ '+totalGeral.toFixed(2), pageW-margin-5, y+11,{align:'right'});
-  doc.setFontSize(12); doc.setTextColor(17,17,17); doc.text('TOTAL GERAL:', margin+5, y+11);
+  doc.setFillColor(17,17,17); doc.rect(margin,y,pageW-margin*2,14,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(212,175,55); doc.text('R$ '+totalGeral.toFixed(2), pageW-margin-5, y+9.5,{align:'right'});
+  doc.setFontSize(10); doc.setTextColor(255,255,255); doc.text('TOTAL GERAL:', margin+5, y+9);
   y+=22;
   doc.setFillColor(212,175,55); doc.rect(0,pageH-5,pageW,5,'F');
   doc.save('ORCAMENTO_'+(clienteNome||'CLIENTE')+'.pdf');
@@ -360,12 +329,9 @@ function render(){
   if(lc){
     if(comodos.length===0) lc.innerHTML='<div style="color:#999;font-size:11px">Nenhum item - clique + ITEM / LOCAL</div>';
     else lc.innerHTML=comodos.map((co,i)=>{
-      let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1, hV=parseFloat(co.h)||2.8;
-      let a=(co.isUnidade? qV : cV*lV*qV);
-      let p=(co.isUnidade? qV : 2*(cV+lV)*qV);
-      let parede=(co.isUnidade? qV : p*hV);
-      let metaTxt = co.isUnidade ? `${qV} un` : `${cV}x${lV}m (h ${hV.toFixed(2)} ✏️) = ${a.toFixed(2)}m² chão | ${p.toFixed(2)}ml | ${parede.toFixed(2)}m² parede`;
-      return `<div class="comodoItem"><div class="comodoHead"><b style="font-size:12px">${co.nome}</b><span class="comodoMeta" onclick="editarAltura(${i})" title="Clique para mudar a altura desse cômodo - cada um tem uma altura!" style="cursor:pointer;background:#fff8e1;border:1px solid #f3d98a;padding:3px 6px;border-radius:8px">${metaTxt}</span><button onclick="removerComodo(${i})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div><div class="servCheck">${servicos.map(s=>{let chk=co.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome}</label>`}).join('')}</div></div>`
+      let cV=co.c||1, lV=co.l||1, qV=co.q||1; let a=(co.isUnidade? qV : cV*lV*qV);
+      let metaTxt = co.isUnidade ? `${qV} un` : `${cV}x${lV}m = ${a.toFixed(2)}m²`;
+      return `<div class="comodoItem"><div class="comodoHead"><b style="font-size:12px">${co.nome}</b><span class="comodoMeta">${metaTxt}</span><button onclick="removerComodo(${i})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div><div class="servCheck">${servicos.map(s=>{let chk=co.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome}</label>`}).join('')}</div></div>`
     }).join('');
   }
   let gs=document.getElementById('gridServicos');
@@ -373,11 +339,11 @@ function render(){
     if(servicos.length===0){
       gs.innerHTML='<div style="color:#999;font-size:11px;padding:14px;text-align:center;border:1px dashed #ddd;border-radius:12px">Nenhum serviço cadastrado<br>Clique em <b>+ SERVICO</b> para começar<br><br>Exemplos:<br>Lava jato: Lavagem completa R$60<br>Gesso: Forro liso R$38/m²<br>Mecânico: Troca óleo R$120</div>';
     }else{
-      gs.innerHTML=servicos.map(s=>{let unid=s.un||s.unidade||'m2'; let tipoTxt = s.tipo==='parede' ? '🧱 Parede' : s.tipo==='linear' ? '📏 Linear' : s.tipo==='un' ? '🔢 Un' : (s.nome||'').toLowerCase().includes('pelicula')||(s.nome||'').toLowerCase().includes('reboco') ? '🧱 Parede (auto)' : '🏠 Chão'; let custo=s.custo||0; let lucro=(s.valor||0)-custo; let lucroTxt = custo>0 ? `<div style="font-size:10px;color:#16a34a;font-weight:700">Custo R$ ${custo.toFixed(2)} | Lucro R$ ${lucro.toFixed(2)}</div>` : `<div style="font-size:10px;color:#999">Sem custo - clique EDITAR para colocar</div>`; return `<div class="servCard"><b style="font-size:11px;display:block;margin-bottom:2px;line-height:1.2">${s.nome}</b><div style="font-size:10px;color:#7c3aed;font-weight:700;margin-bottom:2px">${tipoTxt}</div><div style="font-size:11px;color:#666;margin-bottom:2px">${unid} - Venda R$ ${s.valor}</div>${lucroTxt}<div style="display:flex;gap:6px;margin-top:6px"><button onclick="editarNome(${s.id})" style="flex:1;font-size:11px;padding:7px 8px;background:#111;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">✏️ EDITAR</button><button onclick="removerServico(${s.id})" style="font-size:11px;padding:7px 8px;background:#fee;border:1px solid #fcc;border-radius:8px;cursor:pointer">🗑️</button></div></div>`}).join('');
+      gs.innerHTML=servicos.map(s=>{let unid=s.un||s.unidade||'m2'; let custo=s.custo||0; let lucro=(s.valor||0)-custo; let lucroTxt = custo>0 ? `<div style="font-size:10px;color:#16a34a;font-weight:700">Custo R$ ${custo.toFixed(2)} | Lucro R$ ${lucro.toFixed(2)}</div>` : `<div style="font-size:10px;color:#999">Sem custo - clique EDITAR para colocar</div>`; return `<div class="servCard"><b style="font-size:11px;display:block;margin-bottom:2px;line-height:1.2">${s.nome}</b><div style="font-size:11px;color:#666;margin-bottom:2px">${unid} - Venda R$ ${s.valor}</div>${lucroTxt}<div style="display:flex;gap:6px;margin-top:6px"><button onclick="editarNome(${s.id})" style="flex:1;font-size:11px;padding:7px 8px;background:#111;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">✏️ EDITAR</button><button onclick="removerServico(${s.id})" style="font-size:11px;padding:7px 8px;background:#fee;border:1px solid #fcc;border-radius:8px;cursor:pointer">🗑️</button></div></div>`}).join('');
     }
   }
   let total=0, totalCusto=0;
-  comodos.forEach(co=>{ co.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s) return; let cb=calcBase(co,s); total+=cb.base*s.valor; totalCusto+=cb.base*(s.custo||0);});});
+  comodos.forEach(co=>{let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1; let a=(co.isUnidade? qV : cV*lV*qV); let p=(co.isUnidade? qV : 2*(cV+lV)*qV); co.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s) return; let un=(s.unidade||s.un||'m2').toString().toLowerCase().trim(); let base=a; if(un==='ml'||un==='m') base=p; else if(un==='un'||un==='pct'||un==='kg'||un==='hora'||un==='dia'||un==='vb'||un==='h') base=1; else base=a; total+=base*s.valor; totalCusto+=base*(s.custo||0);});});
   let tg=document.getElementById('totalGeral'); if(tg) tg.textContent='R$ '+total.toFixed(2).replace('.',',');
   let tc=document.getElementById('totalCustoLucro'); if(tc){ let lucro=total-totalCusto; tc.innerHTML=`Custo: R$ ${totalCusto.toFixed(2).replace('.',',')} | Lucro: <b style="color:#4ade80">R$ ${lucro.toFixed(2).replace('.',',')}</b> (${total>0 ? ((lucro/total)*100).toFixed(0) : 0}% de margem)`; }
   localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));
@@ -386,21 +352,29 @@ function render(){
 
 document.addEventListener('DOMContentLoaded',()=>{
   let params=new URLSearchParams(window.location.search),emp=params.get('empresa'),sub=params.get('sub'),tel=params.get('tel'),cid=params.get('cid'),dados=params.get('dados'),limpo=params.get('limpo');
-  // FIX DEFINITIVO: Preservar tudo (empresa, logo, historico, PRO) ao abrir
+  // SEMPRE ABRIR ZERADO COMO KIZARANET - quando abre sem link, volta pra kizaranet
+  // Dono manda link com ?empresa=... para cada cliente, mas ao abrir o site puro abre kizaranet
   if(!emp&&!dados&&!limpo){
-    let jaTemDados = localStorage.getItem('kiza_emp_final') || localStorage.getItem('kiza_hist_cod') || localStorage.getItem('kiza_pro');
-    if(!jaTemDados){
-      empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
-      comodos=[]; servicos=[]; 
-      localStorage.setItem('kiza_dono','1');
-    } else {
-      // Preserva tudo que já existe
-      empresaNome=localStorage.getItem('kiza_emp_final')||EMPRESA_FIXA.nome;
-      empresaSub=localStorage.getItem('kiza_sub_final')||EMPRESA_FIXA.sub;
-      empresaTel=localStorage.getItem('kiza_tel_final')||EMPRESA_FIXA.tel;
-      empresaCidade=localStorage.getItem('kiza_cid_final')||EMPRESA_FIXA.cid;
-      localStorage.setItem('kiza_dono','1');
-    }
+    empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
+    comodos=[]; servicos=[];
+    clienteNome=''; telefoneCli=''; enderecoCli='';
+    // Limpa obra e PRO do cliente anterior, mas mantém histórico de licenças do dono
+    localStorage.setItem('kiza_emp_final', EMPRESA_FIXA.nome);
+    localStorage.setItem('kiza_sub_final', EMPRESA_FIXA.sub);
+    localStorage.setItem('kiza_tel_final', EMPRESA_FIXA.tel);
+    localStorage.setItem('kiza_cid_final', EMPRESA_FIXA.cid);
+    localStorage.setItem('kiza_comodos_final', JSON.stringify([]));
+    localStorage.setItem('kiza_serv_final', JSON.stringify([]));
+    localStorage.removeItem('kiza_pro');
+    localStorage.removeItem('kiza_pro_tipo');
+    localStorage.removeItem('kiza_pro_expira');
+    localStorage.removeItem('kiza_logo_final');
+    localStorage.removeItem('kiza_despesa_obra');
+    localStorage.setItem('kiza_dono','1');
+    // Limpa inputs de cliente
+    let ic=document.getElementById('inputClienteTop'); if(ic) ic.value='';
+    let it=document.getElementById('inputTelefoneTop'); if(it) it.value='';
+    let ie=document.getElementById('inputEnderecoTop'); if(ie) ie.value='';
   }
   if(emp) empresaNome=emp; if(sub) empresaSub=sub; if(tel) empresaTel=tel; if(cid) empresaCidade=cid;
   if(dados){try{let json=JSON.parse(decodeURIComponent(atob(dados))); if(json.comodos) comodos=json.comodos; if(json.servicos) servicos=json.servicos;}catch(e){}}
@@ -414,45 +388,26 @@ document.addEventListener('DOMContentLoaded',()=>{
   let tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
   if(tipo==='mensal' && expira>0 && Date.now()>expira){ localStorage.removeItem('kiza_pro'); }
   try{
+    let isCleanLoad = !emp && !dados && !limpo;
     let savedServ=localStorage.getItem('kiza_serv_final');
-    // Só carrega serviço salvo se NÃO veio do link grande (?dados)
-    if(!dados && savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0) servicos=parsed; }
+    // Se abriu zerado como kizaranet, NÃO carrega serviço salvo do cliente anterior
+    if(!dados && !isCleanLoad && savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0) servicos=parsed; }
     // SEM SERVIÇOS PADRÃO - cliente cadastra do zero (universal)
     // servicos permanece vazio se não tiver nada salvo
     if(servicos.length===0){
       servicos=[];
     }
-    // FIX LINK GRANDE: se tem ?dados, NÃO sobrescrever com comodos salvos local
-    if(!dados){
+    // Se abriu zerado como kizaranet, NÃO carrega comodos salvos
+    if(!dados && !isCleanLoad){
       let savedComodos=localStorage.getItem('kiza_comodos_final'); if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
     }
   }catch(e){}
   let isDono=localStorage.getItem('kiza_dono')==='1';
   let painelD=document.getElementById('painelDono');
-  // AUTO-LIMPEZA: Deixa só o primeiro cliente DANILO GESSO LTDA V57Z-2L0T
+  // NÃO apaga histórico - mantém Danilo e Gilmar
   try{
     let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]');
-    if(hist && hist.length>1){
-      let primeiro = hist.find(h=> (h.cod && h.cod.includes('V57Z-2L0T')) || (typeof h==='string' && h.includes('V57Z-2L0T')) );
-      if(!primeiro){
-        // se não achou pelo código, tenta pelo que tem DANILO
-        primeiro = hist.find(h=> {
-          let txt = typeof h==='string'? h : (h.cliente||'');
-          return txt.toUpperCase().includes('DANILO');
-        });
-      }
-      if(!primeiro && hist.length>0) primeiro = hist[0];
-      // Se achou o primeiro cliente, recria histórico só com ele
-      if(primeiro && hist.length>1){
-        // Verifica se é o primeiro cliente real
-        let codPrimeiro = typeof primeiro==='string'? primeiro : primeiro.cod;
-        if(codPrimeiro && codPrimeiro.includes('V57Z-2L0T')){
-          // Mantém só ele
-          let novoHist = [primeiro];
-          localStorage.setItem('kiza_hist_cod', JSON.stringify(novoHist));
-        }
-      }
-    }
+    if(false && hist && hist.length>1){
     // Se histórico vazio, cria o primeiro cliente oficial
     let histFinal=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]');
     if(histFinal.length===0){
@@ -468,6 +423,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         localStorage.setItem('kiza_hist_cod', JSON.stringify(histFinal));
       }
     }
+    } // fecha if(false) - não apaga histórico
   }catch(e){ console.log('limpeza hist',e); }
 
   if(painelD && isDono && !limpo){
