@@ -415,6 +415,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     localStorage.setItem('kiza_serv_final', JSON.stringify([]));
     localStorage.removeItem('kiza_pro'); localStorage.removeItem('kiza_pro_tipo'); localStorage.removeItem('kiza_pro_expira');
     localStorage.removeItem('kiza_logo_final'); localStorage.removeItem('kiza_despesa_obra');
+    localStorage.removeItem('kiza_cli_final'); localStorage.removeItem('kiza_tel_cli_final'); localStorage.removeItem('kiza_end_final');
+    ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(id=>{ try{localStorage.removeItem('kiza_custo_'+id);}catch(e){} });
+    // Zera despesas na tela também - base tem que abrir zerada!
+    try{ let dt=document.getElementById('despesaTotalObra'); if(dt) dt.value=''; ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(id=>{ let el=document.getElementById(id); if(el) el.value=''; }); let ic=document.getElementById('inputClienteTop'); if(ic) ic.value=''; let it=document.getElementById('inputTelefoneTop'); if(it) it.value=''; let ie=document.getElementById('inputEnderecoTop'); if(ie) ie.value=''; }catch(e){}
     localStorage.setItem('kiza_dono','1');
     }catch(e){}
   }
@@ -511,8 +515,13 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('inputTelefoneTop').addEventListener('input',(e)=>{telefoneCli=e.target.value; localStorage.setItem('kiza_tel_cli_final',telefoneCli); render();});
   document.getElementById('inputEnderecoTop').addEventListener('input',(e)=>{enderecoCli=e.target.value; localStorage.setItem('kiza_end_final',enderecoCli); render();});
   document.getElementById('despesaTotalObra')?.addEventListener('input',(e)=>{ try{localStorage.setItem('kiza_despesa_obra', e.target.value);}catch(err){} atualizarCustoSimples(); });
-  try{ let despSalva=localStorage.getItem('kiza_despesa_obra'); if(despSalva && document.getElementById('despesaTotalObra')) document.getElementById('despesaTotalObra').value=despSalva; }catch(e){}
-  ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(id=>{ let el=document.getElementById(id); if(el){ try{ let v=localStorage.getItem('kiza_custo_'+id); if(v) el.value=v; }catch(e){} el.addEventListener('input',()=>{ try{localStorage.setItem('kiza_custo_'+id, el.value);}catch(e){} somarDespesasDetalhadas(); atualizarCustoSimples(); }); } });
+  // BASE LIMPA: se abriu sem link (?empresa/?dados/?limpo), NÃO restaura valores de despesas - vem zerado!
+  // Só restaura valores se veio de um link com dados (cliente) - aí é a obra dele
+  let abriuBaseLimpa = !params.get('empresa') && !params.get('dados') && !params.get('limpo');
+  if(!abriuBaseLimpa){ try{ let despSalva=localStorage.getItem('kiza_despesa_obra'); if(despSalva && document.getElementById('despesaTotalObra')) document.getElementById('despesaTotalObra').value=despSalva; }catch(e){} }
+  ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(id=>{ let el=document.getElementById(id); if(el){ if(!abriuBaseLimpa){ try{ let v=localStorage.getItem('kiza_custo_'+id); if(v) el.value=v; }catch(e){} } else { el.value=''; try{localStorage.removeItem('kiza_custo_'+id);}catch(e){} } el.addEventListener('input',()=>{ try{localStorage.setItem('kiza_custo_'+id, el.value);}catch(e){} somarDespesasDetalhadas(); atualizarCustoSimples(); }); } });
+  // Despesa total também zera na base limpa
+  if(abriuBaseLimpa){ try{ let dt=document.getElementById('despesaTotalObra'); if(dt) dt.value=''; localStorage.removeItem('kiza_despesa_obra'); }catch(e){} }
   document.querySelectorAll('.labelDespesa').forEach(inp=>{
     try{ let salvo=localStorage.getItem('kiza_label_'+inp.dataset.for); if(salvo) inp.value=salvo; }catch(e){}
     inp.addEventListener('input',()=>{ try{localStorage.setItem('kiza_label_'+inp.dataset.for, inp.value);}catch(e){} });
