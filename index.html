@@ -73,29 +73,11 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
     <div class="card"><h3 style="font-size:13px;margin-bottom:10px">ITENS / LOCAIS</h3><div id="listaComodos"></div></div>
     <div class="card"><h3 style="font-size:13px;margin-bottom:10px">SERVIÇOS - 7 PADRÃO</h3><div id="gridServicos"></div></div>
   </div>
-  <div class="card" style="margin-top:12px;border:2px solid #16a34a;background:#f0fdf4">
-    <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:13px">💰 CUSTO DESSA OBRA - Simples (não é fixo)</h3><button id="btnToggleCustoObra" onclick="let a=document.getElementById('areaCustoObraSimples'); if(a) a.style.display=a.style.display==='none'?'block':'none';" style="background:#fff;border:1px solid #16a34a;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">MOSTRAR / ESCONDER</button></div>
-    <div id="areaCustoObraSimples" style="display:block;margin-top:10px">
-      <div style="font-size:11px;color:#666;margin-bottom:8px">Cada obra muda! O programa soma os metros, você só joga a despesa total dessa obra e ele divide sozinho.</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px">
-        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL M²</div><div id="totM2Display" style="font-size:18px;font-weight:900">0,00</div></div>
-        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL ML</div><div id="totMlDisplay" style="font-size:18px;font-weight:900">0,00</div></div>
-        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL PAREDE</div><div id="totParedeDisplay" style="font-size:18px;font-weight:900;color:#7c3aed">0,00</div></div>
-        <div style="background:#111;color:#fff;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;opacity:0.7">M² + ML + PAREDE</div><div id="totSomaMetrosDisplay" style="font-size:18px;font-weight:900;color:#d4af37">0,00</div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div><label style="font-size:11px;font-weight:700">💸 Despesa total dessa obra R$</label><input id="despesaTotalObra" type="number" step="0.01" placeholder="Ex: 850 - soma automática dos campos abaixo" style="width:100%;padding:10px;border:2px solid #16a34a;border-radius:10px;font-size:14px;font-weight:700"><div style="font-size:10px;color:#16a34a;font-weight:700;margin-top:3px">Preencha os campos detalhados abaixo que ele soma sozinho aqui!</div></div>
-        <div><label style="font-size:11px;font-weight:700">📦 Custo por metro (automático)</label><div id="custoPorMetroDisplay" style="padding:10px;background:#fff;border:1px dashed #16a34a;border-radius:10px;font-weight:900;font-size:14px;text-align:center">R$ 0,00 / metro</div></div>
-      </div>
-      <div id="resumoCustoSimples" style="background:#fff;border-radius:10px;padding:10px;margin-top:10px;font-size:12px;line-height:1.7"></div>
-      <div style="margin-top:10px"><div style="font-size:11px;font-weight:700;margin-bottom:6px">Detalhado (opcional - ele soma sozinho no total acima):</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label style="font-size:11px">⛽ Combustível dessa obra R$</label><input id="cCombustivel" type="number" step="0.01" placeholder="Ex: 80" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><label style="font-size:11px">👷 Mão dele nessa obra R$</label><input id="cMaoDele" type="number" step="0.01" placeholder="Ex: 150" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><label style="font-size:11px">👷‍♂️ Mão funcionários R$</label><input id="cMaoFunc" type="number" step="0.01" placeholder="Ex: 200" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><label style="font-size:11px">🍽️ Alimentação R$</label><input id="cAlimentacao" type="number" step="0.01" placeholder="Ex: 60" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><label style="font-size:11px">📦 Placa de gesso R$</label><input id="cPlaca" type="number" step="0.01" placeholder="Ex: 120" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><label style="font-size:11px">🧱 Gesso em pó R$</label><input id="cGessoPo" type="number" step="0.01" placeholder="Ex: 40" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><label style="font-size:11px">🧵 Fibra de sisal R$</label><input id="cSisal" type="number" step="0.01" placeholder="Ex: 20" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><label style="font-size:11px">🔗 Arame R$</label><input id="cArame" type="number" step="0.01" placeholder="Ex: 15" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><label style="font-size:11px">📏 Tabica de forma R$</label><input id="cTabica" type="number" step="0.01" placeholder="Ex: 30" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><label style="font-size:11px">🧴 Cola R$</label><input id="cCola" type="number" step="0.01" placeholder="Ex: 10" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div></div><div id="resumoCustos" style="background:#f6f5f0;border-radius:10px;padding:10px;margin-top:10px;font-size:12px"></div></div>
-    </div>
-  </div>
   <div class="previa"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:11px;opacity:0.7">TOTAL GERAL (VENDA)</div><div id="totalGeral">R$ 0,00</div><div id="totalCustoLucro" style="font-size:11px;margin-top:6px;opacity:0.9">Custo: R$ 0,00 | Lucro: R$ 0,00</div></div><div style="text-align:right;font-size:10px;opacity:0.7">Só você vê custo/lucro<br>Cliente vê só total venda no PDF</div></div></div>
   <div id="areaLinkPlataforma"><b style="font-size:13px">Link plataforma com dados:</b><textarea id="linkGerado" readonly></textarea><div style="display:flex;gap:8px"><button id="btnCopiarLink" style="flex:1;background:#111;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer">COPIAR LINK</button><button id="btnAbrirCel" style="flex:1;background:#d4af37;border:none;padding:10px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer">ABRIR</button></div></div>
   <div id="status"></div>
-  <div id="modal" class="modalOverlay"><div class="modalBox"><h3>Novo Item / Local</h3><input id="mNome" placeholder="Ex: Sala 5x4 ou Gol Branco"><div style="background:#fff8e1;border:1px solid #f3d98a;border-radius:8px;padding:8px;margin:8px 0"><div style="font-size:11px;font-weight:700;color:#8a6d00;margin-bottom:6px">📏 Medidas (opcional - só construção):</div><div style="display:flex;gap:8px"><input id="mC" type="number" step="0.01" placeholder="Compr. opcional"><input id="mL" type="number" step="0.01" placeholder="Larg. opcional"></div><div style="margin-top:8px"><div style="font-size:11px;font-weight:700;color:#8a6d00;margin-bottom:4px">📐 Altura da parede (pé direito) - VARIAVEL, cada cômodo muda:</div><div style="display:flex;gap:6px;margin-bottom:6px"><button type="button" onclick="document.getElementById('mH').value='2.60'" style="flex:1;padding:7px;border:1px solid #d4af37;border-radius:8px;background:#fff;font-weight:700;cursor:pointer">2,60</button><button type="button" onclick="document.getElementById('mH').value='2.70'" style="flex:1;padding:7px;border:1px solid #d4af37;border-radius:8px;background:#fff;font-weight:700;cursor:pointer">2,70</button><button type="button" onclick="document.getElementById('mH').value='2.80'" style="flex:1;padding:7px;border:1px solid #d4af37;border-radius:8px;background:#fff8e1;font-weight:700;cursor:pointer">2,80</button><button type="button" onclick="document.getElementById('mH').value='3.00'" style="flex:1;padding:7px;border:1px solid #d4af37;border-radius:8px;background:#fff;font-weight:700;cursor:pointer">3,00</button></div><input id="mH" type="number" step="0.01" placeholder="Ou digite outra: ex 2.65, 2.90, 3.20..."></div><div style="font-size:10px;color:#888;margin-top:4px">Deixe em branco para carro, lava jato, etc (conta como 1 un)</div></div><div class="actions"><button class="btnGhost" onclick="fecharModal('modal')">Cancelar</button><button id="btnCriarComodo" class="btnPrimary">Criar Item / Local</button></div></div></div>
-  <div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nsNome" placeholder="Nome - ex: Forro de gesso liso"><input id="nsPreco" type="number" step="0.01" placeholder="Preço de venda R$ - ex: 38"><input id="nsCusto" type="number" step="0.01" placeholder="Custo R$ por unidade - ex: 20 (material + mão de obra) - opcional"><label style="font-size:11px;font-weight:700;display:block;margin:4px 0 3px">Onde calcula?</label><select id="nsTipo"><option value="forro">🏠 Forro / Chão - lado x lado (m² chão)</option><option value="parede">🧱 Parede - 4 paredes (perímetro x altura)</option><option value="linear">📏 Linear - volta do cômodo (ml)</option><option value="un">🔢 Unidade - 1 por item</option></select><select id="nsUn"><option value="m2">m²</option><option value="ml">ml</option><option value="m">m</option><option value="un">un</option><option value="m3">m³</option><option value="pct">pct</option><option value="kg">kg</option><option value="hora">h</option><option value="dia">dia</option><option value="vb">vb</option></select><div style="font-size:11px;color:#666;background:#f6f5f0;padding:8px;border-radius:8px;margin-bottom:8px">Ex: Vende a R$38, custa R$20 = Lucro R$18 por m². Se deixar custo em branco, conta como R$0.</div><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
+  <div id="modal" class="modalOverlay"><div class="modalBox"><h3>Novo Item / Local</h3><input id="mNome" placeholder="Ex: Sala 5x4 ou Gol Branco"><div style="background:#fff8e1;border:1px solid #f3d98a;border-radius:8px;padding:8px;margin:8px 0"><div style="font-size:11px;font-weight:700;color:#8a6d00;margin-bottom:6px">📏 Medidas (opcional - só construção):</div><div style="display:flex;gap:8px"><input id="mC" type="number" step="0.01" placeholder="Compr. opcional"><input id="mL" type="number" step="0.01" placeholder="Larg. opcional"></div><div style="font-size:10px;color:#888;margin-top:4px">Deixe em branco para carro, lava jato, etc (conta como 1 un)</div></div><div class="actions"><button class="btnGhost" onclick="fecharModal('modal')">Cancelar</button><button id="btnCriarComodo" class="btnPrimary">Criar Item / Local</button></div></div></div>
+  <div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nsNome" placeholder="Nome - ex: Forro de gesso liso"><input id="nsPreco" type="number" step="0.01" placeholder="Preço de venda R$ - ex: 38"><input id="nsCusto" type="number" step="0.01" placeholder="Custo R$ por unidade - ex: 20 (material + mão de obra) - opcional"><select id="nsUn"><option value="m2">m²</option><option value="ml">ml</option><option value="m">m</option><option value="un">un</option><option value="m3">m³</option><option value="pct">pct</option><option value="kg">kg</option><option value="hora">h</option><option value="dia">dia</option><option value="vb">vb</option></select><div style="font-size:11px;color:#666;background:#f6f5f0;padding:8px;border-radius:8px;margin-bottom:8px">Ex: Vende a R$38, custa R$20 = Lucro R$18 por m². Se deixar custo em branco, conta como R$0.</div><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
   <div id="modalEditarServ" class="modalOverlay"><div class="modalBox"><h3>✏️ Editar Serviço - Nome, Preço e Custo</h3><input type="hidden" id="editServId"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Nome</label><input id="editServNome"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Unidade</label><select id="editServUnid"><option value="m2">m² - Metro quadrado</option><option value="ml">ml - Metro linear</option><option value="m">m - Metro</option><option value="un">un - Unidade</option><option value="m3">m³ - Metro cúbico</option><option value="pct">pct - Pacote</option><option value="kg">kg - Quilo</option><option value="hora">h - Hora</option><option value="dia">dia - Diária</option><option value="vb">vb - Verba</option></select><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Preço de venda R$</label><input id="editServValor" type="number" step="0.01"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Custo R$ por unidade (material + mão de obra)</label><input id="editServCusto" type="number" step="0.01" placeholder="Ex: 20"><div id="lucroPreview" style="font-size:12px;font-weight:700;color:#16a34a;margin:4px 0"></div><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarServ')">Cancelar</button><button onclick="salvarEdicaoServ()" class="btnPrimary">💾 Salvar nome, preço e custo</button></div></div></div>
   <div id="modalLic" class="modalOverlay"><div class="modalBox"><h3>🔒 Ativar PRO</h3><input id="inputLic" placeholder="KIZARANET-VITALICIO-XXXX-YYYY"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalLic')">Depois</button><button id="btnAtivarPro" class="btnPrimary">Ativar PRO</button></div></div></div>
   <div id="modalEditarEmpresa" class="modalOverlay"><div class="modalBox"><h3>Editar Empresa</h3><input id="editNomeEmp" placeholder="Nome"><input id="editSubEmp" placeholder="CNPJ"><input id="editTelEmp" placeholder="Tel"><input id="editCidadeEmp" placeholder="Cidade"><input id="inputLogo" type="file" accept="image/*" style="display:none"><button onclick="document.getElementById('inputLogo').click()" style="width:100%;padding:8px;border:1px dashed #d4af37;border-radius:10px;background:#fff8e1;font-size:11px;font-weight:700;margin-bottom:8px;cursor:pointer">Trocar Logo</button><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarEmpresa')">Cancelar</button><button id="btnSalvarEmpresa" class="btnPrimary">Salvar</button></div></div></div>
@@ -119,57 +101,6 @@ function gerarCodigoComDevice(deviceId){
 const EMPRESA_FIXA = { nome: 'kizaranet.com', sub: 'CNPJ 42.103.065/0001-02', tel: 'Tel: (84)998791222', cid: 'LAGOA NOVA RN' };
 let empresaNome=EMPRESA_FIXA.nome,empresaSub=EMPRESA_FIXA.sub,empresaTel=EMPRESA_FIXA.tel,empresaCidade=EMPRESA_FIXA.cid,clienteNome='',telefoneCli='',enderecoCli='',comodos=[],servicos=[];
 
-function calcBase(co, s){
-  try{
-  let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1, hV=parseFloat(co.h)||2.8;
-  let a=(co.isUnidade? qV : cV*lV*qV);
-  let p=(co.isUnidade? qV : 2*(cV+lV)*qV);
-  let parede=(co.isUnidade? qV : p*hV);
-  let tipo=(s.tipo||'auto');
-  if(tipo==='auto'){
-    let n=(s.nome||'').toLowerCase();
-    if(n.includes('reboco')||n.includes('pelicula')||n.includes('película')||n.includes('massa')||n.includes('pintura')) tipo='parede';
-    else if(n.includes('tabica')||n.includes('dilata')||n.includes('roda')||n.includes('moldura')||n.includes('modura')) tipo='linear';
-    else if((s.un||s.unidade||'').toLowerCase()==='ml') tipo='linear';
-    else if((s.un||s.unidade||'').toLowerCase()==='un') tipo='un';
-    else tipo='forro';
-  }
-  if(tipo==='parede') return {base: parede, tipo:'parede', a:a, p:p, parede:parede};
-  if(tipo==='linear') return {base: p, tipo:'linear', a:a, p:p, parede:parede};
-  if(tipo==='un') return {base: 1, tipo:'un', a:a, p:p, parede:parede};
-  return {base: a, tipo:'forro', a:a, p:p, parede:parede};
-  }catch(e){ return {base:1, tipo:'forro', a:1, p:1, parede:1}; }
-}
-function editarAltura(i){
-  let co=comodos[i]; if(!co) return;
-  let atual=(parseFloat(co.h)||2.8).toFixed(2);
-  let nova = prompt('Altura da parede de '+co.nome+'? Atual: '+atual+'m. Digite ex 2.60, 2.70, 2.80, 3.00', atual);
-  if(nova===null) return;
-  let v=parseFloat(nova.replace(',','.'))||2.8;
-  co.h=v; render(); showStatus('✅ Altura de '+co.nome+' atualizada para '+v.toFixed(2)+'m');
-}
-function somarDespesasDetalhadas(){
-  let ids=['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'];
-  let soma=0; ids.forEach(id=>{ let el=document.getElementById(id); let v=parseFloat(el?.value||'0')||0; soma+=v; });
-  let totalEl=document.getElementById('despesaTotalObra');
-  if(totalEl && soma>0){ totalEl.value=soma.toFixed(2); try{localStorage.setItem('kiza_despesa_obra', soma.toFixed(2));}catch(e){} }
-  return soma;
-}
-function atualizarCustoSimples(){
-  try{
-  let totalM2=0, totalMl=0, totalParede=0, totalVenda=0;
-  comodos.forEach(co=>{ let cv=parseFloat(co.c)||1, lv=parseFloat(co.l)||1, qv=parseFloat(co.q)||1, hv=parseFloat(co.h)||2.8; let a=(co.isUnidade? qv : cv*lv*qv); let p=(co.isUnidade? qv : 2*(cv+lv)*qv); let parede=(co.isUnidade? qv : p*hv); totalM2+=a; totalMl+=p; totalParede+=parede; co.servicos.forEach(sid=>{ let s=servicos.find(x=>x.id==sid); if(!s) return; totalVenda+=calcBase(co,s).base*s.valor; }); });
-  let soma=totalM2+totalMl+totalParede;
-  let despesa=parseFloat(document.getElementById('despesaTotalObra')?.value || localStorage.getItem('kiza_despesa_obra') || '0')||0;
-  let custoPorMetro=soma>0?despesa/soma:0; let lucro=totalVenda-despesa;
-  let elM2=document.getElementById('totM2Display'); if(elM2) elM2.textContent=totalM2.toFixed(2).replace('.',',');
-  let elMl=document.getElementById('totMlDisplay'); if(elMl) elMl.textContent=totalMl.toFixed(2).replace('.',',');
-  let elPar=document.getElementById('totParedeDisplay'); if(elPar) elPar.textContent=totalParede.toFixed(2).replace('.',',');
-  let elSoma=document.getElementById('totSomaMetrosDisplay'); if(elSoma) elSoma.textContent=soma.toFixed(2).replace('.',',');
-  let elCpm=document.getElementById('custoPorMetroDisplay'); if(elCpm) elCpm.textContent='R$ '+custoPorMetro.toFixed(2).replace('.',',')+' / metro';
-  let elRes=document.getElementById('resumoCustoSimples'); if(elRes){ if(despesa===0){ elRes.innerHTML='👉 Exemplo: Sala 1x1 h 2.70 tem 1.00m² chão + 4.00ml + 10.80m² parede = 15.80 metros. Se gastou R$200, custo R$12,66/metro.'; } else { elRes.innerHTML='📐 Soma: '+totalM2.toFixed(2)+'m² + '+totalMl.toFixed(2)+'ml + '+totalParede.toFixed(2)+'m² parede = <b>'+soma.toFixed(2)+' metros</b><br>💸 Despesa: R$ '+despesa.toFixed(2)+' | 📦 Custo/metro: R$ '+custoPorMetro.toFixed(2)+'<br>💰 Venda: R$ '+totalVenda.toFixed(2)+' - Despesa R$ '+despesa.toFixed(2)+' = <b>Lucro R$ '+lucro.toFixed(2)+'</b>'; } }
-  }catch(e){ console.log('custo simples', e); }
-}
 function toB36(n,len){let c="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",r="";for(let i=0;i<len;i++){r=c[n%36]+r;n=Math.floor(n/36);}return r;}
 function fromB36(s){return parseInt(s,36);}
 function validarLicencaSegura(codigo){
@@ -297,22 +228,21 @@ function criarComodo(){
       c=document.getElementById('mC').value,
       l=document.getElementById('mL').value;
   if(!nome){alert('Nome obrigatório');return;}
-  let hRaw=document.getElementById('mH')?.value||''; let hV=hRaw==='' ? 2.8 : (parseFloat(String(hRaw).replace(',','.'))||2.8);
   let comp=parseFloat(c)||0;
   let larg=parseFloat(l)||0;
   if(comp===0 && larg===0){
-    comodos.push({nome:nome,c:1,l:1,h:2.8,isUnidade:true,q:1,servicos:[]});
+    comodos.push({nome:nome,c:1,l:1,isUnidade:true,q:1,servicos:[]});
   }else{
     if(comp===0) comp=1;
     if(larg===0) larg=1;
-    comodos.push({nome:nome,c:comp,l:larg,h:hV,isUnidade:false,q:1,servicos:[]});
+    comodos.push({nome:nome,c:comp,l:larg,isUnidade:false,q:1,servicos:[]});
   }
-  document.getElementById('mNome').value=''; if(document.getElementById('mH')) document.getElementById('mH').value='';
+  document.getElementById('mNome').value='';
   document.getElementById('mC').value='';
   document.getElementById('mL').value='';
   fecharModal('modal'); render(); showStatus('✅ Item criado: '+nome);
 }
-function criarServ(){let nome=document.getElementById('nsNome').value.trim(),preco=parseFloat(document.getElementById('nsPreco').value)||0,custo=parseFloat(document.getElementById('nsCusto')?document.getElementById('nsCusto').value:0)||0,un=document.getElementById('nsUn').value, tipo=document.getElementById('nsTipo')?document.getElementById('nsTipo').value:'auto'; if(!nome){alert('Nome obrigatório');return;} if(tipo==='auto' || !tipo){ let n=nome.toLowerCase(); if(n.includes('reboco')||n.includes('pelicula')||n.includes('película')) tipo='parede'; else if(n.includes('tabica')) tipo='linear'; else tipo='forro'; } let id=Date.now(); servicos.push({id:id,nome:nome,valor:preco,custo:custo,unidade:un,un:un,tipo:tipo}); document.getElementById('nsNome').value=''; document.getElementById('nsPreco').value=''; if(document.getElementById('nsCusto')) document.getElementById('nsCusto').value=''; fecharModal('modalNovoServ'); render(); }
+function criarServ(){let nome=document.getElementById('nsNome').value.trim(),preco=parseFloat(document.getElementById('nsPreco').value)||0,custo=parseFloat(document.getElementById('nsCusto')?document.getElementById('nsCusto').value:0)||0,un=document.getElementById('nsUn').value; if(!nome){alert('Nome obrigatório');return;} let id=Date.now(); servicos.push({id:id,nome:nome,valor:preco,custo:custo,unidade:un,un:un}); document.getElementById('nsNome').value=''; document.getElementById('nsPreco').value=''; if(document.getElementById('nsCusto')) document.getElementById('nsCusto').value=''; fecharModal('modalNovoServ'); render(); }
 function verificarLimiteGratis(){
   let pro=localStorage.getItem('kiza_pro'), tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
   let isPro=false;
@@ -357,28 +287,26 @@ function gerarPDF(){
   comodos.forEach((c,idx)=>{
     if(y>pageH-45){ doc.addPage(); y=12; }
     let cVP=c.c||1, lVP=c.l||1, qVP=c.q||1; let a=(c.isUnidade? qVP : cVP*lVP*qVP); let p=(c.isUnidade? qVP : 2*(cVP+lVP)*qVP);
-    doc.setFillColor(255,243,205); doc.rect(margin,y,pageW-margin*2,11,'F');
-    doc.setDrawColor(212,175,55); doc.setLineWidth(0.4); doc.rect(margin,y,pageW-margin*2,11,'S');
-    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(17,17,17);
-    let hVpdf=parseFloat(c.h)||2.8; let paredePdf=(c.isUnidade? qVP : (2*(cVP+lVP)*qVP)*hVpdf);
-    doc.text((idx+1)+'. '+c.nome.toUpperCase() + (c.isUnidade ? '' : '  -  '+a.toFixed(2)+'m² chão | '+p.toFixed(2)+'ml | '+paredePdf.toFixed(2)+'m² parede (h '+hVpdf.toFixed(2)+')'), margin+3, y+7.5);
-    y+=15;
+    doc.setFillColor(17,17,17); doc.rect(margin,y,pageW-margin*2,8,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(255,255,255);
+    doc.text((idx+1)+'. '+c.nome.toUpperCase(), margin+3, y+5.5);
+    y+=10;
     let sub=0;
     c.servicos.forEach(sid=>{
       let s=servicos.find(x=>x.id==sid); if(!s) return;
-      let cbPdf=calcBase(c,s); let base=cbPdf.base;
+      let base=(s.unidade==='ml'||s.un==='ml')?p:a; if(s.unidade==='un'||s.un==='un') base=1;
       let val=base*s.valor; sub+=val;
-      doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(40,40,40);
-      doc.text('• '+s.nome+' ('+base.toFixed(2)+' x R$ '+s.valor.toFixed(2)+')', margin+6, y);
-      doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(17,17,17); doc.text('R$ '+val.toFixed(2), pageW-margin-3, y,{align:'right'});
-      y+=7;
+      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(40,40,40);
+      doc.text('• '+s.nome, margin+6, y);
+      doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17); doc.text('R$ '+val.toFixed(2), pageW-margin-3, y,{align:'right'});
+      y+=5;
     });
     totalGeral+=sub; y+=4;
     doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.text('Subtotal: R$ '+sub.toFixed(2), pageW-margin-3, y,{align:'right'}); y+=8;
   });
-  doc.setFillColor(212,175,55); doc.rect(margin,y,pageW-margin*2,16,'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(17,17,17); doc.text('R$ '+totalGeral.toFixed(2), pageW-margin-5, y+11,{align:'right'});
-  doc.setFontSize(12); doc.setTextColor(17,17,17); doc.text('TOTAL GERAL:', margin+5, y+11);
+  doc.setFillColor(17,17,17); doc.rect(margin,y,pageW-margin*2,14,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(212,175,55); doc.text('R$ '+totalGeral.toFixed(2), pageW-margin-5, y+9.5,{align:'right'});
+  doc.setFontSize(10); doc.setTextColor(255,255,255); doc.text('TOTAL GERAL:', margin+5, y+9);
   y+=22;
   doc.setFillColor(212,175,55); doc.rect(0,pageH-5,pageW,5,'F');
   doc.save('ORCAMENTO_'+(clienteNome||'CLIENTE')+'.pdf');
@@ -401,12 +329,9 @@ function render(){
   if(lc){
     if(comodos.length===0) lc.innerHTML='<div style="color:#999;font-size:11px">Nenhum item - clique + ITEM / LOCAL</div>';
     else lc.innerHTML=comodos.map((co,i)=>{
-      let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1, hV=parseFloat(co.h)||2.8;
-      let a=(co.isUnidade? qV : cV*lV*qV);
-      let p=(co.isUnidade? qV : 2*(cV+lV)*qV);
-      let parede=(co.isUnidade? qV : p*hV);
-      let metaTxt = co.isUnidade ? `${qV} un` : `${cV}x${lV}m (h ${hV.toFixed(2)} ✏️) = ${a.toFixed(2)}m² chão | ${p.toFixed(2)}ml | ${parede.toFixed(2)}m² parede`;
-      return `<div class="comodoItem"><div class="comodoHead"><b style="font-size:12px">${co.nome}</b><span class="comodoMeta" onclick="editarAltura(${i})" title="Clique para mudar altura" style="cursor:pointer;background:#fff8e1;border:1px solid #f3d98a;padding:3px 6px;border-radius:8px">${metaTxt}</span><button onclick="removerComodo(${i})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div><div class="servCheck">${servicos.map(s=>{let chk=co.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome}</label>`}).join('')}</div></div>`
+      let cV=co.c||1, lV=co.l||1, qV=co.q||1; let a=(co.isUnidade? qV : cV*lV*qV);
+      let metaTxt = co.isUnidade ? `${qV} un` : `${cV}x${lV}m = ${a.toFixed(2)}m²`;
+      return `<div class="comodoItem"><div class="comodoHead"><b style="font-size:12px">${co.nome}</b><span class="comodoMeta">${metaTxt}</span><button onclick="removerComodo(${i})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div><div class="servCheck">${servicos.map(s=>{let chk=co.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome}</label>`}).join('')}</div></div>`
     }).join('');
   }
   let gs=document.getElementById('gridServicos');
@@ -418,12 +343,11 @@ function render(){
     }
   }
   let total=0, totalCusto=0;
-  comodos.forEach(co=>{ co.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s) return; let cb=calcBase(co,s); total+=cb.base*s.valor; totalCusto+=cb.base*(s.custo||0);});});
+  comodos.forEach(co=>{let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1; let a=(co.isUnidade? qV : cV*lV*qV); let p=(co.isUnidade? qV : 2*(cV+lV)*qV); co.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s) return; let un=(s.unidade||s.un||'m2').toString().toLowerCase().trim(); let base=a; if(un==='ml'||un==='m') base=p; else if(un==='un'||un==='pct'||un==='kg'||un==='hora'||un==='dia'||un==='vb'||un==='h') base=1; else base=a; total+=base*s.valor; totalCusto+=base*(s.custo||0);});});
   let tg=document.getElementById('totalGeral'); if(tg) tg.textContent='R$ '+total.toFixed(2).replace('.',',');
   let tc=document.getElementById('totalCustoLucro'); if(tc){ let lucro=total-totalCusto; tc.innerHTML=`Custo: R$ ${totalCusto.toFixed(2).replace('.',',')} | Lucro: <b style="color:#4ade80">R$ ${lucro.toFixed(2).replace('.',',')}</b> (${total>0 ? ((lucro/total)*100).toFixed(0) : 0}% de margem)`; }
   localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));
   localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));
-  try{ atualizarCustoSimples(); }catch(e){}
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -535,10 +459,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('inputClienteTop').addEventListener('input',(e)=>{clienteNome=e.target.value; localStorage.setItem('kiza_cli_final',clienteNome); render();});
   document.getElementById('inputTelefoneTop').addEventListener('input',(e)=>{telefoneCli=e.target.value; localStorage.setItem('kiza_tel_cli_final',telefoneCli); render();});
   document.getElementById('inputEnderecoTop').addEventListener('input',(e)=>{enderecoCli=e.target.value; localStorage.setItem('kiza_end_final',enderecoCli); render();});
-  document.getElementById('btnToggleCustoObra')?.addEventListener('click',()=>{ let a=document.getElementById('areaCustoObraSimples'); if(a) a.style.display=a.style.display==='none'?'block':'none'; });
-  document.getElementById('despesaTotalObra')?.addEventListener('input',(e)=>{ try{localStorage.setItem('kiza_despesa_obra', e.target.value);}catch(err){} atualizarCustoSimples(); });
-  try{ let despSalva=localStorage.getItem('kiza_despesa_obra'); if(despSalva && document.getElementById('despesaTotalObra')) document.getElementById('despesaTotalObra').value=despSalva; }catch(e){}
-  ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(id=>{ let el=document.getElementById(id); if(el){ try{ let v=localStorage.getItem('kiza_custo_'+id); if(v) el.value=v; }catch(e){} el.addEventListener('input',()=>{ try{localStorage.setItem('kiza_custo_'+id, el.value);}catch(e){} somarDespesasDetalhadas(); atualizarCustoSimples(); }); } });
   document.getElementById('btnPdf').addEventListener('click',gerarPDF);
   document.getElementById('btnLinkPlataforma').addEventListener('click',gerarLinkPlataforma);
   function copiarTextoRobusto(txt){
