@@ -78,10 +78,10 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
     <div id="areaCustoObraSimples" style="display:block;margin-top:10px">
       <div style="font-size:11px;color:#666;margin-bottom:8px">Cada obra muda! O programa soma os metros, você só joga a despesa total dessa obra e ele divide sozinho.</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px">
-        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL M²</div><div id="totM2Display" style="font-size:18px;font-weight:900">0,00</div></div>
-        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL ML</div><div id="totMlDisplay" style="font-size:18px;font-weight:900">0,00</div></div>
-        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL PAREDE</div><div id="totParedeDisplay" style="font-size:18px;font-weight:900;color:#7c3aed">0,00</div></div>
-        <div style="background:#111;color:#fff;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;opacity:0.7">M² + ML + PAREDE</div><div id="totSomaMetrosDisplay" style="font-size:18px;font-weight:900;color:#d4af37">0,00</div></div>
+        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL M²</div><div id="totM2Display" style="font-size:18px;font-weight:900">0,00</div><div id="totM2Valor" style="font-size:12px;font-weight:800;color:#16a34a;margin-top:3px">R$ 0,00</div></div>
+        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL ML</div><div id="totMlDisplay" style="font-size:18px;font-weight:900">0,00</div><div id="totMlValor" style="font-size:12px;font-weight:800;color:#16a34a;margin-top:3px">R$ 0,00</div></div>
+        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL PAREDE</div><div id="totParedeDisplay" style="font-size:18px;font-weight:900;color:#7c3aed">0,00</div><div id="totParedeValor" style="font-size:12px;font-weight:800;color:#16a34a;margin-top:3px">R$ 0,00</div></div>
+        <div style="background:#111;color:#fff;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;opacity:0.7">M² + ML + PAREDE</div><div id="totSomaMetrosDisplay" style="font-size:18px;font-weight:900;color:#d4af37">0,00</div><div id="totSomaValor" style="font-size:12px;font-weight:800;color:#d4af37;margin-top:3px">R$ 0,00</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <div><label style="font-size:11px;font-weight:700">💸 Despesa total dessa obra R$</label><input id="despesaTotalObra" type="number" step="0.01" placeholder="Ex: 850" style="width:100%;padding:10px;border:2px solid #16a34a;border-radius:10px;font-size:14px;font-weight:700"><div style="font-size:10px;color:#16a34a;font-weight:700;margin-top:3px">Preencha os campos detalhados abaixo que ele soma sozinho aqui!</div></div>
@@ -142,7 +142,7 @@ function calcBase(co, s){
 }
 function editarAltura(i){ let co=comodos[i]; if(!co) return; let atual=(parseFloat(co.h)||2.8).toFixed(2); let nova = prompt('Altura da parede de '+co.nome+'? Atual: '+atual+'m. Digite ex 2.60, 2.70, 2.80, 3.00', atual); if(nova===null) return; let v=parseFloat(nova.replace(',','.'))||2.8; co.h=v; render(); showStatus('✅ Altura de '+co.nome+' atualizada para '+v.toFixed(2)+'m'); }
 function somarDespesasDetalhadas(){ let ids=['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola']; let soma=0; ids.forEach(id=>{ let el=document.getElementById(id); let v=parseFloat(el?.value||'0')||0; soma+=v; }); let totalEl=document.getElementById('despesaTotalObra'); if(totalEl && soma>0){ totalEl.value=soma.toFixed(2); try{localStorage.setItem('kiza_despesa_obra', soma.toFixed(2));}catch(e){} } return soma; }
-function atualizarCustoSimples(){ try{ let totalM2=0, totalMl=0, totalParede=0, totalVenda=0; comodos.forEach(co=>{ let cv=parseFloat(co.c)||1, lv=parseFloat(co.l)||1, qv=parseFloat(co.q)||1, hv=parseFloat(co.h)||2.8; let a=(co.isUnidade? qv : cv*lv*qv); let p=(co.isUnidade? qv : 2*(cv+lv)*qv); let parede=(co.isUnidade? qv : p*hv); totalM2+=a; totalMl+=p; totalParede+=parede; co.servicos.forEach(sid=>{ let s=servicos.find(x=>x.id==sid); if(!s) return; totalVenda+=calcBase(co,s).base*s.valor; }); }); let soma=totalM2+totalMl+totalParede; let despesa=parseFloat(document.getElementById('despesaTotalObra')?.value || localStorage.getItem('kiza_despesa_obra') || '0')||0; let custoPorMetro=soma>0?despesa/soma:0; let lucro=totalVenda-despesa; let elM2=document.getElementById('totM2Display'); if(elM2) elM2.textContent=totalM2.toFixed(2).replace('.',','); let elMl=document.getElementById('totMlDisplay'); if(elMl) elMl.textContent=totalMl.toFixed(2).replace('.',','); let elPar=document.getElementById('totParedeDisplay'); if(elPar) elPar.textContent=totalParede.toFixed(2).replace('.',','); let elSoma=document.getElementById('totSomaMetrosDisplay'); if(elSoma) elSoma.textContent=soma.toFixed(2).replace('.',','); let elCpm=document.getElementById('custoPorMetroDisplay'); if(elCpm) elCpm.textContent='R$ '+custoPorMetro.toFixed(2).replace('.',',')+' / metro'; let elRes=document.getElementById('resumoCustoSimples'); if(elRes){ if(despesa===0){ elRes.innerHTML='👉 Exemplo: Sala 5x5 h 2.80 tem 25m² chão + 20ml + 56m² parede = 101 metros.'; } else { elRes.innerHTML='📐 Soma: '+totalM2.toFixed(2)+'m² + '+totalMl.toFixed(2)+'ml + '+totalParede.toFixed(2)+'m² parede = <b>'+soma.toFixed(2)+' metros</b><br>💸 Despesa: R$ '+despesa.toFixed(2)+' | 📦 Custo/metro: R$ '+custoPorMetro.toFixed(2)+'<br>💰 Venda: R$ '+totalVenda.toFixed(2)+' - Despesa R$ '+despesa.toFixed(2)+' = <b>Lucro R$ '+lucro.toFixed(2)+'</b>'; } } }catch(e){} }
+function atualizarCustoSimples(){ try{ let totalM2=0, totalMl=0, totalParede=0, totalVenda=0; let totalVendaM2=0, totalVendaMl=0, totalVendaParede=0, totalVendaUn=0; comodos.forEach(co=>{ let cv=parseFloat(co.c)||1, lv=parseFloat(co.l)||1, qv=parseFloat(co.q)||1, hv=parseFloat(co.h)||2.8; let a=(co.isUnidade? qv : cv*lv*qv); let p=(co.isUnidade? qv : 2*(cv+lv)*qv); let parede=(co.isUnidade? qv : p*hv); totalM2+=a; totalMl+=p; totalParede+=parede; co.servicos.forEach(sid=>{ let s=servicos.find(x=>x.id==sid); if(!s) return; let cb=calcBase(co,s); let v=cb.base*s.valor; totalVenda+=v; if(cb.tipo==='parede') totalVendaParede+=v; else if(cb.tipo==='linear') totalVendaMl+=v; else if(cb.tipo==='un') totalVendaUn+=v; else totalVendaM2+=v; }); }); let soma=totalM2+totalMl+totalParede; let despesa=parseFloat(document.getElementById('despesaTotalObra')?.value || localStorage.getItem('kiza_despesa_obra') || '0')||0; let custoPorMetro=soma>0?despesa/soma:0; let lucro=totalVenda-despesa; let elM2=document.getElementById('totM2Display'); if(elM2) elM2.textContent=totalM2.toFixed(2).replace('.',','); let elMl=document.getElementById('totMlDisplay'); if(elMl) elMl.textContent=totalMl.toFixed(2).replace('.',','); let elPar=document.getElementById('totParedeDisplay'); if(elPar) elPar.textContent=totalParede.toFixed(2).replace('.',','); let elSoma=document.getElementById('totSomaMetrosDisplay'); if(elSoma) elSoma.textContent=soma.toFixed(2).replace('.',','); let elM2V=document.getElementById('totM2Valor'); if(elM2V) elM2V.textContent='R$ '+totalVendaM2.toFixed(2).replace('.',','); let elMlV=document.getElementById('totMlValor'); if(elMlV) elMlV.textContent='R$ '+totalVendaMl.toFixed(2).replace('.',','); let elParV=document.getElementById('totParedeValor'); if(elParV) elParV.textContent='R$ '+totalVendaParede.toFixed(2).replace('.',','); let elSomaV=document.getElementById('totSomaValor'); if(elSomaV) elSomaV.textContent='R$ '+totalVenda.toFixed(2).replace('.',','); let elCpm=document.getElementById('custoPorMetroDisplay'); if(elCpm) elCpm.textContent='R$ '+custoPorMetro.toFixed(2).replace('.',',')+' / metro'; let elRes=document.getElementById('resumoCustoSimples'); if(elRes){ if(despesa===0){ elRes.innerHTML='👉 Exemplo: Sala 5x5 h 2.80 tem 25m² chão + 20ml + 56m² parede = 101 metros.'; } else { elRes.innerHTML='📐 Soma: '+totalM2.toFixed(2)+'m² + '+totalMl.toFixed(2)+'ml + '+totalParede.toFixed(2)+'m² parede = <b>'+soma.toFixed(2)+' metros</b><br>💸 Despesa: R$ '+despesa.toFixed(2)+' | 📦 Custo/metro: R$ '+custoPorMetro.toFixed(2)+'<br>💰 Venda: R$ '+totalVenda.toFixed(2)+' - Despesa R$ '+despesa.toFixed(2)+' = <b>Lucro R$ '+lucro.toFixed(2)+'</b>'; } } }catch(e){} }
 function toB36(n,len){let c="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",r="";for(let i=0;i<len;i++){r=c[n%36]+r;n=Math.floor(n/36);}return r;}
 function fromB36(s){return parseInt(s,36);}
 function validarLicencaSegura(codigo){
@@ -258,20 +258,13 @@ function restaurarServicosPadrao(){
   showStatus('✅ 7 serviços restaurados!');
 }
 function limparTudo(){
-  if(!confirm('Começar do zero e voltar pra base limpa kizaranet.com?')) return;
-  try{
-    // Limpa TUDO do navegador
-    localStorage.removeItem('kiza_comodos_final'); localStorage.removeItem('kiza_serv_final');
-    localStorage.removeItem('kiza_emp_final'); localStorage.removeItem('kiza_sub_final'); localStorage.removeItem('kiza_tel_final'); localStorage.removeItem('kiza_cid_final');
-    localStorage.removeItem('kiza_pro'); localStorage.removeItem('kiza_pro_tipo'); localStorage.removeItem('kiza_pro_expira');
-    localStorage.removeItem('kiza_logo_final'); localStorage.removeItem('kiza_despesa_obra');
-    localStorage.removeItem('kiza_cli_final'); localStorage.removeItem('kiza_tel_cli_final'); localStorage.removeItem('kiza_end_final');
-    ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(id=>{ try{localStorage.removeItem('kiza_custo_'+id);}catch(e){} });
-  }catch(e){}
-  comodos=[]; servicos=[]; clienteNome=''; telefoneCli=''; enderecoCli='';
-  empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
-  // Volta pra URL limpa, sem ?dados - aí abre a base nova!
-  window.location.href='https://kizaracom-code.github.io/kizara-orcamento-editavel/';
+  if(!confirm('COMEÇAR DO ZERO?'))return;
+  let params=new URLSearchParams(window.location.search);
+  if(params.get('limpo')){ alert('Modo cliente travado! Não pode apagar.'); return; }
+  comodos=[]; clienteNome=''; telefoneCli=''; enderecoCli='';
+  document.getElementById('inputClienteTop').value=''; document.getElementById('inputTelefoneTop').value=''; document.getElementById('inputEnderecoTop').value='';
+  render();
+  showStatus('Obra limpa - plataforma vazia');
 }
 function criarComodo(){
   let nome=document.getElementById('mNome').value.trim(),
@@ -386,7 +379,8 @@ function render(){
       let a=(co.isUnidade? qV : cV*lV*qV);
       let p=(co.isUnidade? qV : 2*(cV+lV)*qV);
       let parede=(co.isUnidade? qV : p*hV);
-      let metaTxt = co.isUnidade ? `${qV} un` : `${cV}x${lV}m (h ${hV.toFixed(2)} ✏️) = ${a.toFixed(2)}m² chão | ${p.toFixed(2)}ml | ${parede.toFixed(2)}m² parede`;
+      let totalCo=0; co.servicos.forEach(sid=>{ let ss=servicos.find(x=>x.id==sid); if(ss) totalCo+=calcBase(co,ss).base*ss.valor; });
+      let metaTxt = co.isUnidade ? `${qV} un` : `${cV}x${lV}m (h ${hV.toFixed(2)} ✏️) = ${a.toFixed(2)}m² chão | ${p.toFixed(2)}ml | ${parede.toFixed(2)}m² parede | 💰 R$ ${totalCo.toFixed(2).replace('.',',')}`;
       return `<div class="comodoItem"><div class="comodoHead"><b style="font-size:12px">${co.nome}</b><span class="comodoMeta" onclick="editarAltura(${i})" title="Clique para mudar altura" style="cursor:pointer;background:#fff8e1;border:1px solid #f3d98a;padding:3px 6px;border-radius:8px">${metaTxt}</span><button onclick="removerComodo(${i})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div><div class="servCheck">${servicos.map(s=>{let chk=co.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome}</label>`}).join('')}</div></div>`
     }).join('');
   }
@@ -422,10 +416,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     localStorage.setItem('kiza_serv_final', JSON.stringify([]));
     localStorage.removeItem('kiza_pro'); localStorage.removeItem('kiza_pro_tipo'); localStorage.removeItem('kiza_pro_expira');
     localStorage.removeItem('kiza_logo_final'); localStorage.removeItem('kiza_despesa_obra');
-    localStorage.removeItem('kiza_cli_final'); localStorage.removeItem('kiza_tel_cli_final'); localStorage.removeItem('kiza_end_final');
-    ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(id=>{ try{localStorage.removeItem('kiza_custo_'+id);}catch(e){} });
-    // Limpa inputs de cliente na tela também
-    try{ let ic=document.getElementById('inputClienteTop'); if(ic) ic.value=''; let it=document.getElementById('inputTelefoneTop'); if(it) it.value=''; let ie=document.getElementById('inputEnderecoTop'); if(ie) ie.value=''; }catch(e){}
     localStorage.setItem('kiza_dono','1');
     }catch(e){}
   }
