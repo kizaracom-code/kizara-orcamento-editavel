@@ -316,26 +316,28 @@ function gerarPDF(){
   comodos.forEach((c,idx)=>{
     if(y>pageH-45){ doc.addPage(); y=12; }
     let cVP=c.c||1, lVP=c.l||1, qVP=c.q||1; let a=(c.isUnidade? qVP : cVP*lVP*qVP); let p=(c.isUnidade? qVP : 2*(cVP+lVP)*qVP);
-    doc.setFillColor(17,17,17); doc.rect(margin,y,pageW-margin*2,8,'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(255,255,255);
-    doc.text((idx+1)+'. '+c.nome.toUpperCase(), margin+3, y+5.5);
-    y+=10;
+    doc.setFillColor(255,243,205); doc.rect(margin,y,pageW-margin*2,11,'F');
+    doc.setDrawColor(212,175,55); doc.setLineWidth(0.4); doc.rect(margin,y,pageW-margin*2,11,'S');
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(17,17,17);
+    let hV=parseFloat(c.h)||2.8; let paredePdf=(c.isUnidade? qVP : (2*(cVP+lVP)*qVP)*hV);
+    doc.text((idx+1)+'. '+c.nome.toUpperCase() + (c.isUnidade ? '' : '  -  '+a.toFixed(2)+'m² chão | '+p.toFixed(2)+'ml | '+paredePdf.toFixed(2)+'m² parede (h '+hV.toFixed(2)+')'), margin+3, y+7.5);
+    y+=15;
     let sub=0;
     c.servicos.forEach(sid=>{
       let s=servicos.find(x=>x.id==sid); if(!s) return;
       let cb=calcBase(c,s); let base=cb.base;
       let val=base*s.valor; sub+=val;
-      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(40,40,40);
-      doc.text('• '+s.nome, margin+6, y);
-      doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17); doc.text('R$ '+val.toFixed(2), pageW-margin-3, y,{align:'right'});
-      y+=5;
+      doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(40,40,40);
+      doc.text('• '+s.nome+' ('+base.toFixed(2)+' x R$ '+s.valor.toFixed(2)+')', margin+6, y);
+      doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(17,17,17); doc.text('R$ '+val.toFixed(2), pageW-margin-3, y,{align:'right'});
+      y+=7;
     });
     totalGeral+=sub; y+=4;
     doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.text('Subtotal: R$ '+sub.toFixed(2), pageW-margin-3, y,{align:'right'}); y+=8;
   });
-  doc.setFillColor(17,17,17); doc.rect(margin,y,pageW-margin*2,14,'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(212,175,55); doc.text('R$ '+totalGeral.toFixed(2), pageW-margin-5, y+9.5,{align:'right'});
-  doc.setFontSize(10); doc.setTextColor(255,255,255); doc.text('TOTAL GERAL:', margin+5, y+9);
+  doc.setFillColor(212,175,55); doc.rect(margin,y,pageW-margin*2,16,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(17,17,17); doc.text('R$ '+totalGeral.toFixed(2), pageW-margin-5, y+11,{align:'right'});
+  doc.setFontSize(12); doc.setTextColor(17,17,17); doc.text('TOTAL GERAL:', margin+5, y+11);
   y+=22;
   doc.setFillColor(212,175,55); doc.rect(0,pageH-5,pageW,5,'F');
   doc.save('ORCAMENTO_'+(clienteNome||'CLIENTE')+'.pdf');
@@ -371,11 +373,11 @@ function render(){
     if(servicos.length===0){
       gs.innerHTML='<div style="color:#999;font-size:11px;padding:14px;text-align:center;border:1px dashed #ddd;border-radius:12px">Nenhum serviço cadastrado<br>Clique em <b>+ SERVICO</b> para começar<br><br>Exemplos:<br>Lava jato: Lavagem completa R$60<br>Gesso: Forro liso R$38/m²<br>Mecânico: Troca óleo R$120</div>';
     }else{
-      gs.innerHTML=servicos.map(s=>{let unid=s.un||s.unidade||'m2'; let custo=s.custo||0; let lucro=(s.valor||0)-custo; let lucroTxt = custo>0 ? `<div style="font-size:10px;color:#16a34a;font-weight:700">Custo R$ ${custo.toFixed(2)} | Lucro R$ ${lucro.toFixed(2)}</div>` : `<div style="font-size:10px;color:#999">Sem custo - clique EDITAR para colocar</div>`; return `<div class="servCard"><b style="font-size:11px;display:block;margin-bottom:2px;line-height:1.2">${s.nome}</b><div style="font-size:11px;color:#666;margin-bottom:2px">${unid} - Venda R$ ${s.valor}</div>${lucroTxt}<div style="display:flex;gap:6px;margin-top:6px"><button onclick="editarNome(${s.id})" style="flex:1;font-size:11px;padding:7px 8px;background:#111;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">✏️ EDITAR</button><button onclick="removerServico(${s.id})" style="font-size:11px;padding:7px 8px;background:#fee;border:1px solid #fcc;border-radius:8px;cursor:pointer">🗑️</button></div></div>`}).join('');
+      gs.innerHTML=servicos.map(s=>{let unid=s.un||s.unidade||'m2'; let tipoTxt = s.tipo==='parede' ? '🧱 Parede' : s.tipo==='linear' ? '📏 Linear' : s.tipo==='un' ? '🔢 Un' : (s.nome||'').toLowerCase().includes('pelicula')||(s.nome||'').toLowerCase().includes('reboco') ? '🧱 Parede (auto)' : '🏠 Chão'; let custo=s.custo||0; let lucro=(s.valor||0)-custo; let lucroTxt = custo>0 ? `<div style="font-size:10px;color:#16a34a;font-weight:700">Custo R$ ${custo.toFixed(2)} | Lucro R$ ${lucro.toFixed(2)}</div>` : `<div style="font-size:10px;color:#999">Sem custo - clique EDITAR para colocar</div>`; return `<div class="servCard"><b style="font-size:11px;display:block;margin-bottom:2px;line-height:1.2">${s.nome}</b><div style="font-size:10px;color:#7c3aed;font-weight:700;margin-bottom:2px">${tipoTxt}</div><div style="font-size:11px;color:#666;margin-bottom:2px">${unid} - Venda R$ ${s.valor}</div>${lucroTxt}<div style="display:flex;gap:6px;margin-top:6px"><button onclick="editarNome(${s.id})" style="flex:1;font-size:11px;padding:7px 8px;background:#111;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">✏️ EDITAR</button><button onclick="removerServico(${s.id})" style="font-size:11px;padding:7px 8px;background:#fee;border:1px solid #fcc;border-radius:8px;cursor:pointer">🗑️</button></div></div>`}).join('');
     }
   }
   let total=0, totalCusto=0;
-  comodos.forEach(co=>{let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1; let a=(co.isUnidade? qV : cV*lV*qV); let p=(co.isUnidade? qV : 2*(cV+lV)*qV); co.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s) return; let un=(s.unidade||s.un||'m2').toString().toLowerCase().trim(); let base=a; if(un==='ml'||un==='m') base=p; else if(un==='un'||un==='pct'||un==='kg'||un==='hora'||un==='dia'||un==='vb'||un==='h') base=1; else base=a; total+=base*s.valor; totalCusto+=base*(s.custo||0);});});
+  comodos.forEach(co=>{ co.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s) return; let cb=calcBase(co,s); total+=cb.base*s.valor; totalCusto+=cb.base*(s.custo||0);});});
   let tg=document.getElementById('totalGeral'); if(tg) tg.textContent='R$ '+total.toFixed(2).replace('.',',');
   let tc=document.getElementById('totalCustoLucro'); if(tc){ let lucro=total-totalCusto; tc.innerHTML=`Custo: R$ ${totalCusto.toFixed(2).replace('.',',')} | Lucro: <b style="color:#4ade80">R$ ${lucro.toFixed(2).replace('.',',')}</b> (${total>0 ? ((lucro/total)*100).toFixed(0) : 0}% de margem)`; }
   localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));
