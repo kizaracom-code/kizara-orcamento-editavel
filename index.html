@@ -91,6 +91,15 @@ body{background:#f6f5f0;color:#1a1a1a;padding:12px}
       <div style="margin-top:10px"><div style="font-size:11px;font-weight:700;margin-bottom:6px">Detalhado (opcional - ele soma sozinho no total acima): <span style="font-weight:400;color:#16a34a">✏️ Clique no nome pra editar - fica universal! Ex: troca "Placa de gesso" por "Tinta", "Cimento", "Parafuso"... Salva sozinho!</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><input class="labelDespesa" data-for="cCombustivel" value="⛽ Combustível dessa obra" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cCombustivel" type="number" step="0.01" placeholder="Ex: 80" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cMaoDele" value="👷 Mão dele nessa obra" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cMaoDele" type="number" step="0.01" placeholder="Ex: 150" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cMaoFunc" value="👷‍♂️ Mão funcionários" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cMaoFunc" type="number" step="0.01" placeholder="Ex: 200" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cAlimentacao" value="🍽️ Alimentação" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cAlimentacao" type="number" step="0.01" placeholder="Ex: 60" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cPlaca" value="📦 Placa de gesso" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cPlaca" type="number" step="0.01" placeholder="Ex: 120" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cGessoPo" value="🧱 Gesso em pó" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cGessoPo" type="number" step="0.01" placeholder="Ex: 40" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cSisal" value="🧵 Fibra de sisal" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cSisal" type="number" step="0.01" placeholder="Ex: 20" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cArame" value="🔗 Arame" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cArame" type="number" step="0.01" placeholder="Ex: 15" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cTabica" value="📏 Tabica de forma" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cTabica" type="number" step="0.01" placeholder="Ex: 30" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cCola" value="🧴 Cola" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cCola" type="number" step="0.01" placeholder="Ex: 10" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div></div></div>
     </div>
   </div>
+  <!-- BANCO DE DADOS - SÓ ACRESCENTADO, NÃO MEXEU EM NADA ANTES -->
+  <div id="bancoDados" style="background:#fff;border:2px solid #111;border-radius:14px;padding:14px;margin:14px 0">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <div><b style="font-size:14px">💾 MEUS ORÇAMENTOS SALVOS</b><div style="font-size:11px;color:#666">Cada serviço fica salvo! Abre de novo quando quiser.</div></div>
+      <button id="btnSalvarOrcamento" type="button" style="background:#16a34a;color:#fff;border:none;padding:10px 14px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer">💾 SALVAR ESTE ORÇAMENTO</button>
+    </div>
+    <div id="listaOrcamentosSalvos" style="margin-top:10px"></div>
+    <div id="msgBancoDados" style="font-size:11px;color:#16a34a;font-weight:700;margin-top:6px"></div>
+  </div>
   <div class="previa"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:11px;opacity:0.7">TOTAL GERAL (VENDA)</div><div id="totalGeral">R$ 0,00</div><div id="totalCustoLucro" style="font-size:11px;margin-top:6px;opacity:0.9">Custo: R$ 0,00 | Lucro: R$ 0,00</div></div><div style="text-align:right;font-size:10px;opacity:0.7">Só você vê custo/lucro<br>Cliente vê só total venda no PDF</div></div></div>
   <div id="areaLinkPlataforma"><b style="font-size:13px">Link plataforma com dados:</b><textarea id="linkGerado" readonly></textarea><div style="display:flex;gap:8px"><button id="btnCopiarLink" style="flex:1;background:#111;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer">COPIAR LINK</button><button id="btnAbrirCel" style="flex:1;background:#d4af37;border:none;padding:10px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer">ABRIR</button></div></div>
   <div id="status"></div>
@@ -518,6 +527,68 @@ document.addEventListener('DOMContentLoaded',()=>{
     inp.addEventListener('input',()=>{ try{localStorage.setItem('kiza_label_'+inp.dataset.for, inp.value);}catch(e){} });
     inp.addEventListener('focus',()=>{ inp.select(); });
   });
+  // ===== BANCO DE DADOS - SÓ ACRESCENTADO, NÃO MEXEU EM NADA ANTES =====
+  function getOrcamentosSalvos(){ try{ return JSON.parse(localStorage.getItem('kiza_orcamentos_salvos')||'[]'); }catch(e){ return []; } }
+  function setOrcamentosSalvos(arr){ try{ localStorage.setItem('kiza_orcamentos_salvos', JSON.stringify(arr)); }catch(e){} }
+  function calcularTotalVendaAtual(){ let t=0; try{ comodos.forEach(co=>{ co.servicos.forEach(sid=>{ let s=servicos.find(x=>x.id==sid); if(s) t+=calcBase(co,s).base*s.valor; }); }); }catch(e){} return t; }
+  function getDespesasAtuais(){ let out={}; ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(id=>{ let el=document.getElementById(id); if(el) out[id]=el.value||''; }); return out; }
+  function getLabelsAtuais(){ let out={}; try{ document.querySelectorAll('.labelDespesa').forEach(inp=>{ out[inp.dataset.for]=inp.value; }); }catch(e){} return out; }
+  function renderOrcamentosSalvos(){
+    let lista=document.getElementById('listaOrcamentosSalvos'); if(!lista) return;
+    let arr=getOrcamentosSalvos();
+    if(arr.length===0){ lista.innerHTML='<div style="font-size:12px;color:#888;background:#f9f9f9;border-radius:10px;padding:10px">Nenhum orçamento salvo ainda.<br>Faça o orçamento e clique em <b>💾 SALVAR ESTE ORÇAMENTO</b> que ele fica guardado aqui!</div>'; return; }
+    lista.innerHTML=arr.map((o,i)=>{
+      let data=o.data||''; let nome=(o.clienteNome||'Sem nome'); let total=(o.totalVenda||0); let qtd=(o.comodos||[]).length;
+      let servNomes=[]; try{ (o.servicos||[]).forEach(s=>{ servNomes.push(s.nome); }); }catch(e){}
+      return '<div style="border:1px solid #ddd;border-radius:10px;padding:10px;margin-bottom:8px;background:#fff8e1">'
+        +'<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div><b style="font-size:13px">📋 '+nome.replace(/</g,'&lt;')+'</b> <span style="font-size:11px;color:#666">'+data+'</span><br><span style="font-size:11px;color:#666">'+qtd+' item(s) • '+servNomes.join(', ').slice(0,120)+'</span></div>'
+        +'<div style="text-align:right"><b style="font-size:14px;color:#16a34a">R$ '+Number(total).toFixed(2).replace('.',',')+'</b></div></div>'
+        +'<div style="display:flex;gap:6px;margin-top:8px"><button type="button" onclick="abrirOrcamentoSalvo('+i+')" style="flex:1;background:#111;color:#fff;border:none;padding:8px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer">📂 ABRIR</button>'
+        +'<button type="button" onclick="duplicarOrcamentoSalvo('+i+')" style="flex:1;background:#fff;border:1px solid #111;padding:8px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer">📄 DUPLICAR</button>'
+        +'<button type="button" onclick="excluirOrcamentoSalvo('+i+')" style="background:#fee;border:1px solid #fbb;padding:8px 10px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer">🗑️</button></div></div>';
+    }).join('');
+  }
+  function salvarOrcamentoAtual(){
+    let nome=(document.getElementById('inputClienteTop')?.value||'').trim() || clienteNome || '';
+    if(!nome){ let n=prompt('Nome do cliente para salvar? Ex: Danilo'); if(!n) return; nome=n.trim(); }
+    if(comodos.length===0){ alert('Faça o orçamento primeiro! Adicione pelo menos 1 item.'); return; }
+    let arr=getOrcamentosSalvos();
+    let agora=new Date(); let data=agora.toLocaleDateString('pt-BR')+' '+agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    let novo={ id:Date.now(), clienteNome:nome, telefoneCli:(document.getElementById('inputTelefoneTop')?.value||telefoneCli||''), enderecoCli:(document.getElementById('inputEnderecoTop')?.value||enderecoCli||''), data:data, comodos:JSON.parse(JSON.stringify(comodos)), servicos:JSON.parse(JSON.stringify(servicos)), despesas:getDespesasAtuais(), labels:getLabelsAtuais(), despesaTotal:(document.getElementById('despesaTotalObra')?.value||''), totalVenda:calcularTotalVendaAtual() };
+    arr.unshift(novo); setOrcamentosSalvos(arr); renderOrcamentosSalvos();
+    let msg=document.getElementById('msgBancoDados'); if(msg) msg.textContent='✅ Salvo! "'+nome+'" - R$ '+novo.totalVenda.toFixed(2).replace('.',',')+' - '+data;
+    try{ showStatus('✅ Orçamento salvo!'); }catch(e){}
+  }
+  function abrirOrcamentoSalvo(i){
+    let arr=getOrcamentosSalvos(); let o=arr[i]; if(!o) return;
+    if(!confirm('Abrir "'+o.clienteNome+'"? O orçamento atual na tela vai ser substituído pelo salvo.')) return;
+    try{
+      comodos=JSON.parse(JSON.stringify(o.comodos||[])); servicos=JSON.parse(JSON.stringify(o.servicos||[]));
+      clienteNome=o.clienteNome||''; telefoneCli=o.telefoneCli||''; enderecoCli=o.enderecoCli||'';
+      let ic=document.getElementById('inputClienteTop'); if(ic) ic.value=clienteNome;
+      let it=document.getElementById('inputTelefoneTop'); if(it) it.value=telefoneCli;
+      let ie=document.getElementById('inputEnderecoTop'); if(ie) ie.value=enderecoCli;
+      if(o.labels){ document.querySelectorAll('.labelDespesa').forEach(inp=>{ if(o.labels[inp.dataset.for]) inp.value=o.labels[inp.dataset.for]; }); }
+      if(o.despesas){ Object.keys(o.despesas).forEach(id=>{ let el=document.getElementById(id); if(el) el.value=o.despesas[id]; }); }
+      let dt=document.getElementById('despesaTotalObra'); if(dt) dt.value=o.despesaTotal||'';
+      try{ localStorage.setItem('kiza_comodos_final', JSON.stringify(comodos)); localStorage.setItem('kiza_serv_final', JSON.stringify(servicos)); }catch(e){}
+      render(); atualizarCustoSimples(); renderOrcamentosSalvos();
+      let msg=document.getElementById('msgBancoDados'); if(msg) msg.textContent='📂 Aberto! "'+o.clienteNome+'" - '+o.data;
+      window.scrollTo({top:0,behavior:'smooth'});
+    }catch(e){ alert('Não consegui abrir esse orçamento.'); }
+  }
+  function duplicarOrcamentoSalvo(i){
+    let arr=getOrcamentosSalvos(); let o=arr[i]; if(!o) return;
+    let copia=JSON.parse(JSON.stringify(o)); copia.id=Date.now(); copia.clienteNome=o.clienteNome+' (cópia)'; let agora=new Date(); copia.data=agora.toLocaleDateString('pt-BR')+' '+agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    arr.unshift(copia); setOrcamentosSalvos(arr); renderOrcamentosSalvos();
+  }
+  function excluirOrcamentoSalvo(i){
+    let arr=getOrcamentosSalvos(); let o=arr[i]; if(!o) return;
+    if(!confirm('Excluir "'+o.clienteNome+'" do banco?')) return;
+    arr.splice(i,1); setOrcamentosSalvos(arr); renderOrcamentosSalvos();
+  }
+  // Liga botão SALVAR e mostra lista ao abrir
+  try{ let b=document.getElementById('btnSalvarOrcamento'); if(b) b.addEventListener('click', salvarOrcamentoAtual); renderOrcamentosSalvos(); }catch(e){}
   document.getElementById('btnPdf').addEventListener('click',gerarPDF);
   document.getElementById('btnLinkPlataforma').addEventListener('click',gerarLinkPlataforma);
   function copiarTextoRobusto(txt){
