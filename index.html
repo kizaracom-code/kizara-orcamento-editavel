@@ -1,154 +1,648 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KIZARA - Orçamento Corrigido 100%</title>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KIZARA - Orçamento Universal - 7 Serviços</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-*{box-sizing:border-box}body{font-family:Arial,sans-serif;margin:0;background:#f2f2f2;color:#111;padding:12px}
-.wrap{max-width:980px;margin:auto;background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.1)}
-h1{margin:0;font-size:22px} .sub{color:#666;font-size:13px}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.row input,.row select{padding:10px;border:1px solid #ccc;border-radius:8px;flex:1;min-width:140px}
-button{padding:10px 14px;border:0;border-radius:8px;cursor:pointer;font-weight:700} .green{background:#16a34a;color:#fff}.blue{background:#2563eb;color:#fff}.gray{background:#e5e7eb}.gold{background:#f59e0b;color:#fff}.red{background:#dc2626;color:#fff}
-.card{border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin:10px 0}
-.card h3{margin:0 0 8px}.svc{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0;padding:8px;background:#f9fafb;border-radius:8px}
-.svc input{padding:8px;border:1px solid #ccc;border-radius:6px}.svc input[type=number]{width:90px}.svc input[type=text]{flex:1;min-width:120px}
-.totais{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
-.tot{background:#111;color:#fff;border-radius:10px;padding:12px;text-align:center}.tot small{display:block;opacity:.8}.tot b{font-size:20px;display:block}.tot .rs{font-size:18px;color:#4ade80;margin-top:4px;font-weight:800}
-.desp{display:flex;gap:8px;margin:6px 0}.desp input{padding:9px;border:1px solid #ccc;border-radius:8px}.desp .nome{flex:1}.desp .valor{width:140px}
-.lock{border:2px solid #f59e0b;background:#fffbeb;padding:10px;border-radius:10px;margin:10px 0;display:none}
-@media(max-width:640px){.totais{grid-template-columns:repeat(2,1fr)}}
-@media print{button,.no-print{display:none!important}body{background:#fff}}
-</style></head>
-<body><div class="wrap">
-<h1>KIZARA 💰 Orçamento</h1><div class="sub">V-CORRIGIDA-100 • Sem 7 padrão • Abre zerada • Comprador = dono do app • Dono da obra recebe só o PDF</div>
-<div id="avisoCliente" class="lock">📄 DONO DA OBRA — Você recebe só o PDF do orçamento. Peça o PDF ao profissional que fez o orçamento. Não é preciso abrir o app.</div>
-
-<div class="row no-print"><input id="cliente" placeholder="Nome do cliente"><input id="whats" placeholder="WhatsApp / ID"><input id="custo" type="number" step="0.01" placeholder="Custo / mão de obra R$"></div>
-
-<div class="no-print row"><button class="green" onclick="addLocal()">+ ITEM / LOCAL</button><button class="blue" onclick="addServicoGlobal()">+ SERVIÇO</button><button class="gray" onclick="window.print()">🖨️ PDF / IMPRIMIR</button><button class="gray" onclick="exportar()">💾 EXPORTAR BANCO</button><button class="gray" onclick="limparTudo()">🧹 ZERAR TUDO</button></div>
-
-<div id="locais"></div>
-
-<div class="card"><h3>📊 TOTAIS — só soma se tiver serviço</h3>
-<div class="totais">
-<div class="tot"><small>TOTAL M²</small><b id="tM2">0,00</b><div class="rs" id="rM2">R$ 0,00</div></div>
-<div class="tot"><small>TOTAL ML</small><b id="tMl">0,00</b><div class="rs" id="rMl">R$ 0,00</div></div>
-<div class="tot"><small>TOTAL PAREDE</small><b id="tPar">0,00</b><div class="rs" id="rPar">R$ 0,00</div></div>
-<div class="tot"><small>M² + ML + PAREDE</small><b id="tGeral">0,00</b><div class="rs" id="rGeral">R$ 0,00</div></div>
-</div>
-<div><b>TOTAL SERVIÇOS: <span id="totalServ">R$ 0,00</span></b> &nbsp; | &nbsp; Despesas: <span id="totalDesp">R$ 0,00</span> &nbsp; | &nbsp; <b>LUCRO: <span id="lucro">R$ 0,00</span></b></div>
-</div>
-
-<div class="card"><h3>🧾 Despesas — clique no nome para editar (nome salva, valor zera ao abrir base limpa)</h3><div id="despesas"></div><button class="gray no-print" onclick="addDespesa()">+ Despesa</button></div>
-
-<div class="card no-print"><h3>🗄️ Banco de dados (neste aparelho)</h3><div id="bancoLista"></div><div class="row"><input id="nomeOrc" placeholder="Nome para salvar no banco ex: Sala Maria"><button class="blue" onclick="salvarBanco()">SALVAR NO BANCO</button><input type="file" id="imp" accept=".json" onchange="importar(event)"></div><p class="sub">O banco salva orçamentos. Abrir a base limpa NÃO restaura os 7 serviços — eles não existem mais. Só carrega o que você salvou.</p></div>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,Arial,sans-serif}
+body{background:#f6f5f0;color:#1a1a1a;padding:12px}
+#app{max-width:1100px;margin:0 auto}
+.header{background:#111;color:#fff;border-radius:18px;padding:18px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+#logoEdit{width:64px;height:64px;border-radius:50%;border:3px solid #d4af37;background:#222;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0}
+#logoEdit img{width:100%;height:100%;object-fit:cover;display:none}
+#logoTxt{font-weight:900;color:#d4af37;font-size:14px}
+.empresaBox{flex:1;min-width:200px}
+#nomeEmpresa{font-size:22px;font-weight:800;cursor:pointer}
+#subEmpresa,#telEmpresa,#cidadeEmpresa{font-size:12px;opacity:0.8;cursor:pointer;margin-top:2px;display:inline-block;margin-right:12px}
+.topbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.topbar button{border:none;border-radius:10px;padding:10px 14px;font-weight:700;font-size:12px;cursor:pointer}
+#btnZerar{background:#fff;border:1px solid #ddd}
+#btnComodo{background:#111;color:#fff}
+#btnNovoServ{background:#fff;border:1px solid #111}
+#btnLinkPlataforma{background:#d4af37;color:#111}
+#btnPdf{background:#16a34a;color:#fff}
+.card{background:#fff;border-radius:16px;border:1px solid #eee;padding:16px}
+#listaComodos{display:flex;flex-direction:column;gap:10px}
+.comodoItem{border:1px solid #eee;border-radius:12px;padding:10px 12px}
+.comodoHead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.comodoMeta{font-size:11px;color:#666}
+.servCheck{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.servCheck label{font-size:11px;background:#f6f5f0;border:1px solid #e9e1cc;padding:4px 8px;border-radius:20px;cursor:pointer}
+.servCheck label.checked{background:#111;color:#fff;border-color:#111}
+#gridServicos{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.servCard{border:1px solid #e5ddd0;border-radius:12px;padding:10px;background:#fff}
+.previa{background:#111;color:#fff;border-radius:16px;padding:16px;margin-top:12px}
+#totalGeral{font-size:28px;font-weight:900}
+#areaLinkPlataforma{display:none;background:#fff;border:2px dashed #d4af37;border-radius:14px;padding:14px;margin-top:12px}
+#areaLinkPlataforma textarea{width:100%;height:80px;border:1px solid #ddd;border-radius:10px;padding:10px;font-size:11px;margin:8px 0}
+#status{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 14px;border-radius:20px;font-size:11px;display:none;z-index:999}
+.modalOverlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modalBox{background:#fff;border-radius:18px;padding:18px;width:100%;max-width:480px}
+.modalBox input,.modalBox select{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin-bottom:8px}
+.modalBox .actions{display:flex;gap:8px;margin-top:6px}
+.modalBox .actions button{flex:1;padding:10px;border-radius:10px;border:none;font-weight:700;font-size:12px;cursor:pointer}
+.btnPrimary{background:#111;color:#fff}
+.btnGhost{background:#f3f3f3}
+#avisoCliente{background:#e0f2fe;border:1px solid #bae6fd;color:#0c4a6e;padding:10px 14px;border-radius:12px;font-size:12px;font-weight:700;margin-bottom:12px;display:none}
+.mainGrid{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
+@media(max-width:800px){.mainGrid{grid-template-columns:1fr}}
+.clienteBar{background:#fff;border-radius:14px;padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border:1px solid #e9e5d9;margin-bottom:12px}
+.clienteBar input{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:13px}
+.clienteBar label{font-size:11px;font-weight:700;color:#8a7d5a;margin-bottom:4px;display:block}
+#bannerPromo{background:#fff8e1;border:1px solid #f3d98a;color:#8a6d00;border-radius:12px;padding:10px 14px;font-size:12px;font-weight:700;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header"><div id="logoEdit"><img id="logoImg" alt="logo"><span id="logoTxt">K</span></div><div class="empresaBox"><div id="nomeEmpresa">kizaranet.com <span style='background:#0f0;color:#000;font-size:9px;padding:2px 5px;border-radius:5px;font-weight:900;vertical-align:middle'>V13-ID ✅</span></div><div><span id="subEmpresa">CNPJ 42.103.065/0001-02</span> <span id="telEmpresa">Tel: (84)998791222</span> <span id="cidadeEmpresa">LAGOA NOVA RN</span></div></div><button id="btnAtivarPro2" style="background:#d4af37;border:none;padding:8px 12px;border-radius:20px;font-weight:800;font-size:11px;cursor:pointer">ATIVAR PRO</button></div>
+  <div class="topbar"><button id="btnZerar">COMEÇAR DO ZERO</button><button id="btnComodo">+ ITEM / LOCAL</button><button id="btnNovoServ">+ SERVICO</button><button id="btnLinkPlataforma">LINK PLATAFORMA COM DADOS</button><button id="btnPdf">BAIXAR PDF</button></div>
+  <div id="avisoCliente">📱 MODO CLIENTE - COMEÇAR DO ZERO travado. Cliente não apaga obra.</div>
+  <div class="clienteBar"><div><label>Nome cliente obra</label><input id="inputClienteTop" placeholder="Nome do cliente"></div><div><label>Telefone cliente</label><input id="inputTelefoneTop" placeholder="(00) 00000-0000"></div><div><label>Endereço obra</label><input id="inputEnderecoTop" placeholder="Rua, número, bairro"></div></div>
+  <div id="painelDono" style="display:none;background:#111;border:2px solid #d4af37;border-radius:14px;padding:14px;margin-bottom:12px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="color:#d4af37;font-size:13px">🔐 PAINEL DONO - Gerador de Licenças</b><span id="nextIdInfo" style="font-size:10px;color:#aaa"></span></div>
+    <div style="margin-bottom:8px;display:flex;gap:6px"><input id="inputNomeClienteLic" placeholder="Nome do cliente (ex: João - Lagoa Nova)" style="flex:1;background:#222;color:#fff;border:1px solid #444;border-radius:8px;padding:9px 10px;font-size:11px"><input id="inputTelClienteLic" placeholder="Tel" style="width:110px;background:#222;color:#fff;border:1px solid #444;border-radius:8px;padding:9px 10px;font-size:11px"></div>
+    <div style="margin-bottom:8px;display:flex;gap:6px"><button id="btnLimparHist" style="flex:1;background:#222;color:#ff6b6b;border:1px solid #ff6b6b;border-radius:8px;padding:8px;font-size:11px;font-weight:700;cursor:pointer">🗑️ LIMPAR HISTÓRICO - Deixar só 1º cliente (DANILO)</button></div>
+    <div style="margin-bottom:8px;display:flex;gap:6px"><input id="inputDeviceIdCliente" placeholder="ID do celular do cliente (ex: A7F9K2L0) - para trava" style="flex:1;background:#111;color:#0f0;border:1px solid #0f0;border-radius:8px;padding:9px 10px;font-size:11px;font-weight:700"><button id="btnColarId" style="background:#222;color:#0f0;border:1px solid #0f0;border-radius:8px;padding:8px 10px;font-size:10px;cursor:pointer">COLAR ID</button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button id="btnGerarVitalTravado" style="background:#0f0;color:#111;border:none;padding:12px;border-radius:10px;font-weight:900;font-size:11px;cursor:pointer">🔒 GERAR COM TRAVA ID</button><button id="btnGerar1Vital" style="background:#d4af37;color:#111;border:none;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR 1 VITALÍCIO</button><button id="btnGerar1Mensal" style="background:#fff;color:#111;border:1px solid #d4af37;padding:12px;border-radius:10px;font-weight:900;font-size:12px;cursor:pointer">GERAR 1 MENSAL (30d)</button></div>
+    <div id="ultimoGerado" style="background:#000;color:#0f0;padding:10px;border-radius:10px;margin-top:10px;font-family:monospace;font-size:11px;display:none"></div>
+    <textarea id="historicoGerados" style="width:100%;height:100px;margin-top:10px;background:#111;color:#aaa;border:1px solid #333;border-radius:10px;padding:8px;font-size:10px" placeholder="Histórico de códigos"></textarea>
+  </div>
+  <div id="bannerPromo"><span>🎁 TESTE GRÁTIS 2 ITENS / LOCAIS - Ative PRO para ilimitado</span><span id="bannerAcao" style="text-decoration:underline;cursor:pointer">Ativar</span></div>
+  <div class="mainGrid">
+    <div class="card"><h3 style="font-size:13px;margin-bottom:10px">ITENS / LOCAIS</h3><div id="listaComodos"></div></div>
+    <div class="card"><h3 style="font-size:13px;margin-bottom:10px">SERVIÇOS - 7 PADRÃO</h3><div id="gridServicos"></div></div>
+  </div>
+  <div class="card" style="margin-top:12px;border:2px solid #16a34a;background:#f0fdf4">
+    <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:13px">💰 CUSTO DESSA OBRA - Simples (não é fixo)</h3><button id="btnToggleCustoObra" onclick="let a=document.getElementById('areaCustoObraSimples'); if(a){ let escondido=a.style.display==='none'; a.style.display=escondido?'block':'none'; this.textContent=escondido?'ESCONDER ▲':'MOSTRAR CUSTO ▼'; }" style="background:#fff;border:1px solid #16a34a;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">ESCONDER ▲</button></div>
+    <div id="areaCustoObraSimples" style="display:block;margin-top:10px">
+      <div style="font-size:11px;color:#666;margin-bottom:8px">Cada obra muda! O programa soma os metros, você só joga a despesa total dessa obra e ele divide sozinho.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL M²</div><div id="totM2Display" style="font-size:18px;font-weight:900">0,00</div><div id="totM2Valor" style="font-size:12px;font-weight:800;color:#16a34a;margin-top:3px">R$ 0,00</div></div>
+        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL ML</div><div id="totMlDisplay" style="font-size:18px;font-weight:900">0,00</div><div id="totMlValor" style="font-size:12px;font-weight:800;color:#16a34a;margin-top:3px">R$ 0,00</div></div>
+        <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:#666">TOTAL PAREDE</div><div id="totParedeDisplay" style="font-size:18px;font-weight:900;color:#7c3aed">0,00</div><div id="totParedeValor" style="font-size:12px;font-weight:800;color:#16a34a;margin-top:3px">R$ 0,00</div></div>
+        <div style="background:#111;color:#fff;border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;opacity:0.7">M² + ML + PAREDE</div><div id="totSomaMetrosDisplay" style="font-size:18px;font-weight:900;color:#d4af37">0,00</div><div id="totSomaValor" style="font-size:12px;font-weight:800;color:#d4af37;margin-top:3px">R$ 0,00</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label style="font-size:11px;font-weight:700">💸 Despesa total dessa obra R$</label><input id="despesaTotalObra" type="number" step="0.01" placeholder="Ex: 850" style="width:100%;padding:10px;border:2px solid #16a34a;border-radius:10px;font-size:14px;font-weight:700"><div style="font-size:10px;color:#16a34a;font-weight:700;margin-top:3px">Preencha os campos detalhados abaixo que ele soma sozinho aqui!</div></div>
+        <div><label style="font-size:11px;font-weight:700">📦 Custo por metro (automático)</label><div id="custoPorMetroDisplay" style="padding:10px;background:#fff;border:1px dashed #16a34a;border-radius:10px;font-weight:900;font-size:14px;text-align:center">R$ 0,00 / metro</div></div>
+      </div>
+      <div id="resumoCustoSimples" style="background:#fff;border-radius:10px;padding:10px;margin-top:10px;font-size:12px;line-height:1.7"></div>
+      <div style="margin-top:10px"><div style="font-size:11px;font-weight:700;margin-bottom:6px">Detalhado (opcional - ele soma sozinho no total acima): <span style="font-weight:400;color:#16a34a">✏️ Clique no nome pra editar - fica universal! Ex: troca "Placa de gesso" por "Tinta", "Cimento", "Parafuso"... Salva sozinho!</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><input class="labelDespesa" data-for="cCombustivel" value="⛽ Combustível dessa obra" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cCombustivel" type="number" step="0.01" placeholder="Ex: 80" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cMaoDele" value="👷 Mão dele nessa obra" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cMaoDele" type="number" step="0.01" placeholder="Ex: 150" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cMaoFunc" value="👷‍♂️ Mão funcionários" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cMaoFunc" type="number" step="0.01" placeholder="Ex: 200" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cAlimentacao" value="🍽️ Alimentação" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cAlimentacao" type="number" step="0.01" placeholder="Ex: 60" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cPlaca" value="📦 Placa de gesso" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cPlaca" type="number" step="0.01" placeholder="Ex: 120" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cGessoPo" value="🧱 Gesso em pó" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cGessoPo" type="number" step="0.01" placeholder="Ex: 40" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cSisal" value="🧵 Fibra de sisal" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cSisal" type="number" step="0.01" placeholder="Ex: 20" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cArame" value="🔗 Arame" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cArame" type="number" step="0.01" placeholder="Ex: 15" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cTabica" value="📏 Tabica de forma" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cTabica" type="number" step="0.01" placeholder="Ex: 30" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div><div><input class="labelDespesa" data-for="cCola" value="🧴 Cola" title="Clique para editar o nome - universal!" style="width:100%;font-size:11px;border:1px dashed #ccc;border-radius:6px;padding:4px 6px;background:#fff8e1;font-weight:700;cursor:text"><input id="cCola" type="number" step="0.01" placeholder="Ex: 10" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px"></div></div></div>
+    </div>
+  </div>
+  <!-- BANCO DE DADOS - SÓ ACRESCENTADO, NÃO MEXEU EM NADA ANTES -->
+  <div id="bancoDados" style="background:#fff;border:2px solid #111;border-radius:14px;padding:14px;margin:14px 0">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <div><b style="font-size:14px">💾 MEUS ORÇAMENTOS SALVOS</b><div style="font-size:11px;color:#666">Cada serviço fica salvo! Abre de novo quando quiser.</div></div>
+      <button id="btnSalvarOrcamento" type="button" style="background:#16a34a;color:#fff;border:none;padding:10px 14px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer">💾 SALVAR ESTE ORÇAMENTO</button>
+    </div>
+    <div id="listaOrcamentosSalvos" style="margin-top:10px"></div>
+    <div id="msgBancoDados" style="font-size:11px;color:#16a34a;font-weight:700;margin-top:6px"></div>
+  </div>
+  <div class="previa"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:11px;opacity:0.7">TOTAL GERAL (VENDA)</div><div id="totalGeral">R$ 0,00</div><div id="totalCustoLucro" style="font-size:11px;margin-top:6px;opacity:0.9">Custo: R$ 0,00 | Lucro: R$ 0,00</div></div><div style="text-align:right;font-size:10px;opacity:0.7">Só você vê custo/lucro<br>Cliente vê só total venda no PDF</div></div></div>
+  <div id="areaLinkPlataforma"><b style="font-size:13px">Link plataforma com dados:</b><textarea id="linkGerado" readonly></textarea><div style="display:flex;gap:8px"><button id="btnCopiarLink" style="flex:1;background:#111;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer">COPIAR LINK</button><button id="btnAbrirCel" style="flex:1;background:#d4af37;border:none;padding:10px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer">ABRIR</button></div></div>
+  <div id="status"></div>
+  <div id="modal" class="modalOverlay"><div class="modalBox"><h3>Novo Item / Local</h3><input id="mNome" placeholder="Ex: Sala 5x4 ou Gol Branco"><div style="background:#fff8e1;border:1px solid #f3d98a;border-radius:8px;padding:8px;margin:8px 0"><div style="font-size:11px;font-weight:700;color:#8a6d00;margin-bottom:6px">📏 Medidas (opcional - só construção):</div><div style="display:flex;gap:8px"><input id="mC" type="number" step="0.01" placeholder="Compr. opcional"><input id="mL" type="number" step="0.01" placeholder="Larg. opcional"></div><div style="margin-top:8px"><div style="font-size:11px;font-weight:700;color:#8a6d00;margin-bottom:4px">📐 Altura da parede (pé direito) - VARIAVEL:</div><div style="display:flex;gap:6px;margin-bottom:6px"><button type="button" onclick="document.getElementById('mH').value='2.60'" style="flex:1;padding:7px;border:1px solid #d4af37;border-radius:8px;background:#fff;font-weight:700;cursor:pointer">2,60</button><button type="button" onclick="document.getElementById('mH').value='2.70'" style="flex:1;padding:7px;border:1px solid #d4af37;border-radius:8px;background:#fff;font-weight:700;cursor:pointer">2,70</button><button type="button" onclick="document.getElementById('mH').value='2.80'" style="flex:1;padding:7px;border:1px solid #d4af37;border-radius:8px;background:#fff8e1;font-weight:700;cursor:pointer">2,80</button><button type="button" onclick="document.getElementById('mH').value='3.00'" style="flex:1;padding:7px;border:1px solid #d4af37;border-radius:8px;background:#fff;font-weight:700;cursor:pointer">3,00</button></div><input id="mH" type="number" step="0.01" placeholder="Ou digite outra: ex 2.65, 2.90, 3.20..."></div><div style="font-size:10px;color:#888;margin-top:4px">Deixe em branco para carro, lava jato, etc (conta como 1 un)</div></div><div class="actions"><button class="btnGhost" onclick="fecharModal('modal')">Cancelar</button><button id="btnCriarComodo" class="btnPrimary">Criar Item / Local</button></div></div></div>
+  <div id="modalNovoServ" class="modalOverlay"><div class="modalBox"><h3>Novo Serviço</h3><input id="nsNome" placeholder="Nome - ex: Forro de gesso liso"><input id="nsPreco" type="number" step="0.01" placeholder="Preço de venda R$ - ex: 38"><input id="nsCusto" type="number" step="0.01" placeholder="Custo R$ por unidade - ex: 20 (material + mão de obra) - opcional"><label style="font-size:11px;font-weight:700;display:block;margin:4px 0 3px">Onde calcula?</label><select id="nsTipo"><option value="forro">🏠 Forro / Chão - lado x lado (m² chão)</option><option value="parede">🧱 Parede - 4 paredes (perímetro x altura)</option><option value="linear">📏 Linear - volta do cômodo (ml)</option><option value="un">🔢 Unidade - 1 por item</option></select><select id="nsUn"><option value="m2">m²</option><option value="ml">ml</option><option value="m">m</option><option value="un">un</option><option value="m3">m³</option><option value="pct">pct</option><option value="kg">kg</option><option value="hora">h</option><option value="dia">dia</option><option value="vb">vb</option></select><div style="font-size:11px;color:#666;background:#f6f5f0;padding:8px;border-radius:8px;margin-bottom:8px">Ex: Vende a R$38, custa R$20 = Lucro R$18 por m². Se deixar custo em branco, conta como R$0.</div><div class="actions"><button class="btnGhost" onclick="fecharModal('modalNovoServ')">Cancelar</button><button id="btnCriarServ" class="btnPrimary">Criar</button></div></div></div>
+  <div id="modalEditarServ" class="modalOverlay"><div class="modalBox"><h3>✏️ Editar Serviço - Nome, Preço e Custo</h3><input type="hidden" id="editServId"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Nome</label><input id="editServNome"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Unidade</label><select id="editServUnid"><option value="m2">m² - Metro quadrado</option><option value="ml">ml - Metro linear</option><option value="m">m - Metro</option><option value="un">un - Unidade</option><option value="m3">m³ - Metro cúbico</option><option value="pct">pct - Pacote</option><option value="kg">kg - Quilo</option><option value="hora">h - Hora</option><option value="dia">dia - Diária</option><option value="vb">vb - Verba</option></select><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Preço de venda R$</label><input id="editServValor" type="number" step="0.01"><label style="font-size:11px;font-weight:700;display:block;margin:6px 0 3px">Custo R$ por unidade (material + mão de obra)</label><input id="editServCusto" type="number" step="0.01" placeholder="Ex: 20"><div id="lucroPreview" style="font-size:12px;font-weight:700;color:#16a34a;margin:4px 0"></div><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarServ')">Cancelar</button><button onclick="salvarEdicaoServ()" class="btnPrimary">💾 Salvar nome, preço e custo</button></div></div></div>
+  <div id="modalLic" class="modalOverlay"><div class="modalBox"><h3>🔒 Ativar PRO</h3><div style="background:#111;border:1px solid #d4af37;border-radius:10px;padding:12px;margin-bottom:10px"><div style="font-size:11px;color:#aaa;font-weight:700">📱 SEU ID ÚNICO - Só funciona nesse celular:</div><div id="meuDeviceIdDisplay" style="font-family:monospace;font-size:22px;font-weight:900;color:#0f0;letter-spacing:2px;margin:8px 0;text-align:center">CARREGANDO...</div><div style="display:flex;gap:6px"><button id="btnCopiarMeuId" onclick="try{let id=getDeviceId(); if(navigator.clipboard) navigator.clipboard.writeText(id); showStatus('📋 ID copiado: '+id)}catch(e){}" style="flex:1;background:#d4af37;color:#111;border:none;padding:10px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer">📋 COPIAR MEU ID</button><button id="btnWhatsappId" onclick="try{let id=getDeviceId(); let msg=encodeURIComponent('Olá! Quero ativar vitalício KIZARA. Meu ID é: '+id+' - gera minha chave travada nesse celular por favor!'); window.open('https://wa.me/5584998791222?text='+msg,'_blank')}catch(e){}" style="flex:1;background:#25D366;color:#fff;border:none;padding:10px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer">💬 ENVIAR ID NO WHATSAPP</button></div><div style="font-size:11px;color:#ccc;margin-top:8px;line-height:1.4">1. Copie seu ID ou mande no WhatsApp pro dono (84) 99879-1222<br>2. Dono gera sua chave travada nesse ID<br>3. Cole a chave abaixo e ative - só vai funcionar nesse celular!</div></div><label style="font-size:11px;font-weight:700;display:block;margin:4px 0 3px">Cole sua chave travada aqui:</label><input id="inputLic" placeholder="KIZARANET-VITAL-XXXXXXXX-XXXX-YYYY ou KIZARANET-VITALICIO-XXXX-YYYY"><div class="actions"><button class="btnGhost" onclick="fecharModal('modalLic')">Depois</button><button id="btnAtivarPro" class="btnPrimary">Ativar PRO</button></div></div></div>
+  <div id="modalEditarEmpresa" class="modalOverlay"><div class="modalBox"><h3>Editar Empresa</h3><input id="editNomeEmp" placeholder="Nome"><input id="editSubEmp" placeholder="CNPJ"><input id="editTelEmp" placeholder="Tel"><input id="editCidadeEmp" placeholder="Cidade"><input id="inputLogo" type="file" accept="image/*" style="display:none"><button onclick="document.getElementById('inputLogo').click()" style="width:100%;padding:8px;border:1px dashed #d4af37;border-radius:10px;background:#fff8e1;font-size:11px;font-weight:700;margin-bottom:8px;cursor:pointer">Trocar Logo</button><div class="actions"><button class="btnGhost" onclick="fecharModal('modalEditarEmpresa')">Cancelar</button><button id="btnSalvarEmpresa" class="btnPrimary">Salvar</button></div></div></div>
 </div>
 <script>
-const $=id=>document.getElementById(id);
-const params=new URLSearchParams(location.search);
-// 3 PAPÉIS, SEM CONFUSÃO:
-// 1) PROPRIETÁRIO (Danilo) = único que gera chave de licença (não está neste app do comprador).
-// 2) COMPRADOR / DONO DO APP = quem comprou: cria itens/serviços, edita logo/empresa, salva/abre/exclui os orçamentos DELE. Só não gera chave.
-// 3) DONO DA OBRA = quem vai fazer a obra: NÃO abre o app, NÃO recebe link. Recebe só o PDF do orçamento.
-// MODO_CLIENTE abaixo é só p/ link antigo: dono da obra abre e vê só o aviso de PDF.
-const MODO_CLIENTE=params.get('cliente')==='1'||params.get('modo')==='cliente';
-let state={cliente:'',whats:'',custo:0,locais:[],despesas:[],servicosGlobais:[]};
-const NOMES_PADRAO=['Combustível dessa obra','Placa de gesso','Gesso em pó','Sisal','Cola','Mão dele','Despesa total dessa obra','Material extra','Transporte','Outros'];
-function fmt(v){return 'R$ '+(Number(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function br(v){return (Number(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function num(v){let s=String(v??'').replace(/\./g,'').replace(',','.');let n=parseFloat(s);return isNaN(n)?0:n}
-// NUNCA cria 7 serviços padrão. Lista começa vazia.
-function novoLocal(){return {nome:'',larg: '',comp:'',alt:'',servicos:[]}}
-function novaDespesa(nome){return {nome:nome||'',valor:''}}
-function initBaseLimpa(){
-  state={cliente:'',whats:'',custo:0,locais:[],despesas:NOMES_PADRAO.map(n=>novaDespesa(n)),servicosGlobais:[]};
-  // sem locais, sem serviços. Base 100% zerada.
+const SECRETO = 1397670, MOD = 1679616;
+function getDeviceId(){
+  let id=localStorage.getItem('kiza_device_id');
+  if(id) return id;
+  let r=Math.random().toString(36).substring(2,6).toUpperCase();
+  let fp=(navigator.userAgent.length+screen.width+screen.height).toString(36).toUpperCase();
+  let raw=(r+fp).replace(/[^A-Z0-9]/g,'').substring(0,8).padEnd(8,'X').substring(0,8);
+  localStorage.setItem('kiza_device_id',raw); return raw;
 }
-function salvarLocal(){try{localStorage.setItem('kizara_corr100',JSON.stringify(state))}catch(e){}}
-function carregarLink(){
-  if(params.get('d')){try{let d=JSON.parse(atob(decodeURIComponent(params.get('d')))); if(d&&Array.isArray(d.locais)&&Array.isArray(d.despesas)){state=d; return true}}catch(e){}}
-  return false;
+function gerarCodigoComDevice(deviceId){
+  deviceId=deviceId.replace(/[^A-Z0-9]/g,'').toUpperCase().substring(0,8).padEnd(8,'X');
+  let dv=fromB36(deviceId), obf=(dv*7919+SECRETO)%MOD, chk=(obf*13+SECRETO*7)%MOD;
+  return `KIZARANET-VITAL-${deviceId}-${toB36(obf,4)}-${toB36(chk,4)}`;
 }
-function carregar(){
-  // PRIORIDADE: 1) link com dados (cliente) 2) base limpa. NUNCA volta pros 7.
-  if(carregarLink()){render();return}
-  // Se abriu sem link, abre base limpa zerada, não restaura rascunho antigo com 7.
-  initBaseLimpa();
-  // Nomes de despesas personalizados salvos separadamente (só nomes, nunca valores)
-  try{let nomes=JSON.parse(localStorage.getItem('kizara_nomes_despesas')||'null'); if(Array.isArray(nomes)&&nomes.length) state.despesas=nomes.map(n=>novaDespesa(n))}catch(e){}
+
+const EMPRESA_FIXA = { nome: 'kizaranet.com', sub: 'CNPJ 42.103.065/0001-02', tel: 'Tel: (84)998791222', cid: 'LAGOA NOVA RN' };
+let empresaNome=EMPRESA_FIXA.nome,empresaSub=EMPRESA_FIXA.sub,empresaTel=EMPRESA_FIXA.tel,empresaCidade=EMPRESA_FIXA.cid,clienteNome='',telefoneCli='',enderecoCli='',comodos=[],servicos=[];
+
+function calcBase(co, s){
+  try{
+  let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1, hV=parseFloat(co.h)||2.8;
+  let a=(co.isUnidade? qV : cV*lV*qV);
+  let p=(co.isUnidade? qV : 2*(cV+lV)*qV);
+  let parede=(co.isUnidade? qV : p*hV);
+  let tipo=(s.tipo||'auto');
+  if(tipo==='auto'){
+    let n=(s.nome||'').toLowerCase();
+    if(n.includes('reboco')||n.includes('pelicula')||n.includes('película')||n.includes('massa')||n.includes('pintura')) tipo='parede';
+    else if(n.includes('tabica')||n.includes('dilata')||n.includes('roda')||n.includes('moldura')||n.includes('modura')) tipo='linear';
+    else if((s.un||s.unidade||'').toLowerCase()==='ml') tipo='linear';
+    else if((s.un||s.unidade||'').toLowerCase()==='un') tipo='un';
+    else tipo='forro';
+  }
+  if(tipo==='parede') return {base: parede, tipo:'parede', a:a, p:p, parede:parede};
+  if(tipo==='linear') return {base: p, tipo:'linear', a:a, p:p, parede:parede};
+  if(tipo==='un') return {base: 1, tipo:'un', a:a, p:p, parede:parede};
+  return {base: a, tipo:'forro', a:a, p:p, parede:parede};
+  }catch(e){ return {base:1, tipo:'forro', a:1, p:1, parede:1}; }
+}
+function editarAltura(i){ let co=comodos[i]; if(!co) return; let atual=(parseFloat(co.h)||2.8).toFixed(2); let nova = prompt('Altura da parede de '+co.nome+'? Atual: '+atual+'m. Digite ex 2.60, 2.70, 2.80, 3.00', atual); if(nova===null) return; let v=parseFloat(nova.replace(',','.'))||2.8; co.h=v; render(); showStatus('✅ Altura de '+co.nome+' atualizada para '+v.toFixed(2)+'m'); }
+function somarDespesasDetalhadas(){ let ids=['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola']; let soma=0; ids.forEach(id=>{ let el=document.getElementById(id); let v=parseFloat(el?.value||'0')||0; soma+=v; }); let totalEl=document.getElementById('despesaTotalObra'); if(totalEl && soma>0){ totalEl.value=soma.toFixed(2); try{localStorage.setItem('kiza_despesa_obra', soma.toFixed(2));}catch(e){} } return soma; }
+function atualizarCustoSimples(){ try{ let totalM2=0, totalMl=0, totalParede=0, totalVenda=0; let totalVendaM2=0, totalVendaMl=0, totalVendaParede=0, totalVendaUn=0; comodos.forEach(co=>{ co.servicos.forEach(sid=>{ let s=servicos.find(x=>x.id==sid); if(!s) return; let cb=calcBase(co,s); let v=cb.base*s.valor; totalVenda+=v; if(cb.tipo==='parede'){ totalParede+=cb.base; totalVendaParede+=v; } else if(cb.tipo==='linear'){ totalMl+=cb.base; totalVendaMl+=v; } else if(cb.tipo==='un'){ totalVendaUn+=v; } else { totalM2+=cb.base; totalVendaM2+=v; } }); }); let soma=totalM2+totalMl+totalParede; let despesa=parseFloat(document.getElementById('despesaTotalObra')?.value || localStorage.getItem('kiza_despesa_obra') || '0')||0; let custoPorMetro=soma>0?despesa/soma:0; let lucro=totalVenda-despesa; let elM2=document.getElementById('totM2Display'); if(elM2) elM2.textContent=totalM2.toFixed(2).replace('.',','); let elMl=document.getElementById('totMlDisplay'); if(elMl) elMl.textContent=totalMl.toFixed(2).replace('.',','); let elPar=document.getElementById('totParedeDisplay'); if(elPar) elPar.textContent=totalParede.toFixed(2).replace('.',','); let elSoma=document.getElementById('totSomaMetrosDisplay'); if(elSoma) elSoma.textContent=soma.toFixed(2).replace('.',','); let elM2V=document.getElementById('totM2Valor'); if(elM2V) elM2V.textContent='R$ '+totalVendaM2.toFixed(2).replace('.',','); let elMlV=document.getElementById('totMlValor'); if(elMlV) elMlV.textContent='R$ '+totalVendaMl.toFixed(2).replace('.',','); let elParV=document.getElementById('totParedeValor'); if(elParV) elParV.textContent='R$ '+totalVendaParede.toFixed(2).replace('.',','); let elSomaV=document.getElementById('totSomaValor'); if(elSomaV) elSomaV.textContent='R$ '+totalVenda.toFixed(2).replace('.',','); let elCpm=document.getElementById('custoPorMetroDisplay'); if(elCpm) elCpm.textContent='R$ '+custoPorMetro.toFixed(2).replace('.',',')+' / metro'; let elRes=document.getElementById('resumoCustoSimples'); if(elRes){ if(despesa===0){ elRes.innerHTML='👉 Exemplo: Sala 5x5 h 2.80 tem 25m² chão + 20ml + 56m² parede = 101 metros.'; } else { elRes.innerHTML='📐 Soma: '+totalM2.toFixed(2)+'m² + '+totalMl.toFixed(2)+'ml + '+totalParede.toFixed(2)+'m² parede = <b>'+soma.toFixed(2)+' metros</b><br>💸 Despesa: R$ '+despesa.toFixed(2)+' | 📦 Custo/metro: R$ '+custoPorMetro.toFixed(2)+'<br>💰 Venda: R$ '+totalVenda.toFixed(2)+' - Despesa R$ '+despesa.toFixed(2)+' = <b>Lucro R$ '+lucro.toFixed(2)+'</b>'; } } }catch(e){} }
+function toB36(n,len){let c="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",r="";for(let i=0;i<len;i++){r=c[n%36]+r;n=Math.floor(n/36);}return r;}
+function fromB36(s){return parseInt(s,36);}
+function validarLicencaSegura(codigo){
+  codigo=codigo.trim().toUpperCase();
+  let m2=codigo.match(/^KIZARANET-VITAL-([A-Z0-9]{8})-([A-Z0-9]{4})-([A-Z0-9]{4})$/);
+  if(m2){
+    let dev=m2[1], xxxx=m2[2], yyyy=m2[3];
+    let dv=fromB36(dev), xv=fromB36(xxxx), yv=fromB36(yyyy);
+    if(isNaN(dv)||isNaN(xv)||isNaN(yv)) return null;
+    let expObf=(dv*7919+SECRETO)%MOD;
+    if(xv!==expObf) return null;
+    let expChk=(xv*13+SECRETO*7)%MOD;
+    if(yv!==expChk) return null;
+    let meu=getDeviceId();
+    if(dev!==meu) return {tipo:'vitalicio', valido:false, motivo:'device_mismatch', esperado:dev, meu:meu};
+    return {tipo:'vitalicio', valido:true, travado:true};
+  }
+  let m=codigo.match(/^KIZARANET-(VITALICIO|MENSAL)-([A-Z0-9]{4})-([A-Z0-9]{4})$/);
+  if(m){
+    let tipo=m[1], xxxx=m[2], yyyy=m[3];
+    let xv=fromB36(xxxx), yv=fromB36(yyyy);
+    if(isNaN(xv)||isNaN(yv)) return null;
+    let esperado=(xv*13+SECRETO*7)%MOD;
+    if(yv===esperado) return {tipo:tipo.toLowerCase(), valido:true};
+    return null;
+  }
+  return null;
+}
+const SECRETO_DONO = 1397670, MOD_DONO = 1679616, PRIME_DONO = 7919;
+function toB36d(n,len){let c="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",r="";for(let i=0;i<len;i++){r=c[n%36]+r;n=Math.floor(n/36);}return r;}
+function gerarCodigoDono(id,tipo){
+  let obf=(id*PRIME_DONO + SECRETO_DONO) % MOD_DONO;
+  let chk=(obf*13 + SECRETO_DONO*7) % MOD_DONO;
+  let xxxx=toB36d(obf,4), yyyy=toB36d(chk,4);
+  if(tipo==='vitalicio') return `KIZARANET-VITALICIO-${xxxx}-${yyyy}`;
+  else return `KIZARANET-MENSAL-${xxxx}-${yyyy}`;
+}
+function getNextId(){let n=parseInt(localStorage.getItem('kiza_next_id')||'1',10);return n;}
+function setNextId(n){localStorage.setItem('kiza_next_id',n.toString()); let el=document.getElementById('nextIdInfo'); if(el) el.textContent='Próximo ID: '+n;}
+function renderHist(){
+  let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); 
+  let ta=document.getElementById('historicoGerados'); 
+  if(ta){
+    ta.value=hist.map(h=>{
+      if(typeof h==='string') return h;
+      let cliente=h.cliente||'SEM NOME';
+      let tel=h.tel? ' '+h.tel : '';
+      let data=h.data? ' '+h.data : '';
+      return cliente+tel+' -> '+h.cod+data;
+    }).join('\n');
+  }
+}
+function gerarUm(tipo){
+  let nomeInput=document.getElementById('inputNomeClienteLic');
+  let telInput=document.getElementById('inputTelClienteLic');
+  let nomeCli = nomeInput ? nomeInput.value.trim() : '';
+  let telCli = telInput ? telInput.value.trim() : '';
+  if(!nomeCli){
+    nomeCli = prompt('Nome do cliente que vai receber a senha?');
+    if(!nomeCli || nomeCli.trim()===''){ alert('Digite o nome!'); return; }
+    if(nomeInput) nomeInput.value=nomeCli;
+  }
+  let id=getNextId();
+  let cod=gerarCodigoDono(id,tipo);
+  let el=document.getElementById('ultimoGerado');
+  el.style.display='block';
+  el.innerHTML=`<div style="color:#d4af37">ID ${id} - ${tipo.toUpperCase()} - ${nomeCli}</div><div style="font-size:14px;font-weight:900;margin:6px 0">${cod}</div><div style="font-size:11px;color:#aaa">Cliente: ${nomeCli}${telCli?' - '+telCli:''}</div><button onclick="navigator.clipboard.writeText('${cod}')" style="background:#d4af37;color:#111;border:none;padding:6px 10px;border-radius:6px;font-weight:800;font-size:11px;cursor:pointer;margin-right:6px">COPIAR SENHA</button><button onclick="navigator.clipboard.writeText('${nomeCli} - ${cod}')" style="background:#fff;color:#111;border:1px solid #d4af37;padding:6px 10px;border-radius:6px;font-weight:800;font-size:11px;cursor:pointer">COPIAR NOME+SENHA</button>`;
+  let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]'); 
+  let agora=new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR').substring(0,5);
+  hist.unshift({cod:cod, cliente:nomeCli, tel:telCli, data:agora, tipo:tipo, id:id}); 
+  localStorage.setItem('kiza_hist_cod',JSON.stringify(hist)); 
+  renderHist();
+  setNextId(id+1);
+  showStatus('✅ '+nomeCli+': '+cod);
+}
+
+function atualizarMeuIdDisplay(){ try{ let el=document.getElementById('meuDeviceIdDisplay'); if(el){ let id=getDeviceId(); el.textContent=id.substring(0,4)+'-'+id.substring(4,8); } }catch(e){} }
+function abrirModal(id){let el=document.getElementById(id); if(!el) return; el.style.display='flex'; if(id==='modalLic'){ setTimeout(()=>{ try{ atualizarMeuIdDisplay(); }catch(e){} },100); } }
+function fecharModal(id){document.getElementById(id).style.display='none';}
+function showStatus(msg){let s=document.getElementById('status'); s.textContent=msg; s.style.display='block'; setTimeout(()=>s.style.display='none',3000);}
+
+function editarNome(id){
+  let s=servicos.find(x=>x.id==id); if(!s) return;
+  document.getElementById('editServId').value=s.id;
+  document.getElementById('editServNome').value=s.nome;
+  document.getElementById('editServUnid').value=s.un||s.unidade||'m2';
+  document.getElementById('editServValor').value=s.valor;
+  document.getElementById('editServCusto').value=s.custo||0;
+  let lp=document.getElementById('lucroPreview'); if(lp){ let lucro=(s.valor||0)-(s.custo||0); lp.textContent='Lucro por unidade: R$ '+lucro.toFixed(2); }
+  abrirModal('modalEditarServ');
+}
+function salvarEdicaoServ(){
+  let id=parseInt(document.getElementById('editServId').value,10);
+  let s=servicos.find(x=>x.id==id); if(!s) return;
+  s.nome=document.getElementById('editServNome').value.trim()||s.nome;
+  let unid=document.getElementById('editServUnid').value;
+  s.un=unid; s.unidade=unid;
+  s.valor=parseFloat(document.getElementById('editServValor').value)||0;
+  s.custo=parseFloat(document.getElementById('editServCusto')?document.getElementById('editServCusto').value:0)||0;
+  fecharModal('modalEditarServ');
   render();
+  showStatus('✅ Editado: '+s.nome+' Venda R$'+s.valor+' Custo R$'+s.custo+' Lucro R$'+(s.valor-s.custo).toFixed(2));
 }
-function syncInputs(){
-  state.cliente=$('cliente').value; state.whats=$('whats').value; state.custo=num($('custo').value);
-  // locais e serviços lidos no render via data attributes
-  document.querySelectorAll('[data-local]').forEach(el=>{
-    let i=+el.dataset.local; let L=state.locais[i]; if(!L)return;
-    if(el.dataset.f==='nome')L.nome=el.value; if(el.dataset.f==='larg')L.larg=el.value; if(el.dataset.f==='comp')L.comp=el.value; if(el.dataset.f==='alt')L.alt=el.value;
-  });
-  document.querySelectorAll('[data-svc]').forEach(el=>{
-    let li=+el.dataset.local, si=+el.dataset.svc; let S=state.locais[li]?.servicos[si]; if(!S)return;
-    if(el.dataset.f==='nome')S.nome=el.value; if(el.dataset.f==='tipo')S.tipo=el.value; if(el.dataset.f==='qtd')S.qtd=el.value; if(el.dataset.f==='preco')S.preco=el.value; if(el.dataset.f==='on')S.on=el.checked;
-  });
-  document.querySelectorAll('[data-desp]').forEach(el=>{
-    let i=+el.dataset.desp; if(el.dataset.f==='nome')state.despesas[i].nome=el.value; if(el.dataset.f==='valor')state.despesas[i].valor=el.value;
-  });
-  // salva só nomes das despesas
-  try{localStorage.setItem('kizara_nomes_despesas',JSON.stringify(state.despesas.map(d=>d.nome)))}catch(e){}
+function editarPreco(id){ editarNome(id); }
+function removerServico(id){if(!confirm('Remover serviço?'))return; servicos=servicos.filter(x=>x.id!=id); comodos.forEach(c=>{c.servicos=c.servicos.filter(sid=>sid!=id);}); render();}
+function toggleServico(cIdx,sId){let c=comodos[cIdx]; if(!c)return; if(c.servicos.includes(sId))c.servicos=c.servicos.filter(x=>x!=sId); else c.servicos.push(sId); try{localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));localStorage.setItem('kiza_serv_final',JSON.stringify(servicos))}catch(e){} render();}
+function removerComodo(idx){if(!confirm('Remover este item?'))return; comodos.splice(idx,1); render();}
+function restaurarServicosPadrao(){
+  if(!confirm('Restaurar 7 serviços padrão?')) return;
+  servicos=[];
+  localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));
+  render();
+  showStatus('✅ 7 serviços restaurados!');
 }
-function calc(){
-  let m2=0,ml=0,par=0,rM2=0,rMl=0,rPar=0;
-  state.locais.forEach(L=>{
-    L.servicos.forEach(S=>{
-      if(!S.on) return; // só soma se tiver serviço marcado
-      let q=num(S.qtd), p=num(S.preco), v=q*p;
-      if(S.tipo==='m2'){m2+=q;rM2+=v} if(S.tipo==='ml'){ml+=q;rMl+=v} if(S.tipo==='parede'){par+=q;rPar+=v}
+function limparTudo(){
+  if(!confirm('COMEÇAR DO ZERO?'))return;
+  let params=new URLSearchParams(window.location.search);
+  if(params.get('limpo')){ alert('Modo cliente travado! Não pode apagar.'); return; }
+  comodos=[]; clienteNome=''; telefoneCli=''; enderecoCli='';
+  document.getElementById('inputClienteTop').value=''; document.getElementById('inputTelefoneTop').value=''; document.getElementById('inputEnderecoTop').value='';
+  render();
+  showStatus('Obra limpa - plataforma vazia');
+}
+function criarComodo(){
+  let nome=document.getElementById('mNome').value.trim(),
+      c=document.getElementById('mC').value,
+      l=document.getElementById('mL').value;
+  if(!nome){alert('Nome obrigatório');return;}
+  let hRaw=document.getElementById('mH')?.value||''; let hV=hRaw==='' ? 2.8 : (parseFloat(String(hRaw).replace(',','.'))||2.8);
+  let comp=parseFloat(c)||0;
+  let larg=parseFloat(l)||0;
+  if(comp===0 && larg===0){
+    comodos.push({nome:nome,c:1,l:1,h:2.8,isUnidade:true,q:1,servicos:[]});
+  }else{
+    if(comp===0) comp=1;
+    if(larg===0) larg=1;
+    comodos.push({nome:nome,c:comp,l:larg,h:hV,isUnidade:false,q:1,servicos:[]});
+  }
+  document.getElementById('mNome').value=''; if(document.getElementById('mH')) document.getElementById('mH').value='';
+  document.getElementById('mC').value='';
+  document.getElementById('mL').value='';
+  fecharModal('modal'); try{localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos))}catch(e){} render(); showStatus('✅ Item criado: '+nome);
+}
+function criarServ(){let nome=document.getElementById('nsNome').value.trim(),preco=parseFloat(document.getElementById('nsPreco').value)||0,custo=parseFloat(document.getElementById('nsCusto')?document.getElementById('nsCusto').value:0)||0,un=document.getElementById('nsUn').value, tipo=document.getElementById('nsTipo')?document.getElementById('nsTipo').value:'auto'; if(!nome){alert('Nome obrigatório');return;} if(tipo==='auto' || !tipo){ let n=nome.toLowerCase(); if(n.includes('reboco')||n.includes('pelicula')||n.includes('película')) tipo='parede'; else if(n.includes('tabica')) tipo='linear'; else tipo='forro'; } let id=Date.now(); servicos.push({id:id,nome:nome,valor:preco,custo:custo,unidade:un,un:un,tipo:tipo}); try{localStorage.setItem('kiza_serv_final',JSON.stringify(servicos))}catch(e){} document.getElementById('nsNome').value=''; document.getElementById('nsPreco').value=''; if(document.getElementById('nsCusto')) document.getElementById('nsCusto').value=''; fecharModal('modalNovoServ'); render(); }
+function verificarLimiteGratis(){
+  let pro=localStorage.getItem('kiza_pro'), tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
+  let isPro=false;
+  if(pro==='1'){
+    if(tipo==='mensal' && expira>0){ if(Date.now()>expira){ localStorage.removeItem('kiza_pro'); } else isPro=true; } else isPro=true;
+  }
+  let isDono=localStorage.getItem('kiza_dono')==='1',url=new URLSearchParams(window.location.search),hasLimpo=url.has('limpo');
+  if(isDono&&!hasLimpo) return true;
+  if(isPro) return true;
+  if(comodos.length>=2){abrirModal('modalLic'); return false;}
+  return true;
+}
+function gerarLinkPlataforma(){
+  let dadosObj={comodos:comodos,servicos:servicos},json=JSON.stringify(dadosObj),b64=btoa(encodeURIComponent(json));
+  let baseUrl='https://kizaracom-code.github.io/kizara-orcamento-editavel/',params=new URLSearchParams();
+  params.set('empresa',empresaNome); params.set('sub',empresaSub); params.set('tel',empresaTel); params.set('cid',empresaCidade); params.set('dados',b64); params.set('limpo','1');
+  let link=baseUrl+'?'+params.toString(),box=document.getElementById('areaLinkPlataforma'),ta=document.getElementById('linkGerado'); ta.value=link; box.style.display='block';
+}
+function gerarPDF(){
+  const {jsPDF}=window.jspdf;
+  let doc=new jsPDF();
+  let pageW=doc.internal.pageSize.getWidth();
+  let pageH=doc.internal.pageSize.getHeight();
+  let margin=10;
+  let y=0;
+  doc.setFillColor(17,17,17);
+  doc.rect(0,0,pageW,35,'F');
+  let logoBase64=localStorage.getItem('kiza_logo_final');
+  if(logoBase64){ try{ doc.addImage(logoBase64,'JPEG',10,6,22,22); }catch(e){} }
+  doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.setTextColor(212,175,55); doc.text(empresaNome,38,16);
+  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(200,200,200);
+  doc.text((empresaSub+' | '+empresaTel+' | '+empresaCidade).substring(0,120),38,22);
+  doc.setDrawColor(212,175,55); doc.setLineWidth(0.5); let seloX=pageW-42; doc.rect(seloX,9,36,16);
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(212,175,55); doc.text('ORÇAMENTO',seloX+18,19,{align:'center'});
+  y=42;
+  doc.setFillColor(212,175,55); doc.rect(margin,y,pageW-margin*2,1.5,'F');
+  doc.setFillColor(246,245,240); doc.rect(margin,y+1.5,pageW-margin*2,18,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(17,17,17);
+  doc.text('CLIENTE: '+(clienteNome||'Não informado').toUpperCase(), margin+3, y+8);
+  y+=27;
+  let totalGeral=0;
+  comodos.forEach((c,idx)=>{
+    if(y>pageH-45){ doc.addPage(); y=12; }
+    let cVP=c.c||1, lVP=c.l||1, qVP=c.q||1; let a=(c.isUnidade? qVP : cVP*lVP*qVP); let p=(c.isUnidade? qVP : 2*(cVP+lVP)*qVP);
+    doc.setFillColor(255,243,205); doc.rect(margin,y,pageW-margin*2,11,'F');
+    doc.setDrawColor(212,175,55); doc.setLineWidth(0.4); doc.rect(margin,y,pageW-margin*2,11,'S');
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(17,17,17);
+    let hVpdf=parseFloat(c.h)||2.8; let paredePdf=(c.isUnidade? qVP : (2*(cVP+lVP)*qVP)*hVpdf);
+    doc.text((idx+1)+'. '+c.nome.toUpperCase() + (c.isUnidade ? '' : '  -  '+a.toFixed(2)+'m² chão | '+p.toFixed(2)+'ml | '+paredePdf.toFixed(2)+'m² parede (h '+hVpdf.toFixed(2)+')'), margin+3, y+7.5);
+    y+=15;
+    let sub=0;
+    c.servicos.forEach(sid=>{
+      let s=servicos.find(x=>x.id==sid); if(!s) return;
+      let cbPdf=calcBase(c,s); let base=cbPdf.base;
+      let val=base*s.valor; sub+=val;
+      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(40,40,40);
+      doc.text('• '+s.nome, margin+6, y);
+      doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17); doc.text('R$ '+val.toFixed(2), pageW-margin-3, y,{align:'right'});
+      y+=5;
     });
+    totalGeral+=sub; y+=4;
+    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.text('Subtotal: R$ '+sub.toFixed(2), pageW-margin-3, y,{align:'right'}); y+=8;
   });
-  let totalServ=rM2+rMl+rPar;
-  let totalDesp=state.despesas.reduce((a,d)=>a+num(d.valor),0);
-  $('tM2').textContent=br(m2); $('rM2').textContent=fmt(rM2);
-  $('tMl').textContent=br(ml); $('rMl').textContent=fmt(rMl);
-  $('tPar').textContent=br(par); $('rPar').textContent=fmt(rPar);
-  $('tGeral').textContent=br(m2+ml+par); $('rGeral').textContent=fmt(totalServ);
-  $('totalServ').textContent=fmt(totalServ); $('totalDesp').textContent=fmt(totalDesp);
-  $('lucro').textContent=fmt(totalServ-totalDesp-num(state.custo));
-  return {totalServ,totalDesp};
+  doc.setFillColor(17,17,17); doc.rect(margin,y,pageW-margin*2,14,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(212,175,55); doc.text('R$ '+totalGeral.toFixed(2), pageW-margin-5, y+9.5,{align:'right'});
+  doc.setFontSize(10); doc.setTextColor(255,255,255); doc.text('TOTAL GERAL:', margin+5, y+9);
+  y+=22;
+  doc.setFillColor(212,175,55); doc.rect(0,pageH-5,pageW,5,'F');
+  doc.save('ORCAMENTO_'+(clienteNome||'CLIENTE')+'.pdf');
 }
-function medidas(L){let l=num(L.larg),c=num(L.comp),h=num(L.alt);return {chao:l*c, ml:2*(l+c), parede:2*(l+c)*h}}
+function abrirModalEditarEmpresa(){document.getElementById('editNomeEmp').value=empresaNome; document.getElementById('editSubEmp').value=empresaSub; document.getElementById('editTelEmp').value=empresaTel; document.getElementById('editCidadeEmp').value=empresaCidade; abrirModal('modalEditarEmpresa');}
 function render(){
-  if(MODO_CLIENTE){$('avisoCliente').style.display='block'; document.querySelectorAll('button').forEach(b=>{if(b.textContent.includes('APAGAR')||b.textContent.includes('ZERAR')||b.textContent.includes('SALVAR'))b.style.display='none'})}
-  $('cliente').value=state.cliente; $('whats').value=state.whats; $('custo').value=state.custo||'';
-  if(MODO_CLIENTE){$('cliente').disabled=true;$('whats').disabled=true;$('custo').disabled=true}
-  let html='';
-  state.locais.forEach((L,li)=>{
-    let m=medidas(L);
-    html+=`<div class="card"><div class="row"><input data-local="${li}" data-f="nome" value="${esc(L.nome)}" placeholder="Nome do item / local ex: Sala" oninput="onChange()"><input data-local="${li}" data-f="larg" type="number" step="0.01" value="${L.larg}" placeholder="Largura" oninput="onChange()"><input data-local="${li}" data-f="comp" type="number" step="0.01" value="${L.comp}" placeholder="Comprimento" oninput="onChange()"><input data-local="${li}" data-f="alt" type="number" step="0.01" value="${L.alt}" placeholder="Altura" oninput="onChange()"></div><div class="sub">${L.larg&&L.comp?`${esc(L.larg)}x${esc(L.comp)}m (h ${L.alt||0}) = ${br(m.chao)}m² chão | ${br(m.ml)}ml | ${br(m.parede)}m² parede`:''} — medidas só informativas, total só soma serviço marcado ✅</div>`;
-    L.servicos.forEach((S,si)=>{
-      html+=`<div class="svc"><input type="checkbox" data-local="${li}" data-svc="${si}" data-f="on" ${S.on?'checked':''} onchange="onChange()"><input data-local="${li}" data-svc="${si}" data-f="nome" value="${esc(S.nome)}" placeholder="Nome do serviço"><select data-local="${li}" data-svc="${si}" data-f="tipo" onchange="onChange()"><option value="m2" ${S.tipo==='m2'?'selected':''}>M²</option><option value="ml" ${S.tipo==='ml'?'selected':''}>ML</option><option value="parede" ${S.tipo==='parede'?'selected':''}>PAREDE</option></select><input data-local="${li}" data-svc="${si}" data-f="qtd" type="number" step="0.01" value="${S.qtd}" placeholder="Qtd" oninput="onChange()"><input data-local="${li}" data-svc="${si}" data-f="preco" type="number" step="0.01" value="${S.preco}" placeholder="Preço R$" oninput="onChange()"><b>${fmt(num(S.qtd)*num(S.preco))}</b>${MODO_CLIENTE?'':`<button class="red" onclick="delServico(${li},${si})">✕</button>`}</div>`;
-    });
-    if(!MODO_CLIENTE) html+=`<div class="row no-print"><button class="gray" onclick="addServico(${li})">+ Serviço neste local</button><button class="red" onclick="delLocal(${li})">Excluir local</button></div>`;
-    html+=`</div>`;
-  });
-  $('locais').innerHTML=html||'<p class="sub">Nenhum item ainda. Clique em <b>+ ITEM / LOCAL</b>. Sem serviços padrão.</p>';
-  let dh=''; state.despesas.forEach((d,i)=>{dh+=`<div class="desp"><input class="nome" data-desp="${i}" data-f="nome" value="${esc(d.nome)}" placeholder="Nome da despesa - clique e edite" oninput="onChange()"><input class="valor" data-desp="${i}" data-f="valor" type="number" step="0.01" value="${d.valor}" placeholder="R$ 0,00" oninput="onChange()"></div>`});
-  $('despesas').innerHTML=dh;
-  if(MODO_CLIENTE){document.querySelectorAll('#despesas input, #locais input, #locais select').forEach(e=>e.disabled=true)}
-  calc(); renderBanco();
+  // Atualizar header empresa - FIX do Editar Empresa
+  let elNome=document.getElementById('nomeEmpresa'); if(elNome) elNome.textContent=empresaNome;
+  let elSub=document.getElementById('subEmpresa'); if(elSub) elSub.textContent=empresaSub;
+  let elTel=document.getElementById('telEmpresa'); if(elTel) elTel.textContent=empresaTel;
+  let elCid=document.getElementById('cidadeEmpresa'); if(elCid) elCid.textContent=empresaCidade;
+  // Logo
+  let logoBase64=localStorage.getItem('kiza_logo_final');
+  let imgLogo=document.getElementById('logoImg');
+  let txtLogo=document.getElementById('logoTxt');
+  if(logoBase64 && imgLogo){
+    imgLogo.src=logoBase64; imgLogo.style.display='block'; if(txtLogo) txtLogo.style.display='none';
+  }
+  let lc=document.getElementById('listaComodos');
+  if(lc){
+    if(comodos.length===0) lc.innerHTML='<div style="color:#999;font-size:11px">Nenhum item - clique + ITEM / LOCAL</div>';
+    else lc.innerHTML=comodos.map((co,i)=>{
+      let cV=parseFloat(co.c)||1, lV=parseFloat(co.l)||1, qV=parseFloat(co.q)||1, hV=parseFloat(co.h)||2.8;
+      let a=(co.isUnidade? qV : cV*lV*qV);
+      let p=(co.isUnidade? qV : 2*(cV+lV)*qV);
+      let parede=(co.isUnidade? qV : p*hV);
+      let metaTxt = co.isUnidade ? `${qV} un` : `${cV}x${lV}m (h ${hV.toFixed(2)} ✏️) = ${a.toFixed(2)}m² chão | ${p.toFixed(2)}ml | ${parede.toFixed(2)}m² parede`;
+      return `<div class="comodoItem"><div class="comodoHead"><b style="font-size:12px">${co.nome}</b><span class="comodoMeta" onclick="editarAltura(${i})" title="Clique para mudar altura" style="cursor:pointer;background:#fff8e1;border:1px solid #f3d98a;padding:3px 6px;border-radius:8px">${metaTxt}</span><button onclick="removerComodo(${i})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div><div class="servCheck">${servicos.map(s=>{let chk=co.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome}</label>`}).join('')}</div></div>`
+    }).join('');
+  }
+  let gs=document.getElementById('gridServicos');
+  if(gs){
+    if(servicos.length===0){
+      gs.innerHTML='<div style="color:#999;font-size:11px;padding:14px;text-align:center;border:1px dashed #ddd;border-radius:12px">Nenhum serviço cadastrado<br>Clique em <b>+ SERVICO</b> para começar<br><br>Exemplos:<br>Lava jato: Lavagem completa R$60<br>Gesso: Forro liso R$38/m²<br>Mecânico: Troca óleo R$120</div>';
+    }else{
+      gs.innerHTML=servicos.map(s=>{let unid=s.un||s.unidade||'m2'; let custo=s.custo||0; let lucro=(s.valor||0)-custo; let lucroTxt = custo>0 ? `<div style="font-size:10px;color:#16a34a;font-weight:700">Custo R$ ${custo.toFixed(2)} | Lucro R$ ${lucro.toFixed(2)}</div>` : `<div style="font-size:10px;color:#999">Sem custo - clique EDITAR para colocar</div>`; return `<div class="servCard"><b style="font-size:11px;display:block;margin-bottom:2px;line-height:1.2">${s.nome}</b><div style="font-size:11px;color:#666;margin-bottom:2px">${unid} - Venda R$ ${s.valor}</div>${lucroTxt}<div style="display:flex;gap:6px;margin-top:6px"><button onclick="editarNome(${s.id})" style="flex:1;font-size:11px;padding:7px 8px;background:#111;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">✏️ EDITAR</button><button onclick="removerServico(${s.id})" style="font-size:11px;padding:7px 8px;background:#fee;border:1px solid #fcc;border-radius:8px;cursor:pointer">🗑️</button></div></div>`}).join('');
+    }
+  }
+  let total=0, totalCusto=0;
+  comodos.forEach(co=>{ co.servicos.forEach(sid=>{let s=servicos.find(x=>x.id==sid); if(!s) return; let cb=calcBase(co,s); total+=cb.base*s.valor; totalCusto+=cb.base*(s.custo||0);});});
+  let tg=document.getElementById('totalGeral'); if(tg) tg.textContent='R$ '+total.toFixed(2).replace('.',',');
+  let tc=document.getElementById('totalCustoLucro'); if(tc){ let lucro=total-totalCusto; tc.innerHTML=`Custo: R$ ${totalCusto.toFixed(2).replace('.',',')} | Lucro: <b style="color:#4ade80">R$ ${lucro.toFixed(2).replace('.',',')}</b> (${total>0 ? ((lucro/total)*100).toFixed(0) : 0}% de margem)`; }
+  localStorage.setItem('kiza_comodos_final',JSON.stringify(comodos));
+  localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));
+  try{ atualizarCustoSimples(); }catch(e){}
 }
-function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
-function onChange(){syncInputs(); if(!MODO_CLIENTE) salvarLocal(); calc()}
-function addLocal(){if(MODO_CLIENTE)return; syncInputs(); state.locais.push(novoLocal()); render(); salvarLocal()}
-function addServico(li){if(MODO_CLIENTE)return; syncInputs(); state.locais[li].servicos.push({nome:'',tipo:'m2',qtd:'',preco:'',on:true}); render(); salvarLocal()}
-function addServicoGlobal(){if(MODO_CLIENTE)return; if(!state.locais.length) addLocal(); else addServico(0)}
-function delServico(li,si){if(MODO_CLIENTE)return; if(!confirm('Excluir este serviço?'))return; syncInputs(); state.locais[li].servicos.splice(si,1); render(); salvarLocal()}
-function delLocal(li){if(MODO_CLIENTE)return; if(!confirm('Excluir este local e seus serviços?'))return; syncInputs(); state.locais.splice(li,1); render(); salvarLocal()}
-function addDespesa(){if(MODO_CLIENTE)return; syncInputs(); state.despesas.push(novaDespesa('Nova despesa')); render()}
-function limparTudo(){if(MODO_CLIENTE)return; if(!confirm('Zerar tudo? Isso limpa a tela, mantém os nomes das despesas.'))return; initBaseLimpa(); try{let n=JSON.parse(localStorage.getItem('kizara_nomes_despesas')||'null'); if(Array.isArray(n)) state.despesas=n.map(x=>novaDespesa(x))}catch(e){} localStorage.removeItem('kizara_corr100'); render()}
-function copiarLink(){alert('Dono da obra recebe só o PDF. Clique em PDF / IMPRIMIR e mande o PDF para ele.');window.print();}
-function getBanco(){try{return JSON.parse(localStorage.getItem('kizara_banco')||'[]')}catch(e){return[]}}
-function salvarBanco(){syncInputs(); let b=getBanco(); let nome=$('nomeOrc').value||('Orçamento '+(b.length+1)); b.push({nome, data:new Date().toLocaleString('pt-BR'), state:JSON.parse(JSON.stringify(state))}); localStorage.setItem('kizara_banco',JSON.stringify(b)); $('nomeOrc').value=''; renderBanco(); alert('Salvo no banco: '+nome)}
-function renderBanco(){let b=getBanco(); $('bancoLista').innerHTML=b.length?b.map((x,i)=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:8px;background:#f9fafb;border-radius:8px;margin:4px 0"><span><b>${esc(x.nome)}</b> — ${esc(x.data)}</span><span><button class="blue" onclick="abrirBanco(${i})">Abrir</button> ${MODO_CLIENTE?'':`<button class="red" onclick="delBanco(${i})">Excluir</button>`}</span></div>`).join(''):'<p class="sub">Banco vazio.</p>'}
-function abrirBanco(i){let b=getBanco(); state=b[i].state; render(); salvarLocal()}
-function delBanco(i){if(MODO_CLIENTE)return; if(!confirm('Excluir do banco?'))return; let b=getBanco(); b.splice(i,1); localStorage.setItem('kizara_banco',JSON.stringify(b)); renderBanco()}
-function exportar(){syncInputs(); let blob=new Blob([JSON.stringify({banco:getBanco(),atual:state},null,2)],{type:'application/json'}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kizara-banco.json'; a.click()}
-function importar(e){let f=e.target.files[0]; if(!f)return; let r=new FileReader(); r.onload=()=>{try{let j=JSON.parse(r.result); if(j.banco) localStorage.setItem('kizara_banco',JSON.stringify(j.banco)); if(j.atual) state=j.atual; render(); alert('Banco importado!')}catch(err){alert('Arquivo inválido')}}; r.readAsText(f)}
-carregar();
-</script></body></html>
+
+document.addEventListener('DOMContentLoaded',()=>{
+  let params=new URLSearchParams(window.location.search),emp=params.get('empresa'),sub=params.get('sub'),tel=params.get('tel'),cid=params.get('cid'),dados=params.get('dados'),limpo=params.get('limpo');
+  // BASE LIMPA - SEMPRE ABRE ZERADA COMO KIZARANET (não carrega lixo de teste)
+  if(!emp&&!dados&&!limpo){
+    empresaNome=EMPRESA_FIXA.nome; empresaSub=EMPRESA_FIXA.sub; empresaTel=EMPRESA_FIXA.tel; empresaCidade=EMPRESA_FIXA.cid;
+    comodos=[]; servicos=[]; clienteNome=''; telefoneCli=''; enderecoCli='';
+    try{
+    localStorage.setItem('kiza_emp_final', EMPRESA_FIXA.nome);
+    localStorage.setItem('kiza_sub_final', EMPRESA_FIXA.sub);
+    localStorage.setItem('kiza_tel_final', EMPRESA_FIXA.tel);
+    localStorage.setItem('kiza_cid_final', EMPRESA_FIXA.cid);
+    // CORRECAO: NAO apaga o que foi salvo. Abrir zerado limpa so a tela (comodos=[] / servicos=[] acima).
+    // Antes essas linhas apagavam os servicos salvos e o PRO a cada abertura - por isso o comprador nao conseguia salvar os servicos.
+    localStorage.removeItem('kiza_logo_final'); localStorage.removeItem('kiza_despesa_obra');
+    localStorage.setItem('kiza_dono','1');
+    }catch(e){}
+  }
+  if(emp) empresaNome=emp; if(sub) empresaSub=sub; if(tel) empresaTel=tel; if(cid) empresaCidade=cid;
+  if(dados){
+    // FIX CLIENTE: se já abriu esse link antes, usa o que tá salvo no celular (mais novo), não o link antigo!
+    let hashAntigo=''; try{ hashAntigo=localStorage.getItem('kiza_dados_hash')||''; }catch(e){}
+    let jaAbriuEsseLink = (hashAntigo===dados);
+    let temSalvoMaisNovo=false; try{ let sc=localStorage.getItem('kiza_comodos_final'); if(sc){ let pc=JSON.parse(sc); if(pc && pc.length>0) temSalvoMaisNovo=true; } }catch(e){}
+    if(jaAbriuEsseLink && temSalvoMaisNovo){
+      // Já abriu antes - NÃO sobrescreve! Vai usar o salvo no celular lá embaixo!
+    } else {
+      try{let json=JSON.parse(decodeURIComponent(atob(dados))); if(json.comodos) comodos=json.comodos; if(json.servicos) servicos=json.servicos; try{localStorage.setItem('kiza_dados_hash', dados); localStorage.setItem('kiza_comodos_final', JSON.stringify(comodos)); localStorage.setItem('kiza_serv_final', JSON.stringify(servicos));}catch(e){}}catch(e){}
+    }
+    // Limpa o ?dados= da barra - assim quando apertar ATUALIZAR, não volta pro orçamento antigo!
+    try{ let u=new URL(window.location.href); u.searchParams.delete('dados'); window.history.replaceState({},'',u.toString()); }catch(e){}
+  }
+  if(limpo){
+    // Banco de dados SEMPRE visível no cliente também!
+    try{ let bd=document.getElementById('bancoDados'); if(bd) bd.style.display='block'; }catch(e){}
+    document.getElementById('avisoCliente').style.display='block'; 
+    let bl=document.getElementById('btnLinkPlataforma'); if(bl) bl.style.display='none';
+    let pd=document.getElementById('painelDono'); if(pd) pd.style.display='none';
+    let bp=document.getElementById('bannerPromo'); if(bp) bp.style.display='none';
+    let bz=document.getElementById('btnAtivarPro2'); if(bz) bz.style.display='none';
+  }
+  let tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
+  if(tipo==='mensal' && expira>0 && Date.now()>expira){ localStorage.removeItem('kiza_pro'); }
+  try{
+    let isCleanLoad = !emp && !dados && !limpo;
+    let savedServ=localStorage.getItem('kiza_serv_final');
+    // Só carrega serviço salvo se NÃO veio do link grande (?dados)
+    if(!dados && !isCleanLoad && savedServ){ let parsed=JSON.parse(savedServ); if(parsed && parsed.length>0) servicos=parsed; }
+    // SEM SERVIÇOS PADRÃO - cliente cadastra do zero (universal)
+    // servicos permanece vazio se não tiver nada salvo
+    if(servicos.length===0){
+      servicos=[];
+    }
+    // FIX LINK GRANDE: se tem ?dados, NÃO sobrescrever com comodos salvos local
+    if(!dados && !isCleanLoad){
+      let savedComodos=localStorage.getItem('kiza_comodos_final'); if(savedComodos){ let pc=JSON.parse(savedComodos); if(pc && pc.length>0) comodos=pc; }
+    }
+  }catch(e){}
+  let isDono=localStorage.getItem('kiza_dono')==='1';
+  let painelD=document.getElementById('painelDono');
+  // AUTO-LIMPEZA: Deixa só o primeiro cliente DANILO GESSO LTDA V57Z-2L0T
+  try{
+    let hist=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]');
+    if(hist && hist.length>1){
+      let primeiro = hist.find(h=> (h.cod && h.cod.includes('V57Z-2L0T')) || (typeof h==='string' && h.includes('V57Z-2L0T')) );
+      if(!primeiro){
+        // se não achou pelo código, tenta pelo que tem DANILO
+        primeiro = hist.find(h=> {
+          let txt = typeof h==='string'? h : (h.cliente||'');
+          return txt.toUpperCase().includes('DANILO');
+        });
+      }
+      if(!primeiro && hist.length>0) primeiro = hist[0];
+      // Se achou o primeiro cliente, recria histórico só com ele
+      if(primeiro && hist.length>1){
+        // Verifica se é o primeiro cliente real
+        let codPrimeiro = typeof primeiro==='string'? primeiro : primeiro.cod;
+        if(codPrimeiro && codPrimeiro.includes('V57Z-2L0T')){
+          // Mantém só ele
+          let novoHist = [primeiro];
+          localStorage.setItem('kiza_hist_cod', JSON.stringify(novoHist));
+        }
+      }
+    }
+    // Se histórico vazio, cria o primeiro cliente oficial
+    let histFinal=JSON.parse(localStorage.getItem('kiza_hist_cod')||'[]');
+    if(histFinal.length===0){
+      let oficial1={cliente:'danilo gesso ltda', cod:'KIZARANET-MENSAL-V57Z-2L0T', data:'20/10/2026 14:26', tipo:'mensal', id:1};
+      let oficial2={cliente:'aelcio gimar pereira - GILMAR', cod:'KIZARANET-VITAL-BGVH123X-OU09-SJ8F', data:'26/10/2026 21:51', tipo:'vitalicio_travado', id:2, device:'BGVH123X'};
+      localStorage.setItem('kiza_hist_cod', JSON.stringify([oficial2, oficial1]));
+      localStorage.setItem('kiza_next_id','3');
+    }else{
+      let temGilmar = histFinal.some(h=> (h.cod||'').includes('BGVH123X') || (h.cliente||'').toLowerCase().includes('gimar'));
+      if(!temGilmar){
+        let gilmar={cliente:'aelcio gimar pereira - GILMAR', cod:'KIZARANET-VITAL-BGVH123X-OU09-SJ8F', data:'26/10/2026 21:51', tipo:'vitalicio_travado', id:2, device:'BGVH123X'};
+        histFinal.unshift(gilmar);
+        localStorage.setItem('kiza_hist_cod', JSON.stringify(histFinal));
+      }
+    }
+  }catch(e){ console.log('limpeza hist',e); }
+
+  if(painelD && isDono && !limpo){
+    painelD.style.display='block';
+    try{ setNextId(getNextId()); renderHist(); }catch(e){ console.log(e); }
+  }
+  if(limpo && painelD){ painelD.style.display='none'; }
+  document.getElementById('btnGerar1Vital')?.addEventListener('click',()=>gerarUm('vitalicio'));
+  document.getElementById('btnGerar1Mensal')?.addEventListener('click',()=>gerarUm('mensal'));
+  document.getElementById('btnLimparHist')?.addEventListener('click',()=>{
+    if(!confirm('Limpar histórico e deixar só DANILO GESSO LTDA -> KIZARANET-MENSAL-V57Z-2L0T ?')) return;
+    let oficial={cliente:'danilo gesso ltda', cod:'KIZARANET-MENSAL-V57Z-2L0T', data:'20/10/2026 14:26', tipo:'mensal', id:1};
+    localStorage.setItem('kiza_hist_cod', JSON.stringify([oficial]));
+    try{ renderHist(); setNextId(2); }catch(e){}
+    alert('✅ Histórico limpo! Só DANILO ficou!');
+  });
+  document.getElementById('logoEdit').addEventListener('click',()=>{ document.getElementById('inputLogo').click();});
+  document.getElementById('nomeEmpresa').addEventListener('click',()=>{ abrirModalEditarEmpresa();});
+  document.getElementById('subEmpresa').addEventListener('click',()=>{ abrirModalEditarEmpresa();});
+  document.getElementById('telEmpresa').addEventListener('click',()=>{ abrirModalEditarEmpresa();});
+  document.getElementById('cidadeEmpresa').addEventListener('click',()=>{ abrirModalEditarEmpresa();});
+  document.getElementById('inputLogo').addEventListener('change',(e)=>{let file=e.target.files[0];if(!file)return;let reader=new FileReader();reader.onload=(ev)=>{localStorage.setItem('kiza_logo_final',ev.target.result);render();};reader.readAsDataURL(file);});
+  document.getElementById('inputClienteTop').addEventListener('input',(e)=>{clienteNome=e.target.value; localStorage.setItem('kiza_cli_final',clienteNome); render();});
+  document.getElementById('inputTelefoneTop').addEventListener('input',(e)=>{telefoneCli=e.target.value; localStorage.setItem('kiza_tel_cli_final',telefoneCli); render();});
+  document.getElementById('inputEnderecoTop').addEventListener('input',(e)=>{enderecoCli=e.target.value; localStorage.setItem('kiza_end_final',enderecoCli); render();});
+  document.getElementById('despesaTotalObra')?.addEventListener('input',(e)=>{ try{localStorage.setItem('kiza_despesa_obra', e.target.value);}catch(err){} atualizarCustoSimples(); });
+  try{ let despSalva=localStorage.getItem('kiza_despesa_obra'); if(despSalva && document.getElementById('despesaTotalObra')) document.getElementById('despesaTotalObra').value=despSalva; }catch(e){}
+  ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(id=>{ let el=document.getElementById(id); if(el){ try{ let v=localStorage.getItem('kiza_custo_'+id); if(v) el.value=v; }catch(e){} el.addEventListener('input',()=>{ try{localStorage.setItem('kiza_custo_'+id, el.value);}catch(e){} somarDespesasDetalhadas(); atualizarCustoSimples(); }); } });
+  document.querySelectorAll('.labelDespesa').forEach(inp=>{
+    try{ let salvo=localStorage.getItem('kiza_label_'+inp.dataset.for); if(salvo) inp.value=salvo; }catch(e){}
+    inp.addEventListener('input',()=>{ try{localStorage.setItem('kiza_label_'+inp.dataset.for, inp.value);}catch(e){} });
+    inp.addEventListener('focus',()=>{ inp.select(); });
+  });
+  // ===== BANCO DE DADOS - SÓ ACRESCENTADO, NÃO MEXEU EM NADA ANTES =====
+  function getOrcamentosSalvos(){ try{ return JSON.parse(localStorage.getItem('kiza_orcamentos_salvos')||'[]'); }catch(e){ return []; } }
+  function setOrcamentosSalvos(arr){ try{ localStorage.setItem('kiza_orcamentos_salvos', JSON.stringify(arr)); }catch(e){} }
+  function calcularTotalVendaAtual(){ let t=0; try{ comodos.forEach(co=>{ co.servicos.forEach(sid=>{ let s=servicos.find(x=>x.id==sid); if(s) t+=calcBase(co,s).base*s.valor; }); }); }catch(e){} return t; }
+  function getDespesasAtuais(){ let out={}; ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(id=>{ let el=document.getElementById(id); if(el) out[id]=el.value||''; }); return out; }
+  function getLabelsAtuais(){ let out={}; try{ document.querySelectorAll('.labelDespesa').forEach(inp=>{ out[inp.dataset.for]=inp.value; }); }catch(e){} return out; }
+  function renderOrcamentosSalvos(){
+    let lista=document.getElementById('listaOrcamentosSalvos'); if(!lista) return;
+    let arr=getOrcamentosSalvos();
+    if(arr.length===0){ lista.innerHTML='<div style="font-size:12px;color:#888;background:#f9f9f9;border-radius:10px;padding:10px">Nenhum orçamento salvo ainda.<br>Faça o orçamento e clique em <b>💾 SALVAR ESTE ORÇAMENTO</b> que ele fica guardado aqui!</div>'; return; }
+    lista.innerHTML=arr.map((o,i)=>{
+      let data=o.data||''; let nome=(o.clienteNome||'Sem nome'); let total=(o.totalVenda||0); let qtd=(o.comodos||[]).length;
+      let servNomes=[]; try{ (o.servicos||[]).forEach(s=>{ servNomes.push(s.nome); }); }catch(e){}
+      return '<div style="border:1px solid #ddd;border-radius:10px;padding:10px;margin-bottom:8px;background:#fff8e1">'
+        +'<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div><b style="font-size:13px">📋 '+nome.replace(/</g,'&lt;')+'</b> <span style="font-size:11px;color:#666">'+data+'</span><br><span style="font-size:11px;color:#666">'+qtd+' item(s) • '+servNomes.join(', ').slice(0,120)+'</span></div>'
+        +'<div style="text-align:right"><b style="font-size:14px;color:#16a34a">R$ '+Number(total).toFixed(2).replace('.',',')+'</b></div></div>'
+        +'<div style="display:flex;gap:6px;margin-top:8px"><button type="button" onclick="abrirOrcamentoSalvo('+i+')" style="flex:1;background:#111;color:#fff;border:none;padding:8px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer">📂 ABRIR</button>'
+        +'<button type="button" onclick="duplicarOrcamentoSalvo('+i+')" style="flex:1;background:#fff;border:1px solid #111;padding:8px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer">📄 DUPLICAR</button>'
+        +'<button type="button" onclick="excluirOrcamentoSalvo('+i+')" style="background:#fee;border:1px solid #fbb;padding:8px 10px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer">🗑️</button></div></div>';
+    }).join('');
+  }
+  function salvarOrcamentoAtual(){
+    let nome=(document.getElementById('inputClienteTop')?.value||'').trim() || clienteNome || '';
+    if(!nome){ let n=prompt('Nome do cliente para salvar? Ex: Danilo'); if(!n) return; nome=n.trim(); }
+    if(comodos.length===0){ alert('Faça o orçamento primeiro! Adicione pelo menos 1 item.'); return; }
+    let arr=getOrcamentosSalvos();
+    let agora=new Date(); let data=agora.toLocaleDateString('pt-BR')+' '+agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    let novo={ id:Date.now(), clienteNome:nome, telefoneCli:(document.getElementById('inputTelefoneTop')?.value||telefoneCli||''), enderecoCli:(document.getElementById('inputEnderecoTop')?.value||enderecoCli||''), data:data, comodos:JSON.parse(JSON.stringify(comodos)), servicos:JSON.parse(JSON.stringify(servicos)), despesas:getDespesasAtuais(), labels:getLabelsAtuais(), despesaTotal:(document.getElementById('despesaTotalObra')?.value||''), totalVenda:calcularTotalVendaAtual() };
+    arr.unshift(novo); setOrcamentosSalvos(arr); renderOrcamentosSalvos();
+    let msg=document.getElementById('msgBancoDados'); if(msg) msg.textContent='✅ Salvo! "'+nome+'" - R$ '+novo.totalVenda.toFixed(2).replace('.',',')+' - '+data;
+    try{ showStatus('✅ Orçamento salvo!'); }catch(e){}
+  }
+  function abrirOrcamentoSalvo(i){
+    let arr=getOrcamentosSalvos(); let o=arr[i]; if(!o) return;
+    if(!confirm('Abrir "'+o.clienteNome+'"? O orçamento atual na tela vai ser substituído pelo salvo.')) return;
+    try{
+      comodos=JSON.parse(JSON.stringify(o.comodos||[])); servicos=JSON.parse(JSON.stringify(o.servicos||[]));
+      clienteNome=o.clienteNome||''; telefoneCli=o.telefoneCli||''; enderecoCli=o.enderecoCli||'';
+      let ic=document.getElementById('inputClienteTop'); if(ic) ic.value=clienteNome;
+      let it=document.getElementById('inputTelefoneTop'); if(it) it.value=telefoneCli;
+      let ie=document.getElementById('inputEnderecoTop'); if(ie) ie.value=enderecoCli;
+      if(o.labels){ document.querySelectorAll('.labelDespesa').forEach(inp=>{ if(o.labels[inp.dataset.for]) inp.value=o.labels[inp.dataset.for]; }); }
+      if(o.despesas){ Object.keys(o.despesas).forEach(id=>{ let el=document.getElementById(id); if(el) el.value=o.despesas[id]; }); }
+      let dt=document.getElementById('despesaTotalObra'); if(dt) dt.value=o.despesaTotal||'';
+      try{ localStorage.setItem('kiza_comodos_final', JSON.stringify(comodos)); localStorage.setItem('kiza_serv_final', JSON.stringify(servicos)); }catch(e){}
+      render(); atualizarCustoSimples(); renderOrcamentosSalvos();
+      let msg=document.getElementById('msgBancoDados'); if(msg) msg.textContent='📂 Aberto! "'+o.clienteNome+'" - '+o.data;
+      window.scrollTo({top:0,behavior:'smooth'});
+    }catch(e){ alert('Não consegui abrir esse orçamento.'); }
+  }
+  function duplicarOrcamentoSalvo(i){
+    let arr=getOrcamentosSalvos(); let o=arr[i]; if(!o) return;
+    let copia=JSON.parse(JSON.stringify(o)); copia.id=Date.now(); copia.clienteNome=o.clienteNome+' (cópia)'; let agora=new Date(); copia.data=agora.toLocaleDateString('pt-BR')+' '+agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    arr.unshift(copia); setOrcamentosSalvos(arr); renderOrcamentosSalvos();
+  }
+  function excluirOrcamentoSalvo(i){
+    let arr=getOrcamentosSalvos(); let o=arr[i]; if(!o) return;
+    if(!confirm('Excluir "'+o.clienteNome+'" do banco?')) return;
+    arr.splice(i,1); setOrcamentosSalvos(arr); renderOrcamentosSalvos();
+  }
+  // FIX 2: Deixa as funções do banco visíveis pra os botões da lista acharem (cliente também)!
+  try{ window.abrirOrcamentoSalvo=abrirOrcamentoSalvo; window.duplicarOrcamentoSalvo=duplicarOrcamentoSalvo; window.excluirOrcamentoSalvo=excluirOrcamentoSalvo; window.salvarOrcamentoAtual=salvarOrcamentoAtual; window.renderOrcamentosSalvos=renderOrcamentosSalvos; }catch(e){}
+  // Liga botão SALVAR e mostra lista ao abrir
+  try{ let b=document.getElementById('btnSalvarOrcamento'); if(b) b.addEventListener('click', salvarOrcamentoAtual); renderOrcamentosSalvos(); }catch(e){}
+  document.getElementById('btnPdf').addEventListener('click',gerarPDF);
+  document.getElementById('btnLinkPlataforma').addEventListener('click',gerarLinkPlataforma);
+  function copiarTextoRobusto(txt){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(()=>showStatus('🔗 Link copiado!')).catch(()=>fallbackCopy(txt));
+    }else fallbackCopy(txt);
+  }
+  function fallbackCopy(txt){
+    let ta=document.getElementById('linkGerado');
+    if(ta){ ta.select(); ta.setSelectionRange(0,999999); try{ document.execCommand('copy'); showStatus('🔗 Link copiado!'); }catch(e){ prompt('Copie manualmente:', txt); } }
+  }
+  document.getElementById('btnCopiarLink')?.addEventListener('click',()=>{
+    let ta=document.getElementById('linkGerado');
+    if(ta && ta.value){ copiarTextoRobusto(ta.value); }else showStatus('❌ Gere o link primeiro');
+  });
+  document.getElementById('btnAbrirCel')?.addEventListener('click',()=>{
+    let ta=document.getElementById('linkGerado');
+    if(ta && ta.value){ window.open(ta.value,'_blank'); }else showStatus('❌ Gere o link primeiro');
+  });
+  document.getElementById('btnComodo').addEventListener('click',()=>{if(verificarLimiteGratis())abrirModal('modal');});
+  document.getElementById('btnNovoServ').addEventListener('click',()=>{abrirModal('modalNovoServ');});
+  document.getElementById('btnCriarComodo').addEventListener('click',()=>{if(verificarLimiteGratis())criarComodo();});
+  document.getElementById('btnCriarServ').addEventListener('click',criarServ);
+  document.getElementById('btnSalvarEmpresa').addEventListener('click',()=>{empresaNome=document.getElementById('editNomeEmp').value||empresaNome;empresaSub=document.getElementById('editSubEmp').value||empresaSub;empresaTel=document.getElementById('editTelEmp').value||empresaTel;empresaCidade=document.getElementById('editCidadeEmp').value||empresaCidade;localStorage.setItem('kiza_emp_final',empresaNome);localStorage.setItem('kiza_sub_final',empresaSub);localStorage.setItem('kiza_tel_final',empresaTel);localStorage.setItem('kiza_cid_final',empresaCidade);fecharModal('modalEditarEmpresa');render();});
+  document.getElementById('btnZerar').addEventListener('click',limparTudo);
+  document.getElementById('btnAtivarPro2').addEventListener('click',()=>{abrirModal('modalLic');});
+  document.getElementById('bannerAcao').addEventListener('click',()=>{abrirModal('modalLic');});
+  document.getElementById('btnAtivarPro').addEventListener('click',()=>{
+    let licVal=document.getElementById('inputLic').value.trim().toUpperCase();
+    let res=validarLicencaSegura(licVal);
+    if(!res){alert('Licença inválida!');return;}
+    if(res.tipo==='vitalicio'){ localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_pro_tipo','vitalicio'); localStorage.removeItem('kiza_pro_expira'); fecharModal('modalLic'); showStatus('✅ PRO VITALÍCIO!'); document.getElementById('btnAtivarPro2').textContent='✅ PRO ATIVO'; document.getElementById('btnAtivarPro2').style.background='#16a34a'; document.getElementById('btnAtivarPro2').style.color='#fff'; document.getElementById('bannerPromo').style.display='none'; }
+    else if(res.tipo==='mensal'){ let expira=Date.now()+30*24*60*60*1000; localStorage.setItem('kiza_pro','1'); localStorage.setItem('kiza_pro_tipo','mensal'); localStorage.setItem('kiza_pro_expira',expira.toString()); fecharModal('modalLic'); showStatus('✅ PRO MENSAL 30 dias!'); document.getElementById('btnAtivarPro2').textContent='✅ PRO ATIVO - MENSAL'; document.getElementById('btnAtivarPro2').style.background='#16a34a'; document.getElementById('btnAtivarPro2').style.color='#fff'; document.getElementById('bannerPromo').style.display='none'; }
+  });
+  document.querySelectorAll('.modalOverlay').forEach(ov=>{ov.addEventListener('click',(e)=>{if(e.target===ov)fecharModal(ov.id);});});
+  let pro=localStorage.getItem('kiza_pro'); if(pro){ document.getElementById('btnAtivarPro2').textContent='✅ PRO ATIVO'; document.getElementById('btnAtivarPro2').style.background='#16a34a'; document.getElementById('btnAtivarPro2').style.color='#fff'; document.getElementById('bannerPromo').style.display='none'; }
+  render();
+  try{ atualizarMeuIdDisplay(); }catch(e){}
+});
+</script>
+</body>
+</html>
