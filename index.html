@@ -431,11 +431,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     // FIX CLIENTE: se já abriu esse link antes, usa o que tá salvo no celular (mais novo), não o link antigo!
     let hashAntigo=''; try{ hashAntigo=localStorage.getItem('kiza_dados_hash')||''; }catch(e){}
     let jaAbriuEsseLink = (hashAntigo===dados);
-    let temSalvoMaisNovo=false; try{ let sc=localStorage.getItem('kiza_comodos_final'); if(sc){ let pc=JSON.parse(sc); if(pc && pc.length>0) temSalvoMaisNovo=true; } let ss=localStorage.getItem('kiza_serv_final'); if(ss){ let ps=JSON.parse(ss); if(ps && ps.length>0) temSalvoMaisNovo=true; } }catch(e){}
+    let temSalvoMaisNovo=false; try{ let sc=localStorage.getItem('kiza_comodos_final'); if(sc){ let pc=JSON.parse(sc); if(pc && pc.length>0) temSalvoMaisNovo=true; } let ss2=localStorage.getItem('kiza_serv_final'); if(ss2){ let ps2=JSON.parse(ss2); if(ps2 && ps2.length>0) temSalvoMaisNovo=true; } }catch(e){}
     if(jaAbriuEsseLink && temSalvoMaisNovo){
-      // Já abriu antes - NÃO sobrescreve! Vai usar o salvo no celular lá embaixo!
+      // Já abriu antes - NÃO sobrescreve! Carrega o salvo no celular na tela.
+      try{ let _sc=localStorage.getItem('kiza_comodos_final'); if(_sc){ let _pc=JSON.parse(_sc); if(_pc&&_pc.length>0) comodos=_pc; } let _ss=localStorage.getItem('kiza_serv_final'); if(_ss){ let _ps=JSON.parse(_ss); if(_ps&&_ps.length>0) servicos=_ps; } }catch(e){}
     } else {
-      try{let json=JSON.parse(decodeURIComponent(atob(dados))); let linkVazio=(!json.comodos||json.comodos.length===0)&&(!json.servicos||json.servicos.length===0); if(linkVazio&&temSalvoMaisNovo){ /* link vazio nao apaga o salvo */ }else{ if(json.comodos) comodos=json.comodos; if(json.servicos) servicos=json.servicos; try{localStorage.setItem('kiza_dados_hash', dados); localStorage.setItem('kiza_comodos_final', JSON.stringify(comodos)); localStorage.setItem('kiza_serv_final', JSON.stringify(servicos));}catch(e){} }}catch(e){}
+      try{let json=JSON.parse(decodeURIComponent(atob(dados))); let _vazio=(!json.comodos||json.comodos.length===0)&&(!json.servicos||json.servicos.length===0); if(_vazio&&temSalvoMaisNovo){ try{ let _sc=localStorage.getItem('kiza_comodos_final'); if(_sc){ let _pc=JSON.parse(_sc); if(_pc&&_pc.length>0) comodos=_pc; } let _ss=localStorage.getItem('kiza_serv_final'); if(_ss){ let _ps=JSON.parse(_ss); if(_ps&&_ps.length>0) servicos=_ps; } }catch(e){} }else{ if(json.comodos) comodos=json.comodos; if(json.servicos) servicos=json.servicos; try{localStorage.setItem('kiza_dados_hash', dados); localStorage.setItem('kiza_comodos_final', JSON.stringify(comodos)); localStorage.setItem('kiza_serv_final', JSON.stringify(servicos));}catch(e){}}}catch(e){}
     }
     // Limpa o ?dados= da barra - assim quando apertar ATUALIZAR, não volta pro orçamento antigo!
     try{ let u=new URL(window.location.href); u.searchParams.delete('dados'); window.history.replaceState({},'',u.toString()); }catch(e){}
