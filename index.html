@@ -149,7 +149,7 @@ function calcBase(co, s){
   return {base: a, tipo:'forro', a:a, p:p, parede:parede};
   }catch(e){ return {base:1, tipo:'forro', a:1, p:1, parede:1}; }
 }
-function editarAltura(i){ let co=comodos[i]; if(!co) return; let atual=(parseFloat(co.h)||2.8).toFixed(2); let nova = prompt('Altura da parede de '+co.nome+'? Atual: '+atual+'m. Digite ex 2.60, 2.70, 2.80, 3.00', atual); if(nova===null) return; let v=parseFloat(nova.replace(',','.'))||2.8; co.h=v; render(); showStatus('✅ Altura de '+co.nome+' atualizada para '+v.toFixed(2)+'m'); }
+function editarAltura(i){if(bloqueiaCliente())return; let co=comodos[i]; if(!co) return; let atual=(parseFloat(co.h)||2.8).toFixed(2); let nova = prompt('Altura da parede de '+co.nome+'? Atual: '+atual+'m. Digite ex 2.60, 2.70, 2.80, 3.00', atual); if(nova===null) return; let v=parseFloat(nova.replace(',','.'))||2.8; co.h=v; render(); showStatus('✅ Altura de '+co.nome+' atualizada para '+v.toFixed(2)+'m'); }
 function somarDespesasDetalhadas(){ let ids=['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola']; let soma=0; ids.forEach(id=>{ let el=document.getElementById(id); let v=parseFloat(el?.value||'0')||0; soma+=v; }); let totalEl=document.getElementById('despesaTotalObra'); if(totalEl && soma>0){ totalEl.value=soma.toFixed(2); try{localStorage.setItem('kiza_despesa_obra', soma.toFixed(2));}catch(e){} } return soma; }
 function atualizarCustoSimples(){ try{ let totalM2=0, totalMl=0, totalParede=0, totalVenda=0; let totalVendaM2=0, totalVendaMl=0, totalVendaParede=0, totalVendaUn=0; comodos.forEach(co=>{ co.servicos.forEach(sid=>{ let s=servicos.find(x=>x.id==sid); if(!s) return; let cb=calcBase(co,s); let v=cb.base*s.valor; totalVenda+=v; if(cb.tipo==='parede'){ totalParede+=cb.base; totalVendaParede+=v; } else if(cb.tipo==='linear'){ totalMl+=cb.base; totalVendaMl+=v; } else if(cb.tipo==='un'){ totalVendaUn+=v; } else { totalM2+=cb.base; totalVendaM2+=v; } }); }); let soma=totalM2+totalMl+totalParede; let despesa=parseFloat(document.getElementById('despesaTotalObra')?.value || localStorage.getItem('kiza_despesa_obra') || '0')||0; let custoPorMetro=soma>0?despesa/soma:0; let lucro=totalVenda-despesa; let elM2=document.getElementById('totM2Display'); if(elM2) elM2.textContent=totalM2.toFixed(2).replace('.',','); let elMl=document.getElementById('totMlDisplay'); if(elMl) elMl.textContent=totalMl.toFixed(2).replace('.',','); let elPar=document.getElementById('totParedeDisplay'); if(elPar) elPar.textContent=totalParede.toFixed(2).replace('.',','); let elSoma=document.getElementById('totSomaMetrosDisplay'); if(elSoma) elSoma.textContent=soma.toFixed(2).replace('.',','); let elM2V=document.getElementById('totM2Valor'); if(elM2V) elM2V.textContent='R$ '+totalVendaM2.toFixed(2).replace('.',','); let elMlV=document.getElementById('totMlValor'); if(elMlV) elMlV.textContent='R$ '+totalVendaMl.toFixed(2).replace('.',','); let elParV=document.getElementById('totParedeValor'); if(elParV) elParV.textContent='R$ '+totalVendaParede.toFixed(2).replace('.',','); let elSomaV=document.getElementById('totSomaValor'); if(elSomaV) elSomaV.textContent='R$ '+totalVenda.toFixed(2).replace('.',','); let elCpm=document.getElementById('custoPorMetroDisplay'); if(elCpm) elCpm.textContent='R$ '+custoPorMetro.toFixed(2).replace('.',',')+' / metro'; let elRes=document.getElementById('resumoCustoSimples'); if(elRes){ if(despesa===0){ elRes.innerHTML='👉 Exemplo: Sala 5x5 h 2.80 tem 25m² chão + 20ml + 56m² parede = 101 metros.'; } else { elRes.innerHTML='📐 Soma: '+totalM2.toFixed(2)+'m² + '+totalMl.toFixed(2)+'ml + '+totalParede.toFixed(2)+'m² parede = <b>'+soma.toFixed(2)+' metros</b><br>💸 Despesa: R$ '+despesa.toFixed(2)+' | 📦 Custo/metro: R$ '+custoPorMetro.toFixed(2)+'<br>💰 Venda: R$ '+totalVenda.toFixed(2)+' - Despesa R$ '+despesa.toFixed(2)+' = <b>Lucro R$ '+lucro.toFixed(2)+'</b>'; } } }catch(e){} }
 function toB36(n,len){let c="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",r="";for(let i=0;i<len;i++){r=c[n%36]+r;n=Math.floor(n/36);}return r;}
@@ -257,16 +257,13 @@ function salvarEdicaoServ(){
 }
 function editarPreco(id){ editarNome(id); }
 function removerServico(id){if(!confirm('Remover serviço?'))return; servicos=servicos.filter(x=>x.id!=id); comodos.forEach(c=>{c.servicos=c.servicos.filter(sid=>sid!=id);}); render();}
-function toggleServico(cIdx,sId){let c=comodos[cIdx]; if(!c)return; if(c.servicos.includes(sId))c.servicos=c.servicos.filter(x=>x!=sId); else c.servicos.push(sId); render();}
-function removerComodo(idx){if(!confirm('Remover este item?'))return; comodos.splice(idx,1); render();}
-function restaurarServicosPadrao(){
-  if(!confirm('Restaurar 7 serviços padrão?')) return;
-  servicos=[];
-  localStorage.setItem('kiza_serv_final',JSON.stringify(servicos));
-  render();
-  showStatus('✅ 7 serviços restaurados!');
-}
+function isModoCliente(){try{return new URLSearchParams(window.location.search).get('limpo')==='1'}catch(e){return false}}
+function bloqueiaCliente(){if(isModoCliente()){alert('Modo cliente travado! Voce so pode ver, nao pode apagar nem alterar a obra.');return true}return false}
+function toggleServico(cIdx,sId){if(bloqueiaCliente())return;let c=comodos[cIdx]; if(!c)return; if(c.servicos.includes(sId))c.servicos=c.servicos.filter(x=>x!=sId); else c.servicos.push(sId); render();}
+function removerComodo(idx){if(bloqueiaCliente())return;if(!confirm('Remover este item?'))return; comodos.splice(idx,1); render();}
+function restaurarServicosPadrao(){alert('Sem servicos padrao. Cadastre do zero em + SERVICO.');return;}
 function limparTudo(){
+  if(bloqueiaCliente())return;
   if(!confirm('COMEÇAR DO ZERO?'))return;
   let params=new URLSearchParams(window.location.search);
   if(params.get('limpo')){ alert('Modo cliente travado! Não pode apagar.'); return; }
@@ -276,6 +273,7 @@ function limparTudo(){
   showStatus('Obra limpa - plataforma vazia');
 }
 function criarComodo(){
+  if(bloqueiaCliente())return;
   let nome=document.getElementById('mNome').value.trim(),
       c=document.getElementById('mC').value,
       l=document.getElementById('mL').value;
@@ -295,7 +293,7 @@ function criarComodo(){
   document.getElementById('mL').value='';
   fecharModal('modal'); render(); showStatus('✅ Item criado: '+nome);
 }
-function criarServ(){let nome=document.getElementById('nsNome').value.trim(),preco=parseFloat(document.getElementById('nsPreco').value)||0,custo=parseFloat(document.getElementById('nsCusto')?document.getElementById('nsCusto').value:0)||0,un=document.getElementById('nsUn').value, tipo=document.getElementById('nsTipo')?document.getElementById('nsTipo').value:'auto'; if(!nome){alert('Nome obrigatório');return;} if(tipo==='auto' || !tipo){ let n=nome.toLowerCase(); if(n.includes('reboco')||n.includes('pelicula')||n.includes('película')) tipo='parede'; else if(n.includes('tabica')) tipo='linear'; else tipo='forro'; } let id=Date.now(); servicos.push({id:id,nome:nome,valor:preco,custo:custo,unidade:un,un:un,tipo:tipo}); document.getElementById('nsNome').value=''; document.getElementById('nsPreco').value=''; if(document.getElementById('nsCusto')) document.getElementById('nsCusto').value=''; fecharModal('modalNovoServ'); render(); }
+function criarServ(){if(bloqueiaCliente())return;let nome=document.getElementById('nsNome').value.trim(),preco=parseFloat(document.getElementById('nsPreco').value)||0,custo=parseFloat(document.getElementById('nsCusto')?document.getElementById('nsCusto').value:0)||0,un=document.getElementById('nsUn').value, tipo=document.getElementById('nsTipo')?document.getElementById('nsTipo').value:'auto'; if(!nome){alert('Nome obrigatório');return;} if(tipo==='auto' || !tipo){ let n=nome.toLowerCase(); if(n.includes('reboco')||n.includes('pelicula')||n.includes('película')) tipo='parede'; else if(n.includes('tabica')) tipo='linear'; else tipo='forro'; } let id=Date.now(); servicos.push({id:id,nome:nome,valor:preco,custo:custo,unidade:un,un:un,tipo:tipo}); document.getElementById('nsNome').value=''; document.getElementById('nsPreco').value=''; if(document.getElementById('nsCusto')) document.getElementById('nsCusto').value=''; fecharModal('modalNovoServ'); render(); }
 function verificarLimiteGratis(){
   let pro=localStorage.getItem('kiza_pro'), tipo=localStorage.getItem('kiza_pro_tipo'), expira=parseInt(localStorage.getItem('kiza_pro_expira')||'0',10);
   let isPro=false;
@@ -389,7 +387,7 @@ function render(){
       let p=(co.isUnidade? qV : 2*(cV+lV)*qV);
       let parede=(co.isUnidade? qV : p*hV);
       let metaTxt = co.isUnidade ? `${qV} un` : `${cV}x${lV}m (h ${hV.toFixed(2)} ✏️) = ${a.toFixed(2)}m² chão | ${p.toFixed(2)}ml | ${parede.toFixed(2)}m² parede`;
-      return `<div class="comodoItem"><div class="comodoHead"><b style="font-size:12px">${co.nome}</b><span class="comodoMeta" onclick="editarAltura(${i})" title="Clique para mudar altura" style="cursor:pointer;background:#fff8e1;border:1px solid #f3d98a;padding:3px 6px;border-radius:8px">${metaTxt}</span><button onclick="removerComodo(${i})" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button></div><div class="servCheck">${servicos.map(s=>{let chk=co.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome}</label>`}).join('')}</div></div>`
+      return `<div class="comodoItem"><div class="comodoHead"><b style="font-size:12px">${co.nome}</b><span class="comodoMeta" onclick="editarAltura(${i})" title="Clique para mudar altura" style="cursor:pointer;background:#fff8e1;border:1px solid #f3d98a;padding:3px 6px;border-radius:8px">${metaTxt}</span>${isModoCliente()?'':'<button onclick="removerComodo('+i+')" style="font-size:10px;padding:3px 6px;background:#fee;border:1px solid #fcc;border-radius:6px;cursor:pointer">X</button>'}</div><div class="servCheck">${servicos.map(s=>{let chk=co.servicos.includes(s.id)?'checked':''; return `<label class="${chk}" onclick="toggleServico(${i},${s.id})">${s.nome}</label>`}).join('')}</div></div>`
     }).join('');
   }
   let gs=document.getElementById('gridServicos');
@@ -424,6 +422,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     localStorage.setItem('kiza_serv_final', JSON.stringify([]));
     localStorage.removeItem('kiza_pro'); localStorage.removeItem('kiza_pro_tipo'); localStorage.removeItem('kiza_pro_expira');
     localStorage.removeItem('kiza_logo_final'); localStorage.removeItem('kiza_despesa_obra');
+    ['cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(function(id){localStorage.removeItem('kiza_custo_'+id)});
+    localStorage.removeItem('kiza_cli_final'); localStorage.removeItem('kiza_tel_cli_final'); localStorage.removeItem('kiza_end_final');
     localStorage.setItem('kiza_dono','1');
     }catch(e){}
   }
@@ -447,6 +447,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('avisoCliente').style.display='block'; 
     let bl=document.getElementById('btnLinkPlataforma'); if(bl) bl.style.display='none';
     let pd=document.getElementById('painelDono'); if(pd) pd.style.display='none';
+    ['btnZerar','btnComodo','btnNovoServ','btnSalvarOrcamento'].forEach(function(id){var _b=document.getElementById(id); if(_b) _b.style.display='none';});
+    ['inputClienteTop','inputTelefoneTop','inputEnderecoTop','despesaTotalObra','cCombustivel','cMaoDele','cMaoFunc','cAlimentacao','cPlaca','cGessoPo','cSisal','cArame','cTabica','cCola'].forEach(function(id){var _e=document.getElementById(id); if(_e) _e.setAttribute('readonly','readonly');});
+    document.querySelectorAll('.labelDespesa').forEach(function(inp){inp.setAttribute('readonly','readonly');});
     let bp=document.getElementById('bannerPromo'); if(bp) bp.style.display='none';
     let bz=document.getElementById('btnAtivarPro2'); if(bz) bz.style.display='none';
   }
@@ -562,7 +565,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         +'<button type="button" onclick="excluirOrcamentoSalvo('+i+')" style="background:#fee;border:1px solid #fbb;padding:8px 10px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer">🗑️</button></div></div>';
     }).join('');
   }
-  function salvarOrcamentoAtual(){
+  function salvarOrcamentoAtual(){if(bloqueiaCliente())return;
     let nome=(document.getElementById('inputClienteTop')?.value||'').trim() || clienteNome || '';
     if(!nome){ let n=prompt('Nome do cliente para salvar? Ex: Danilo'); if(!n) return; nome=n.trim(); }
     if(comodos.length===0){ alert('Faça o orçamento primeiro! Adicione pelo menos 1 item.'); return; }
@@ -573,7 +576,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     let msg=document.getElementById('msgBancoDados'); if(msg) msg.textContent='✅ Salvo! "'+nome+'" - R$ '+novo.totalVenda.toFixed(2).replace('.',',')+' - '+data;
     try{ showStatus('✅ Orçamento salvo!'); }catch(e){}
   }
-  function abrirOrcamentoSalvo(i){
+  function abrirOrcamentoSalvo(i){if(bloqueiaCliente())return;
     let arr=getOrcamentosSalvos(); let o=arr[i]; if(!o) return;
     if(!confirm('Abrir "'+o.clienteNome+'"? O orçamento atual na tela vai ser substituído pelo salvo.')) return;
     try{
@@ -596,7 +599,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     let copia=JSON.parse(JSON.stringify(o)); copia.id=Date.now(); copia.clienteNome=o.clienteNome+' (cópia)'; let agora=new Date(); copia.data=agora.toLocaleDateString('pt-BR')+' '+agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     arr.unshift(copia); setOrcamentosSalvos(arr); renderOrcamentosSalvos();
   }
-  function excluirOrcamentoSalvo(i){
+  function excluirOrcamentoSalvo(i){if(bloqueiaCliente())return;
     let arr=getOrcamentosSalvos(); let o=arr[i]; if(!o) return;
     if(!confirm('Excluir "'+o.clienteNome+'" do banco?')) return;
     arr.splice(i,1); setOrcamentosSalvos(arr); renderOrcamentosSalvos();
