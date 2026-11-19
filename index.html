@@ -428,8 +428,22 @@ document.addEventListener('DOMContentLoaded',()=>{
     }catch(e){}
   }
   if(emp) empresaNome=emp; if(sub) empresaSub=sub; if(tel) empresaTel=tel; if(cid) empresaCidade=cid;
-  if(dados){try{let json=JSON.parse(decodeURIComponent(atob(dados))); if(json.comodos) comodos=json.comodos; if(json.servicos) servicos=json.servicos;}catch(e){}}
+  if(dados){
+    // FIX CLIENTE: se já abriu esse link antes, usa o que tá salvo no celular (mais novo), não o link antigo!
+    let hashAntigo=''; try{ hashAntigo=localStorage.getItem('kiza_dados_hash')||''; }catch(e){}
+    let jaAbriuEsseLink = (hashAntigo===dados);
+    let temSalvoMaisNovo=false; try{ let sc=localStorage.getItem('kiza_comodos_final'); if(sc){ let pc=JSON.parse(sc); if(pc && pc.length>0) temSalvoMaisNovo=true; } }catch(e){}
+    if(jaAbriuEsseLink && temSalvoMaisNovo){
+      // Já abriu antes - NÃO sobrescreve! Vai usar o salvo no celular lá embaixo!
+    } else {
+      try{let json=JSON.parse(decodeURIComponent(atob(dados))); if(json.comodos) comodos=json.comodos; if(json.servicos) servicos=json.servicos; try{localStorage.setItem('kiza_dados_hash', dados); localStorage.setItem('kiza_comodos_final', JSON.stringify(comodos)); localStorage.setItem('kiza_serv_final', JSON.stringify(servicos));}catch(e){}}catch(e){}
+    }
+    // Limpa o ?dados= da barra - assim quando apertar ATUALIZAR, não volta pro orçamento antigo!
+    try{ let u=new URL(window.location.href); u.searchParams.delete('dados'); window.history.replaceState({},'',u.toString()); }catch(e){}
+  }
   if(limpo){
+    // Banco de dados SEMPRE visível no cliente também!
+    try{ let bd=document.getElementById('bancoDados'); if(bd) bd.style.display='block'; }catch(e){}
     document.getElementById('avisoCliente').style.display='block'; 
     let bl=document.getElementById('btnLinkPlataforma'); if(bl) bl.style.display='none';
     let pd=document.getElementById('painelDono'); if(pd) pd.style.display='none';
@@ -587,6 +601,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(!confirm('Excluir "'+o.clienteNome+'" do banco?')) return;
     arr.splice(i,1); setOrcamentosSalvos(arr); renderOrcamentosSalvos();
   }
+  // FIX 2: Deixa as funções do banco visíveis pra os botões da lista acharem (cliente também)!
+  try{ window.abrirOrcamentoSalvo=abrirOrcamentoSalvo; window.duplicarOrcamentoSalvo=duplicarOrcamentoSalvo; window.excluirOrcamentoSalvo=excluirOrcamentoSalvo; window.salvarOrcamentoAtual=salvarOrcamentoAtual; window.renderOrcamentosSalvos=renderOrcamentosSalvos; }catch(e){}
   // Liga botão SALVAR e mostra lista ao abrir
   try{ let b=document.getElementById('btnSalvarOrcamento'); if(b) b.addEventListener('click', salvarOrcamentoAtual); renderOrcamentosSalvos(); }catch(e){}
   document.getElementById('btnPdf').addEventListener('click',gerarPDF);
